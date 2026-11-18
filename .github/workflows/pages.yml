@@ -1,4 +1,8 @@
-name: Deploy to GitHub Pages
+name: Publish to gh-pages
+
+# Builds the site and pushes dist/ to the gh-pages branch. GitHub Pages serves
+# that branch as-is (Settings → Pages → Deploy from a branch → gh-pages, / root).
+# dist/.nojekyll turns Jekyll off, so the files are published exactly as built.
 
 on:
   push:
@@ -6,16 +10,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,17 +27,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Push dist/ to gh-pages
+        working-directory: dist
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          test -f .nojekyll
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -q -m "Publish ${GITHUB_SHA::7}"
+          git push -q --force "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

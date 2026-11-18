@@ -124,6 +124,8 @@ async function main() {
   await fs.copyFile(path.join(srcDir, 'html-deck.css'), path.join(dist, 'html-deck.css'));
   await fs.copyFile(path.join(srcDir, 'html-deck.js'), path.join(dist, 'html-deck.js'));
   await fs.copyFile(path.join(srcDir, 'favicon.png'), path.join(dist, 'favicon.png'));
+  // Serve the files exactly as built: no Jekyll processing on GitHub Pages.
+  await fs.writeFile(path.join(dist, '.nojekyll'), '');
   // Optional extras: per-slide enhancements for converted decks, and live components.
   const exists = (p) => fs.access(p).then(() => true, () => false);
   if (await exists(path.join(srcDir, 'enhance.js'))) await fs.copyFile(path.join(srcDir, 'enhance.js'), path.join(dist, 'enhance.js'));

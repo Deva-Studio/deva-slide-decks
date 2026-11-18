@@ -12,8 +12,10 @@ npm run dev      # build, then serve at http://localhost:4322
 - `npm run build` writes the static site to `dist/`.
 - `npm run serve` serves `dist/` locally (`PORT=… npm run serve` to change the port).
 
-Pushing to `main` deploys `dist/` to GitHub Pages (`.github/workflows/pages.yml`). In the repository's
-*Settings → Pages*, set the source to **GitHub Actions** once.
+Pushing to `main` builds the site and publishes `dist/` to the `gh-pages` branch
+(`.github/workflows/pages.yml`). In the repository's *Settings → Pages*, choose **Deploy from a branch** with
+**`gh-pages`** and **`/ (root)`**. The build writes `dist/.nojekyll`, so GitHub Pages serves the files as built
+and never runs Jekyll.
 
 ## Decks
 
