@@ -40,7 +40,17 @@ Decks are written in HTML, so slides can contain working UI.
 A `.pptx` dropped into `decks/` is also converted (positioned text, shapes and images), as in the
 personal slide-decks site this repo was copied from.
 
+### Look
+
+Slides follow the Deva Kit cover (Figma: 🧩 Deva Kit · Components): indigo ink (`indigo/700` #05237d) on pink
+paper (`pink/400` #f4c7c2) over the isometric grid in `src/theme/`, Funnel Display headings and Funnel Sans text.
+`class="dark"` reverses to pink on indigo. The kit's colour tokens are CSS variables at the top of `src/html-deck.css`.
+
 ### Layout classes
+
+- `hd-cover` with `hd-kicker`, `hd-display` and `hd-sub`: the title slide. `hd-people`: speaker names.
+- `hd-band`: a full-width band between thick rules (`span.is-off` dims an item). `hd-giant`: oversized spaced letters.
+- `hd-close`: the closing slide.
 
 - `hd-label` + `hd-title`: section label and slide title. `hd-lede`: a line under the title.
 - `hd-cols`: two columns (text left, demo right). Override `grid-template-columns` per slide.

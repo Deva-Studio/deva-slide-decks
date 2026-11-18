@@ -40,13 +40,12 @@ function slideMarkup(deck, slide, i, mediaPrefix, { label = true } = {}) {
 
 // HTML-authored decks: decks/<dir>/slides.html holds one top-level
 // <section> per slide (class="dark" for the dark theme), laid out on a
-// 1280 × 720 canvas with the classes in src/html-deck.css. Files in
+// 1280 × 720 canvas with the classes in src/html-deck.css (Deva Kit look). Files in
 // decks/<dir>/media/ are published next to the deck and referenced as
 // "media/…". Interactive components from src/components/ can be used freely.
 const HTML_DECK_FONTS = new Map([
-  ['Inter', new Set(['0,400', '0,500', '0,600', '0,700', '1,400'])],
-  ['Poppins', new Set(['0,600', '0,700'])],
-  ['Manrope', new Set(['0,400', '0,600'])],
+  ['Funnel Display', new Set(['0,500', '0,700', '0,800'])],
+  ['Funnel Sans', new Set(['0,400', '0,500', '0,600', '0,700', '1,400'])],
   ['Cousine', new Set(['0,400', '0,700'])],
 ]);
 
@@ -58,7 +57,7 @@ async function loadHtmlDeck(dir) {
     const dark = /\bdark\b/.test(cls);
     slides.push({
       html: `<div class="hd ${esc(cls)}">${m[2].replaceAll('media/', MEDIA)}</div>`,
-      background: `background:${dark ? '#1a1a1a' : '#f0efeb'}`,
+      background: `background:${dark ? '#05237d' : '#f4c7c2'}`, // Deva Kit indigo/700 · pink/400
       text: '',
     });
   }
@@ -128,7 +127,7 @@ async function main() {
   // Optional extras: per-slide enhancements for converted decks, and live components.
   const exists = (p) => fs.access(p).then(() => true, () => false);
   if (await exists(path.join(srcDir, 'enhance.js'))) await fs.copyFile(path.join(srcDir, 'enhance.js'), path.join(dist, 'enhance.js'));
-  for (const dir of ['enhance-data', 'components']) {
+  for (const dir of ['enhance-data', 'components', 'theme']) {
     if (await exists(path.join(srcDir, dir))) await fs.cp(path.join(srcDir, dir), path.join(dist, dir), { recursive: true });
   }
 

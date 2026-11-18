@@ -1,24 +1,26 @@
 /* ------------------------------------------------------------------ tokens */
 :root {
-  --bg: #f4f2ee;
-  --surface: #ffffff;
-  --text: #1c1b19;
-  --muted: #6b6760;
-  --line: #e2ded6;
-  --accent: #ac4d15;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.06);
-  --ui-font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Deva Kit: pink paper, indigo ink */
+  --bg: #fcefed;          /* pink/100 */
+  --surface: #fef8f8;     /* pink/50 */
+  --text: #05237d;        /* indigo/700 */
+  --muted: #0731b0;       /* indigo/500 */
+  --line: #f4c7c2;        /* pink/400 */
+  --accent: #05237d;
+  --shadow: 0 1px 2px rgb(5 35 125 / 0.08), 0 8px 24px rgb(5 35 125 / 0.08);
+  --ui-font: 'Funnel Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display-font: 'Funnel Display', 'Funnel Sans', system-ui, sans-serif;
   --gutter: clamp(16px, 4vw, 48px);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #161514;
-    --surface: #211f1d;
-    --text: #f1eee9;
-    --muted: #a39e96;
-    --line: #34312d;
-    --accent: #e08a52;
+    --bg: #03164f;        /* indigo/900 */
+    --surface: #041c64;   /* indigo/800 */
+    --text: #f9e2df;      /* pink/200 */
+    --muted: #c3ceec;     /* indigo/100 */
+    --line: #062a96;      /* indigo/600 */
+    --accent: #f4c7c2;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.3);
     color-scheme: dark;
   }
@@ -89,6 +91,7 @@ button { font: inherit; color: inherit; }
 .home-header { margin-bottom: clamp(32px, 5vw, 56px); }
 .home-header h1 {
   margin: 0;
+  font-family: var(--display-font);
   font-size: clamp(2rem, 5vw, 3.25rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -120,7 +123,7 @@ button { font: inherit; color: inherit; }
 .card a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .card-thumb { border-bottom: 1px solid var(--line); pointer-events: none; }
 .card-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.card-body h2 { margin: 0; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.01em; }
+.card-body h2 { margin: 0; font-family: var(--display-font); font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; }
 .card-body p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 .card-body .meta { margin-top: auto; padding-top: 8px; color: var(--muted); font-size: 0.8125rem; }
 
@@ -168,7 +171,7 @@ button { font: inherit; color: inherit; }
   font-weight: 600;
   cursor: pointer;
 }
-.present-btn:hover { background: var(--accent); color: #fff; }
+.present-btn:hover { background: var(--muted); color: var(--bg); }
 @media (max-width: 560px) {
   .back-label, .deck-count { display: none; }
   .deck-bar { gap: 12px; }

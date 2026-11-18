@@ -14,8 +14,11 @@
     <h2 class="hd-display" style="font-size:calc(58 * var(--u))">How to build a CLI for your design system</h2>
     <p class="hd-sub" style="font-size:calc(20 * var(--u))">Design the setup as a decision tree, scaffold from the answers, and keep the AI agent inside your system's rules</p>
   </div>
-  <div class="hd-cover" style="top:calc(570 * var(--u));right:calc(610 * var(--u))">
-    <p class="hd-todo" style="padding-block:calc(8 * var(--u))">Speaker names and titles · Deva Studio</p>
+  <div class="hd-cover" style="top:calc(560 * var(--u));right:calc(610 * var(--u))">
+    <div class="hd-people">
+      <p><b>Aimee Maroney</b>Design Engineer · Deva Studio</p>
+      <p><b>Hannah Clarke</b>Design System Architect · Deva Studio</p>
+    </div>
   </div>
   <div data-terminal="interview" style="position:absolute;left:calc(720 * var(--u));top:calc(104 * var(--u));width:calc(474 * var(--u));height:calc(512 * var(--u));font-size:calc(11.5 * var(--u))"></div>
 </section>
@@ -102,6 +105,7 @@
     <h2 class="hd-section-title">What a CLI is,<br>and how one is built</h2>
     <p class="hd-section-sub">The parts every command-line tool shares, and the one that matters most for a design system.</p>
   </div>
+  <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Agentic layer</span></p>
 </section>
 
 <!-- 6 · What a CLI is -->
@@ -160,6 +164,7 @@
     <h2 class="hd-section-title">The setup interview<br>as a decision tree</h2>
     <p class="hd-section-sub">Fewer questions, asked in the right order, with a recommendation where one is better.</p>
   </div>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Agentic layer</span></p>
 </section>
 
 <!-- 9 · Gating -->
@@ -241,6 +246,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
     <h2 class="hd-section-title">Keeping the AI agent<br>inside the system</h2>
     <p class="hd-section-sub">The scaffold doesn't stop at files. It sets up the agent that will keep building in them.</p>
   </div>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span>Agentic layer</span></p>
 </section>
 
 <!-- 13 · The agentic layer -->
@@ -293,7 +299,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
   process.exit(<span class="k">2</span>); <span class="c">// blocks the edit; stderr tells the agent the fix</span>
 }</pre>
     </div>
-    <div data-terminal="guardrail" style="height:calc(470 * var(--u));font-size:calc(12 * var(--u))"></div>
+    <div data-terminal="guardrail" style="height:calc(452 * var(--u));font-size:calc(12 * var(--u))"></div>
   </div>
 </section>
 
@@ -308,7 +314,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
 <span class="k">const</span> installed = installedVersion(<span class="s">'@your-ds/components'</span>);
 <span class="k">const</span> latest = <span class="k">await</span> publishedVersion(<span class="s">'@your-ds/components'</span>);
 <span class="k">if</span> (installed !== latest) {
-  console.log(<span class="s">`Components ${installed} installed · ${latest} available`</span>);
+  console.log(<span class="s">`Components ${installed} installed, ${latest} out`</span>);
   console.log(<span class="s">`New: ${</span><span class="k">await</span> <span class="s">newComponents(installed, latest)}`</span>);
 }
 <span class="k">if</span> (scaffoldVersion() &lt; latestScaffold()) {
@@ -317,7 +323,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
 <span class="c">// SessionStart output is added to the agent's context</span></pre>
       <p class="hd-text" style="font-size:calc(16 * var(--u))">It nudges and never blocks. Updating stays the team's call.</p>
     </div>
-    <div data-terminal="session-start" style="height:calc(470 * var(--u));font-size:calc(12 * var(--u))"></div>
+    <div data-terminal="session-start" style="height:calc(452 * var(--u));font-size:calc(12 * var(--u))"></div>
   </div>
 </section>
 
@@ -365,10 +371,12 @@ create-ds-prototype my-first-prototype</pre>
 
 <!-- 18 · Thank you -->
 <section class="dark">
-  <div class="hd-cover" style="top:calc(262 * var(--u))">
-    <span style="display:block;width:calc(38 * var(--u));height:calc(3 * var(--u));background:var(--accent)"></span>
-    <h2 class="hd-display" style="font-size:calc(66.7 * var(--u))">Thank you</h2>
-    <p class="hd-sub" style="font-size:calc(18.67 * var(--u))">Questions?</p>
-    <p class="hd-todo" style="margin-top:calc(24 * var(--u));max-width:calc(560 * var(--u))">Speaker names, titles and where to find you</p>
+  <div class="hd-close">
+    <h2>Thank you</h2>
+    <p class="hd-sub">Questions?</p>
+    <div class="hd-people">
+      <p><b>Aimee Maroney</b>Design Engineer · Deva Studio</p>
+      <p><b>Hannah Clarke</b>Design System Architect · Deva Studio</p>
+    </div>
   </div>
 </section>
