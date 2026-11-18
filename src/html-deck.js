@@ -2,7 +2,10 @@
 //   [data-terminal="<script>"]  a terminal that plays a scripted session and loops
 //   [data-interview="tree|files"] a setup interview you can answer, showing either
 //                                the decision tree or the files each answer scaffolds
+//   [data-walkthrough="<page>/"] a button that opens a page over the deck
+//   .hd-diagram > script[type="text/x-mermaid"]  a Mermaid diagram drawn in the Deva Kit colours
 (() => {
+  const scriptUrl = document.currentScript?.src || location.href;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -17,52 +20,59 @@
   }
 
   // ---------------------------------------------------------------- terminal
+  // The two fictional brands in the example (also set in pages/decision-tree/).
+  const BRAND_A = 'Brand A';
+  const BRAND_B = 'Brand B';
   const ME = '~ % ';
-  const PROJECT = '~/checkout-study % ';
+  const PROJECT = '~/product-page % ';
   const SCRIPTS = {
     // The starter CLI's setup interview, from npx to "Done".
     interview: {
       title: 'Terminal — npx create-ds-prototype',
-      label: 'Animated terminal: create-ds-prototype asks what you are making, the project name, who will see it, '
-        + 'recommends the storefront template with a reason (the team picks checkout instead), asks which AI agent '
-        + 'you use, then installs the design system and writes the agent rules and hooks.',
+      label: `Animated terminal: create-ds-prototype asks what you are building (a prototype), the project name, `
+        + `which brand you work on (${BRAND_A}), and the starting template (the product page). It recommends Claude Code `
+        + 'with a reason, installs the design system and brand theme, writes the agent rules and hooks, then creates '
+        + 'the project repo and deploys a shareable preview URL.',
       steps: [
         { cmd: 'npx create-ds-prototype', prompt: ME },
         { out: '' },
         { out: '  <span class="t-accent t-b">create-ds-prototype</span>' },
         { out: '  <span class="t-dim">Prototype with your design system</span>', wait: 500 },
         { out: '' },
-        { select: 'What are you making?', options: [
-          ['Prototype', 'Test an idea with people · deploys to a preview URL'],
-          ['Feature', 'Headed to engineering · built on your product stack'],
-          ['Contribution', 'A new or changed design system component'],
+        { select: 'What are you building?', options: [
+          ['Prototype', 'Test an idea · deploys to a preview URL'],
+          ['App', 'Headed to production · tests and CI included'],
         ], path: [] },
-        { input: 'Project name', value: 'checkout-study' },
-        { select: 'Who will see it?', options: [
-          ['Our team', 'Internal review · placeholder content is fine'],
-          ['Research participants', 'People outside the team, in a study'],
-        ], path: [1] },
-        { select: 'Content', options: [
-          ['Realistic mock data', 'Recommended: participants react to content that looks real'],
-          ['Placeholder text'],
+        { input: 'Project name', value: 'product-page' },
+        { select: 'What brand do you work on?', options: [
+          [BRAND_A, `${BRAND_A} theme and templates`],
+          [BRAND_B, `${BRAND_B} theme and templates`],
         ], path: [] },
         { select: 'Starting template', options: [
-          ['Storefront', 'Recommended: participants should land somewhere that feels like the real store'],
-          ['Product page'],
-          ['Checkout', 'Cart, shipping and payment steps'],
-          ['Blank page'],
-        ], path: [2], note: 'Overrode the recommendation: the study is about checkout' },
-        { select: 'Which AI coding agent do you use?', options: [['Claude Code'], ['Cursor'], ['GitHub Copilot'], ['None']], path: [] },
+          ['Storefront', `${BRAND_A}: header, navigation and a product grid`],
+          ['Product page', `${BRAND_A}: gallery, price and add to cart`],
+          ['Checkout', `${BRAND_A}: cart, shipping and payment steps`],
+          ['Blank page', `${BRAND_A}: the store header and nothing else`],
+        ], path: [1] },
+        { select: 'Which AI coding agent do you use?', options: [
+          ['Claude Code', 'Recommended: gets the guardrail and update hooks as well as rules'],
+          ['Cursor', 'Rules file only'],
+          ['GitHub Copilot', 'Rules file only'],
+          ['None'],
+        ], path: [] },
         { out: '' },
-        { spin: 'Copying the checkout template…', done: 'Checkout template copied' },
+        { spin: `Copying the ${BRAND_A} product page template…`, done: 'Product page template copied' },
         { spin: 'Installing @your-ds/tokens and @your-ds/components…', done: 'Design system installed', ms: 1400 },
-        { out: '<span class="t-ok">✔</span> Realistic mock data generated', wait: 220 },
+        { out: `<span class="t-ok">✔</span> ${BRAND_A} theme applied`, wait: 220 },
+        { out: '<span class="t-ok">✔</span> Preview deploy configured', wait: 220 },
         { out: '<span class="t-ok">✔</span> CLAUDE.md written', wait: 220 },
         { out: '<span class="t-ok">✔</span> Guardrail hook wired <span class="t-dim">(PreToolUse)</span>', wait: 220 },
         { out: '<span class="t-ok">✔</span> Update check wired <span class="t-dim">(SessionStart)</span>', wait: 220 },
+        { spin: 'Creating the project repo…', done: 'Repo created · your-org/product-page' },
+        { spin: 'Deploying a preview…', done: 'Preview ready · https://preview.your-org.example/product-page', ms: 1300 },
         { out: '' },
-        { out: '<span class="t-ok t-b">Done!</span> Next steps:' },
-        { out: '  <span class="t-accent">cd checkout-study</span>' },
+        { out: '<span class="t-ok t-b">Done!</span> Share the preview link, or start building:' },
+        { out: '  <span class="t-accent">cd product-page</span>' },
         { out: '  <span class="t-accent">npm run dev</span>' },
         { out: '' },
         { prompt: ME, end: true },
@@ -71,24 +81,24 @@
 
     // An agent tries to write off-system code and the PreToolUse hook blocks it.
     guardrail: {
-      title: 'Terminal — AI coding agent in checkout-study',
-      label: 'Animated agent session: asked to add a Pay now button, the agent writes a raw hex colour and a plain '
+      title: 'Terminal — AI coding agent in product-page',
+      label: 'Animated agent session: asked to add an Add to cart button, the agent writes a raw hex colour and a plain '
         + 'button element. The guardrail hook blocks the edit and names the token and component to use. The agent '
         + 'retries with the design system Button and the edit passes.',
       steps: [
-        { cmd: 'Add a "Pay now" button under the order total', prompt: '❯ ' },
+        { cmd: 'Add an "Add to cart" button under the price', prompt: '❯ ' },
         { out: '', wait: 600 },
-        { out: '<span class="t-b">●</span> I\'ll add a primary button below the total.', wait: 700 },
-        { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/CheckoutSummary.tsx', wait: 300 },
-        { out: '  <span class="t-add">+ &lt;button style={{ background: "#2F6FED" }}&gt;Pay now&lt;/button&gt;</span>', wait: 900 },
+        { out: '<span class="t-b">●</span> I\'ll add a primary button below the price.', wait: 700 },
+        { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
+        { out: '  <span class="t-add">+ &lt;button style={{ background: "#2F6FED" }}&gt;Add to cart&lt;/button&gt;</span>', wait: 900 },
         { spin: 'Running PreToolUse hook: ds-guard', done: '', ms: 900, quiet: true },
         { out: '  <span class="t-err">⎿ Blocked by ds-guard</span>', wait: 200 },
         { out: '    <span class="t-err">✖</span> Raw colour #2F6FED. Use a token: var(--ds-color-action-primary)', wait: 200 },
         { out: '    <span class="t-err">✖</span> &lt;button&gt; found. Use &lt;Button&gt; from @your-ds/components', wait: 1400 },
         { out: '' },
         { out: '<span class="t-b">●</span> The design system has a Button. Using it instead.', wait: 700 },
-        { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/CheckoutSummary.tsx', wait: 300 },
-        { out: '  <span class="t-add">+ &lt;Button variant="primary"&gt;Pay now&lt;/Button&gt;</span>', wait: 900 },
+        { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
+        { out: '  <span class="t-add">+ &lt;Button variant="primary"&gt;Add to cart&lt;/Button&gt;</span>', wait: 900 },
         { spin: 'Running PreToolUse hook: ds-guard', done: '', ms: 700, quiet: true },
         { out: '  <span class="t-ok">⎿ ✔ Passed ds-guard</span>', wait: 300 },
         { out: '' },
@@ -98,26 +108,26 @@
 
     // A new agent session starts and the SessionStart hook reports what is out of date.
     'session-start': {
-      title: 'Terminal — AI coding agent in checkout-study',
+      title: 'Terminal — AI coding agent in product-page',
       label: 'Animated agent session: when the session starts, the update check finds a newer design system '
-        + 'release with a Stepper component and a newer scaffold template. Asked for a step indicator, the agent '
-        + 'updates the package first and uses the Stepper.',
+        + 'release with a Rating component and a newer scaffold template. Asked for star ratings, the agent '
+        + 'updates the package first and uses the Rating component.',
       steps: [
         { cmd: 'claude', prompt: PROJECT },
         { out: '' },
         { spin: 'SessionStart hook: ds-check', done: 'ds-check added context for the agent', ms: 1100 },
         { out: '  <span class="t-warn">!</span> @your-ds/components <span class="t-b">4.2.0</span> installed · <span class="t-b">4.4.0</span> available', wait: 250 },
-        { out: '    <span class="t-dim">New since 4.2: Stepper, DatePicker</span>', wait: 250 },
+        { out: '    <span class="t-dim">New since 4.2: Rating, QuantityStepper</span>', wait: 250 },
         { out: '  <span class="t-warn">!</span> Scaffold template <span class="t-b">1.3</span> · <span class="t-b">1.5</span> available', wait: 250 },
         { out: '    <span class="t-dim">Update with: npx create-ds-prototype update</span>', wait: 1200 },
         { out: '' },
-        { cmd: 'Add a step indicator to the checkout', prompt: '❯ ' },
+        { cmd: 'Add star ratings under the product title', prompt: '❯ ' },
         { out: '', wait: 600 },
-        { out: '<span class="t-b">●</span> Version 4.4.0 adds a Stepper, so I\'ll update the package first.', wait: 700 },
+        { out: '<span class="t-b">●</span> Version 4.4.0 adds a Rating component, so I\'ll update the package first.', wait: 700 },
         { out: '<span class="t-b">●</span> <span class="t-b">Bash</span> npm install @your-ds/components@4.4.0', wait: 300 },
         { spin: 'Installing…', done: 'Updated @your-ds/components to 4.4.0', ms: 1200 },
-        { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/CheckoutFlow.tsx', wait: 300 },
-        { out: '  <span class="t-add">+ &lt;Stepper steps={steps} current={step} /&gt;</span>', wait: 300 },
+        { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
+        { out: '  <span class="t-add">+ &lt;Rating value={product.rating} count={product.reviews} /&gt;</span>', wait: 300 },
         { out: '  <span class="t-ok">⎿ ✔ Passed ds-guard</span>', wait: 300 },
         { out: '' },
         { prompt: '❯ ', end: true },
@@ -213,47 +223,35 @@
   // ---------------------------------------------------------------- interview
   // The starter CLI's interview as data. `when` gates a question on earlier
   // answers; `recommend` picks an option and says why. Each answer adds files.
+  const BRANDS = { a: BRAND_A, b: BRAND_B };
   const QUESTIONS = [
-    { id: 'kind', q: 'What are you making?', options: [
-      { v: 'prototype', l: 'Prototype' }, { v: 'feature', l: 'Feature' }, { v: 'contribution', l: 'Contribution' }] },
-    { id: 'audience', q: 'Who will see it?', when: (a) => a.kind === 'prototype', why: 'prototypes only', options: [
-      { v: 'team', l: 'Our team' }, { v: 'participants', l: 'Participants' }] },
-    { id: 'content', q: 'Content', when: (a) => a.kind === 'prototype', why: 'prototypes only',
-      recommend: (a) => (a.audience === 'participants'
-        ? ['realistic', 'participants react to content that looks real']
-        : ['placeholder', 'quickest for an internal review']),
-      options: [{ v: 'realistic', l: 'Realistic data' }, { v: 'placeholder', l: 'Placeholder' }] },
-    { id: 'stack', q: 'Framework', when: (a) => a.kind === 'feature', why: 'features only',
-      recommend: () => ['react', 'matches the product codebase engineers will merge it into'],
-      options: [{ v: 'react', l: 'React' }, { v: 'vue', l: 'Vue' }, { v: 'wc', l: 'Web components' }] },
-    { id: 'template', q: 'Starting template', when: (a) => a.kind !== 'contribution', why: 'not for contributions',
-      recommend: (a) => (a.kind === 'feature' || a.audience === 'participants'
-        ? ['storefront', a.kind === 'feature' ? "features live inside the store's header and navigation" : 'participants should land somewhere that feels like the real store']
-        : ['blank', 'nothing to remove when sketching an idea']),
+    { id: 'build', q: 'What are you building?', options: [
+      { v: 'prototype', l: 'Prototype' }, { v: 'app', l: 'App' }] },
+    { id: 'brand', q: 'What brand do you work on?', options: [
+      { v: 'a', l: BRAND_A }, { v: 'b', l: BRAND_B }] },
+    // Gated on the brand: each brand only offers its own templates.
+    { id: 'template', q: (a) => (a.brand ? `Starting template (${BRANDS[a.brand]})` : 'Starting template'),
+      recommend: (a) => (a.build === 'app' ? ['storefront', "apps live inside the store's header and navigation"] : null),
       options: [{ v: 'storefront', l: 'Storefront' }, { v: 'product', l: 'Product page' }, { v: 'checkout', l: 'Checkout' }, { v: 'blank', l: 'Blank' }] },
-    { id: 'component', q: 'Which component?', when: (a) => a.kind === 'contribution', why: 'contributions only', options: [
-      { v: 'new', l: 'A new one' }, { v: 'existing', l: 'An existing one' }] },
-    { id: 'agent', q: 'AI coding agent', options: [
-      { v: 'claude', l: 'Claude Code' }, { v: 'cursor', l: 'Cursor' }, { v: 'copilot', l: 'Copilot' }, { v: 'none', l: 'None' }] },
+    { id: 'agent', q: 'AI coding agent',
+      recommend: () => ['claude', 'gets the guardrail and update hooks as well as rules'],
+      options: [{ v: 'claude', l: 'Claude Code' }, { v: 'cursor', l: 'Cursor' }, { v: 'copilot', l: 'Copilot' }, { v: 'none', l: 'None' }] },
   ];
+  const qText = (q, a) => (typeof q.q === 'function' ? q.q(a) : q.q);
 
   // What gets scaffolded, as [path, reason] pairs.
   function filesFor(a) {
     const f = [['package.json', 'tokens and components installed'], ['src/main.tsx', 'imports the token CSS'],
       ['eslint.config.js', 'design system lint rules']];
-    if (a.kind === 'prototype') f.push(['.github/workflows/preview.yml', 'deploys a preview URL']);
-    if (a.content === 'realistic') f.push(['src/mocks/products.ts', 'realistic products, prices and orders']);
-    if (a.content === 'placeholder') f.push(['src/mocks/placeholder.ts', 'placeholder content']);
-    if (a.stack === 'react') f.push(['src/app/routes.tsx', 'product routing']);
-    if (a.stack === 'vue') f.push(['src/app/router.ts', 'product routing']);
-    if (a.stack === 'wc') f.push(['src/app/app-root.ts', 'app entry element']);
-    if (a.template) f.push(['src/templates/StoreHeader.tsx', 'logo, search, navigation and cart']);
+    if (a.build === 'prototype') f.push(['.github/workflows/preview.yml', 'deploys a preview URL'], ['src/mocks/products.ts', 'mock products, prices and reviews']);
+    if (a.build === 'app') f.push(['vitest.config.ts', 'unit tests'], ['.github/workflows/ci.yml', 'checks on every pull request']);
+    if (a.brand) f.push([`src/theme/brand-${a.brand}.css`, `${BRANDS[a.brand]} tokens and fonts`]);
+    const who = BRANDS[a.brand] || 'the brand';
+    if (a.template) f.push(['src/templates/StoreHeader.tsx', `${who} logo, search, navigation and cart`]);
     if (a.template === 'storefront') f.push(['src/templates/Storefront.tsx', 'hero and product grid']);
     if (a.template === 'product') f.push(['src/templates/ProductPage.tsx', 'gallery, price and add to cart']);
     if (a.template === 'checkout') f.push(['src/templates/Checkout.tsx', 'cart, shipping and payment steps']);
     if (a.template === 'blank') f.push(['src/pages/Start.tsx', 'the store header and nothing else']);
-    if (a.component === 'new') f.push(['src/components/NewComponent/', 'component, stories and tests'], ['CONTRIBUTING.md', 'the review process']);
-    if (a.component === 'existing') f.push(['src/sandbox/', 'the component, linked from the library'], ['CONTRIBUTING.md', 'the review process']);
     if (a.agent === 'claude') f.push(['CLAUDE.md', 'design system rules for the agent'], ['.claude/settings.json', 'registers both hooks'],
       ['.claude/hooks/ds-guard.mjs', 'PreToolUse: blocks off-system code'], ['.claude/hooks/ds-check.mjs', 'SessionStart: checks for updates']);
     if (a.agent === 'cursor') f.push(['.cursor/rules/design-system.mdc', 'design system rules for the agent']);
@@ -281,8 +279,9 @@
       const visible = open.slice(0, firstUnanswered ? open.indexOf(firstUnanswered) + 1 : open.length);
       qs.innerHTML = visible.map((q) => {
         const [rec, why] = q.recommend?.(answers) || [];
-        return `<div class="hd-iv__q${q.id in answers ? ' is-done' : ''}" role="group" aria-label="${esc(q.q)}">
-          <p class="hd-iv__qt"><span aria-hidden="true">?</span> ${esc(q.q)}</p>
+        const text = qText(q, answers);
+        return `<div class="hd-iv__q${q.id in answers ? ' is-done' : ''}" role="group" aria-label="${esc(text)}">
+          <p class="hd-iv__qt"><span aria-hidden="true">?</span> ${esc(text)}</p>
           <div class="hd-iv__opts">${q.options.map((o) => `<button type="button" data-q="${q.id}" data-v="${o.v}"
             aria-pressed="${answers[q.id] === o.v}">${esc(o.l)}${o.v === rec ? '<span class="hd-iv__rec">Recommended</span>' : ''}</button>`).join('')}</div>
           ${why ? `<p class="hd-iv__why">${esc(why[0].toUpperCase() + why.slice(1))}</p>` : ''}
@@ -296,14 +295,14 @@
           const ans = q.options.find((o) => o.v === answers[q.id]);
           const state = !on ? 'skip' : ans ? 'done' : q === firstUnanswered ? 'now' : 'later';
           const note = state === 'skip' ? `Skipped · ${q.why}` : state === 'done' ? ans.l : state === 'now' ? 'Asking now' : 'Coming up';
-          return `<li class="is-${state}"><span>${esc(q.q)}</span><em>${esc(note)}</em></li>`;
+          return `<li class="is-${state}"><span>${esc(qText(q, answers))}</span><em>${esc(note)}</em></li>`;
         }).join('')}</ol>`;
       } else {
         const files = filesFor(answers);
         const now = new Set(files.map(([p]) => p));
         // Files the last answer added show why they're there (and flash, after the first draw).
         const first = !before;
-        side.innerHTML = `<p class="hd-iv__title">checkout-study/ · ${files.length} files</p><ul class="hd-iv__files">${files.map(([p, r]) =>
+        side.innerHTML = `<p class="hd-iv__title">product-page/ · ${files.length} files</p><ul class="hd-iv__files">${files.map(([p, r]) =>
           (first || !before.has(p) ? `<li class="is-new${first ? '' : ' is-flash'}"><code>${esc(p)}</code><span>${esc(r)}</span></li>` : `<li><code>${esc(p)}</code></li>`)).join('')}</ul>`;
         before = now;
       }
@@ -317,8 +316,90 @@
       draw(b.dataset.q);
     });
     // Start part-way through so the slide reads at a glance.
-    Object.assign(answers, { kind: 'prototype', audience: 'participants' });
+    Object.assign(answers, { build: 'prototype', brand: 'a' });
     draw();
+  }
+
+  // ---------------------------------------------------------------- walkthrough
+  // [data-walkthrough="<page>/"]: opens that page (e.g. Mermaid diagrams) in a layer
+  // over the deck. The layer sits inside the deck element, so Present (full screen)
+  // stays on. The page posts { type: 'walkthrough-close', finished } to close it;
+  // finished moves on to the next slide.
+  function openWalkthrough(btn) {
+    if (document.querySelector('.hd-layer')) return;
+    const frame = btn.closest('.slide-frame');
+    const nextSlide = Number(frame?.dataset.index ?? 0) + 2;
+    const layer = document.createElement('div');
+    layer.className = 'hd-layer';
+    const iframe = document.createElement('iframe');
+    iframe.title = btn.textContent.trim();
+    iframe.src = `${btn.dataset.walkthrough}?return=${nextSlide}`;
+    layer.append(iframe);
+    (btn.closest('[data-deck]') || document.body).append(layer);
+    iframe.addEventListener('load', () => iframe.contentWindow.focus(), { once: true });
+    const close = (finished) => {
+      removeEventListener('message', onMessage);
+      layer.remove();
+      if (finished) location.hash = String(nextSlide);
+      else btn.focus({ preventScroll: true });
+    };
+    function onMessage(e) {
+      if (e.source === iframe.contentWindow && e.data?.type === 'walkthrough-close') close(Boolean(e.data.finished));
+    }
+    addEventListener('message', onMessage);
+  }
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-walkthrough]');
+    if (btn) openWalkthrough(btn);
+  });
+  // Enter on a walkthrough slide opens it, without having to focus the button.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || e.defaultPrevented || e.target.closest?.('button, a, input, textarea')) return;
+    const btn = [...document.querySelectorAll('[data-walkthrough]')].find((b) => !b.closest('.slide-frame')?.hidden);
+    if (btn) { e.preventDefault(); openWalkthrough(btn); }
+  });
+
+  // ---------------------------------------------------------------- mermaid
+  // Diagrams on slides. Mermaid is bundled (dist/vendor/), so this works offline.
+  const diagrams = [...document.querySelectorAll('.hd-diagram')];
+  if (diagrams.length) {
+    const tag = document.createElement('script');
+    tag.src = new URL('vendor/mermaid.min.js', scriptUrl).href;
+    tag.addEventListener('load', async () => {
+      const { mermaid } = window;
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          fontFamily: '"Funnel Sans", system-ui, sans-serif',
+          fontSize: '22px',
+          primaryColor: '#fef8f8',
+          primaryTextColor: '#05237d',
+          primaryBorderColor: '#05237d',
+          lineColor: '#05237d',
+          textColor: '#05237d',
+          edgeLabelBackground: '#fcefed',
+        },
+        flowchart: { curve: 'basis', htmlLabels: true, padding: 14, nodeSpacing: 30, rankSpacing: 46, wrappingWidth: 340 },
+      });
+      await document.fonts.ready;
+      for (const [i, box] of diagrams.entries()) {
+        const src = box.querySelector('script[type="text/x-mermaid"]');
+        if (!src) continue;
+        try {
+          const { svg } = await mermaid.render(`hd-diagram-${i + 1}`, src.textContent);
+          box.insertAdjacentHTML('beforeend', svg);
+          const el = box.querySelector('svg');
+          el.removeAttribute('height');
+          el.setAttribute('role', 'img');
+          if (box.dataset.label) el.setAttribute('aria-label', box.dataset.label);
+        } catch (err) {
+          box.insertAdjacentHTML('beforeend', `<p class="hd-diagram-error">Diagram could not be drawn: ${esc(err.message || err)}</p>`);
+        }
+      }
+    });
+    document.head.append(tag);
   }
 
   document.querySelectorAll('[data-terminal]').forEach(terminal);

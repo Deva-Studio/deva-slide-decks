@@ -132,6 +132,12 @@ async function main() {
   for (const dir of ['enhance-data', 'components', 'theme']) {
     if (await exists(path.join(srcDir, dir))) await fs.cp(path.join(srcDir, dir), path.join(dist, dir), { recursive: true });
   }
+  // Mermaid, bundled so walkthrough diagrams work without a network connection.
+  const mermaidJs = path.join(root, 'node_modules', 'mermaid', 'dist', 'mermaid.min.js');
+  if (await exists(mermaidJs)) {
+    await fs.mkdir(path.join(dist, 'vendor'), { recursive: true });
+    await fs.copyFile(mermaidJs, path.join(dist, 'vendor', 'mermaid.min.js'));
+  }
 
   const built = [];
   for (const entry of entries) {
@@ -144,6 +150,10 @@ async function main() {
     const outDir = path.join(dist, slug);
     await fs.mkdir(path.join(outDir, 'media'), { recursive: true });
     for (const m of deck.media) await fs.writeFile(path.join(outDir, 'media', m.name), m.data);
+    // Extra pages for an HTML deck (e.g. a diagram walkthrough): decks/<dir>/pages/* → dist/<slug>/*.
+    if (entry.dir && (await exists(path.join(decksDir, entry.dir, 'pages')))) {
+      await fs.cp(path.join(decksDir, entry.dir, 'pages'), outDir, { recursive: true });
+    }
 
     const fonts = googleFontsUrls(deck.fonts);
     const slidesHtml = deck.slides

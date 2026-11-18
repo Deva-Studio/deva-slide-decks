@@ -55,6 +55,8 @@ paper (`pink/400` #f4c7c2) over the isometric grid in `src/theme/`, Funnel Displ
 - `hd-close`: the closing slide.
 - `hd-tpls` / `hd-tpl` with `hd-wf`: template cards with outline wireframes (storefront, product, checkout, blank).
 - `hd-break` with `hd-break-tag`: a "Live in Figma" pause slide for a demo.
+- `hd-diagram` (with a `<script type="text/x-mermaid">` inside) and `hd-diagram-cap`: a Mermaid diagram on a slide,
+  drawn in the Deva Kit colours; a `<span>` in the caption becomes a second, lighter line.
 
 - `hd-label` + `hd-title`: section label and slide title. `hd-lede`: a line under the title.
 - `hd-cols`: two columns (text left, demo right). Override `grid-template-columns` per slide.
@@ -73,6 +75,25 @@ paper (`pink/400` #f4c7c2) over the isometric grid in `src/theme/`, Funnel Displ
   scaffolds. Questions, gates and recommendations live in `QUESTIONS`; files in `filesFor()`.
 
 Both respect reduced motion (the terminal shows its finished session).
+- `<button data-walkthrough="decision-tree/">`: opens a page from `decks/<dir>/pages/` in a layer over the deck,
+  so Present (full screen) stays on. The page closes the layer with
+  `parent.postMessage({ type: 'walkthrough-close', finished })`; `finished` moves on to the next slide.
+  `Enter` on that slide opens it too.
+
+### Decision tree walkthrough (Mermaid)
+
+`decks/cli-for-design-systems/pages/decision-tree/index.html` is a page of Mermaid diagrams shown one at a time,
+outside the slide format, opened from the "Planning the decision tree" slide: how to plan a tree, then the
+example's tree (what you're building → brand → starting templates → agent → plan → project) and one path through it.
+Edit the diagrams in its `<script type="text/x-mermaid">` blocks; the two brand names are set once in `BRANDS`.
+
+The example's fictional brands (placeholders "Brand A" and "Brand B") appear in three places: `BRANDS` in the
+walkthrough page, `BRAND_A` / `BRAND_B` at the top of `src/html-deck.js` (interview and terminals), and the text of
+`decks/cli-for-design-systems/slides.html`. `←` / `→` step through, `Esc` goes back to the slides, and `→` on the
+last diagram continues the deck. It also works on its own at `/cli-for-design-systems/decision-tree/`.
+
+Files in `decks/<dir>/pages/` are copied next to the deck as they are. Mermaid comes from the `mermaid` npm
+package and is copied to `dist/vendor/`, so the diagrams work without a network connection.
 
 ## Viewing a deck
 
