@@ -413,7 +413,7 @@
 
 /* Static terminal text */
 .hd .hd-shell {
-  white-space: pre; background: var(--indigo-900); color: var(--pink-100);
+  white-space: pre; overflow: hidden; background: var(--indigo-900); color: var(--pink-100);
   font-family: var(--mono); font-size: calc(14 * var(--u)); line-height: 1.6;
   padding: calc(16 * var(--u)) calc(18 * var(--u)); border-radius: calc(8 * var(--u));
 }
@@ -422,7 +422,7 @@
 .hd-shell .t-b { font-weight: 700; }
 
 /* Side-by-side comparison */
-.hd-vs { display: grid; grid-template-columns: 1fr 1fr; gap: calc(28 * var(--u)); margin-top: calc(28 * var(--u)); }
+.hd-vs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(28 * var(--u)); margin-top: calc(28 * var(--u)); }
 .hd-vs > div { display: flex; flex-direction: column; gap: calc(10 * var(--u)); }
 .hd .hd-vs-head { display: flex; align-items: center; gap: calc(10 * var(--u)); font-family: var(--display); font-weight: 700; font-size: calc(22 * var(--u)); }
 .hd-vs-head::before {
@@ -509,3 +509,54 @@
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+/* ------------------------------------------------------------------ ecommerce templates */
+.hd-tpls { display: grid; grid-template-columns: 1fr 1fr; gap: calc(16 * var(--u)); align-content: start; }
+.hd-tpl {
+  display: flex; flex-direction: column; gap: calc(4 * var(--u));
+  padding: calc(14 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u));
+  background: var(--panel); border: calc(2 * var(--u)) solid var(--panel-line); border-radius: calc(8 * var(--u));
+}
+.hd .hd-tpl b { margin-top: calc(8 * var(--u)); font-family: var(--display); font-size: calc(20 * var(--u)); line-height: 1.2; }
+.hd .hd-tpl p { font-size: calc(14.5 * var(--u)); line-height: 1.4; color: var(--body); }
+/* Wireframe thumbnails, drawn in outline like the kit's blueprint art */
+.hd-wf {
+  display: flex; flex-direction: column; gap: calc(6 * var(--u));
+  height: calc(104 * var(--u)); padding: calc(8 * var(--u));
+  border: calc(1.5 * var(--u)) solid var(--ink); border-radius: calc(4 * var(--u));
+  background: var(--pink-50);
+}
+.hd-wf i, .hd-wf span > i { display: block; border: calc(1.5 * var(--u)) solid var(--ink); border-radius: calc(2 * var(--u)); }
+.hd-wf .wf-bar { flex: none; height: calc(10 * var(--u)); background: var(--ink); }
+.hd-wf .wf-hero { flex: 1; }
+.hd-wf .wf-row { display: flex; gap: calc(6 * var(--u)); height: calc(30 * var(--u)); }
+.hd-wf .wf-row i { flex: 1; }
+.hd-wf .wf-split { flex: 1; display: flex; gap: calc(8 * var(--u)); min-height: 0; }
+.hd-wf .wf-img { flex: 1.1; }
+.hd-wf .wf-box { flex: 0.8; }
+.hd-wf .wf-lines { flex: 1; display: flex; flex-direction: column; gap: calc(5 * var(--u)); }
+.hd-wf .wf-lines i { height: calc(6 * var(--u)); border-width: 0; background: var(--indigo-200); }
+.hd-wf .wf-lines i.short { width: 55%; }
+.hd-wf .wf-lines i.wf-btn { width: 60%; height: calc(12 * var(--u)); margin-top: auto; background: var(--ink); }
+.hd-wf .wf-steps { display: flex; justify-content: space-between; align-items: center; height: calc(10 * var(--u)); padding-inline: calc(14 * var(--u)); }
+.hd-wf .wf-steps i { width: calc(10 * var(--u)); height: calc(10 * var(--u)); border-radius: 50%; }
+.hd-wf .wf-steps i:first-child { background: var(--ink); }
+
+/* ------------------------------------------------------------------ demo breaks */
+.hd-break { position: absolute; left: calc(86 * var(--u)); right: calc(86 * var(--u)); top: calc(170 * var(--u)); }
+.hd .hd-break-tag {
+  display: inline-flex; align-items: center; gap: calc(10 * var(--u));
+  padding: calc(6 * var(--u)) calc(14 * var(--u));
+  border: calc(2 * var(--u)) solid var(--ink); border-radius: 999px;
+  font-size: calc(16 * var(--u)); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.hd-break-tag span { color: var(--marigold-300); font-weight: 700; }
+.hd-break .hd-section-title { margin-top: calc(26 * var(--u)); }
+.hd-break .hd-todo { margin-top: calc(34 * var(--u)); max-width: calc(560 * var(--u)); }
+
+/* ------------------------------------------------------------------ reasons grid (3 × 2) */
+.hd-why { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; gap: calc(18 * var(--u)); margin-top: calc(28 * var(--u)); height: calc(446 * var(--u)); }
+.hd-why .hd-card { padding: calc(18 * var(--u)) calc(22 * var(--u)) calc(20 * var(--u)); }
+.hd .hd-why .hd-card h3 { font-size: calc(24 * var(--u)); }
+.hd-why .hd-card.is-key { justify-content: center; background: var(--ink); color: var(--paper); }
+.hd .hd-why .hd-card.is-key h3 { font-size: calc(25 * var(--u)); line-height: 1.25; }

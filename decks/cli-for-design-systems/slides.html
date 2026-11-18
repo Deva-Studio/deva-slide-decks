@@ -3,7 +3,8 @@
   One section element per slide (1280 × 720 canvas). Layout classes: src/html-deck.css.
   Live pieces (src/html-deck.js): data-terminal="interview|guardrail|session-start" and
   data-interview="tree|files". "create-ds-prototype", "@your-ds/*" and checkout-study
-  are illustrative names for the starter CLI and its example project.
+  are illustrative names for the starter CLI and its example project: an ecommerce
+  storefront whose CLI offers templates. "Live in Figma" slides are breaks for a demo.
 -->
 
 <!-- 1 · Cover -->
@@ -87,7 +88,7 @@
   <h2 class="hd-title">What you'll learn</h2>
   <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
     <ol class="hd-num" style="margin-top:calc(10 * var(--u))">
-      <li><b>What a CLI is</b>, and the architecture most of them share</li>
+      <li><b>What a CLI is</b>, why it's worth building one, and the architecture most of them share</li>
       <li><b>How to design the setup interview as a decision tree</b>: gate questions on earlier answers, and recommend a choice with a reason instead of showing a blind menu</li>
       <li><b>How to wire in an agentic layer</b>: a guardrail hook that blocks off-system styles and components, and a session-start check that nudges toward design system and scaffold updates</li>
     </ol>
@@ -98,17 +99,49 @@
   </div>
 </section>
 
-<!-- 5 · Section: what a CLI is -->
+<!-- 5 · The example -->
+<section>
+  <p class="hd-label">The example</p>
+  <h2 class="hd-title">One ecommerce site, all the way through</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(400 * var(--u)) 1fr">
+    <div class="hd-stack">
+      <p class="hd-text">We'll follow one team through the talk. They want to test a new checkout for their online store with research participants.</p>
+      <ul class="hd-list">
+        <li>The CLI offers <b>ecommerce templates</b>, each one built from design system components</li>
+        <li>The team scaffolds a project called <b>checkout-study</b></li>
+        <li>We'll stop along the way to show each template <b>in Figma</b></li>
+      </ul>
+    </div>
+    <div class="hd-tpls">
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><i class="wf-hero"></i><span class="wf-row"><i></i><i></i><i></i></span></span><b>Storefront</b><p>Header, navigation and a product grid</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-split"><i class="wf-img"></i><span class="wf-lines"><i></i><i></i><i class="short"></i><i class="wf-btn"></i></span></span></span><b>Product page</b><p>Gallery, price and add to cart</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-steps"><i></i><i></i><i></i></span><span class="wf-split"><span class="wf-lines"><i></i><i></i><i></i><i class="wf-btn"></i></span><i class="wf-box"></i></span></span><b>Checkout</b><p>Cart, shipping and payment steps</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i></span><b>Blank page</b><p>The store header and nothing else</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · Live in Figma: the templates -->
+<section class="dark">
+  <div class="hd-break">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in Figma</p>
+    <h2 class="hd-section-title">The ecommerce templates</h2>
+    <p class="hd-section-sub">Storefront, product page and checkout: the designs each CLI template is built from, using the design system's components.</p>
+    <p class="hd-todo">Figma link for this demo</p>
+  </div>
+</section>
+
+<!-- 7 · Section: what a CLI is -->
 <section class="dark">
   <div class="hd-section">
     <p class="hd-section-num">01</p>
-    <h2 class="hd-section-title">What a CLI is,<br>and how one is built</h2>
-    <p class="hd-section-sub">The parts every command-line tool shares, and the one that matters most for a design system.</p>
+    <h2 class="hd-section-title">What a CLI is,<br>and why build one</h2>
+    <p class="hd-section-sub">What it does, why it suits a design system and AI agents, and the parts every command-line tool shares.</p>
   </div>
   <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Agentic layer</span></p>
 </section>
 
-<!-- 6 · What a CLI is -->
+<!-- 8 · What a CLI is -->
 <section>
   <p class="hd-label">The basics</p>
   <h2 class="hd-title">A program you run by typing its name</h2>
@@ -117,7 +150,7 @@
     <span style="--seg:#8c9098"><b>npx</b><i><strong>Runner</strong>Downloads and runs the latest version. Nothing to install first.</i></span>
     <span style="--seg:#ea8a53"><b>create-ds-prototype</b><i><strong>The program</strong>Your CLI, published as a package.</i></span>
     <span style="--seg:#7ccfc4"><b>checkout-study</b><i><strong>Argument</strong>The project name.</i></span>
-    <span style="--seg:#febc2e"><b>--layout form</b><i><strong>Flag</strong>Answers one setup question up front.</i></span>
+    <span style="--seg:#febc2e"><b>--template checkout</b><i><strong>Flag</strong>Answers one setup question up front.</i></span>
   </div>
   <div class="hd-cols" style="grid-template-columns:1fr 1fr;height:auto;margin-top:calc(28 * var(--u))">
     <div><p class="hd-h3">Flags</p><p class="hd-text">For people who already know what they want, and for scripts and CI.</p></div>
@@ -125,7 +158,43 @@
   </div>
 </section>
 
-<!-- 7 · Architecture -->
+<!-- 9 · Why a CLI -->
+<section>
+  <p class="hd-label">Why a CLI</p>
+  <h2 class="hd-title">Why it's worth building one</h2>
+  <div class="hd-why">
+    <div class="hd-card">
+      <span class="hd-card-icon">1 command</span>
+      <h3>Fast</h3>
+      <p>Complex, repetitive, multi-step setup becomes one text command.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">same in · same out</span>
+      <h3>Repeatable</h3>
+      <p>The same answers produce the same project every time, for every team.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">--flags</span>
+      <h3>Automatable</h3>
+      <p>Flags answer every question, so scripts and CI can run it without anyone at the keyboard.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">fewer tokens</span>
+      <h3>A head start for AI</h3>
+      <p>The agent starts from a working base template instead of generating the project from scratch, so it spends tokens on the actual work.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">npx …</span>
+      <h3>Easy to share</h3>
+      <p>One line anyone can copy into a README, a ticket or a chat, and an AI agent can run it too.</p>
+    </div>
+    <div class="hd-card is-key">
+      <h3>One command that people, scripts and AI agents all run the same way</h3>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · Architecture -->
 <section>
   <p class="hd-label">Architecture</p>
   <h2 class="hd-title">A typical CLI architecture</h2>
@@ -149,7 +218,7 @@
     </div>
 <pre class="hd-pre" style="align-self:start">{
   kind: <span class="s">'prototype'</span>,
-  layout: <span class="s">'form'</span>,
+  template: <span class="s">'checkout'</span>,
   content: <span class="s">'realistic'</span>,
   agent: <span class="s">'claude'</span>,
   packages: [<span class="s">'@your-ds/tokens'</span>, <span class="s">'@your-ds/components'</span>],
@@ -157,7 +226,7 @@
   </div>
 </section>
 
-<!-- 8 · Section: the interview -->
+<!-- 11 · Section: the interview -->
 <section class="dark">
   <div class="hd-section">
     <p class="hd-section-num">02</p>
@@ -167,7 +236,7 @@
   <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Agentic layer</span></p>
 </section>
 
-<!-- 9 · Gating -->
+<!-- 12 · Gating -->
 <section>
   <p class="hd-label">The interview</p>
   <h2 class="hd-title">Gate each question on the answers before it</h2>
@@ -188,37 +257,39 @@
   </div>
 </section>
 
-<!-- 10 · Recommend -->
+<!-- 13 · Recommend -->
 <section>
   <p class="hd-label">The interview</p>
   <h2 class="hd-title">Recommend a choice, and say why</h2>
   <div class="hd-vs">
     <div>
       <p class="hd-vs-head">A blind menu</p>
-<pre class="hd-shell"><span class="t-accent">?</span> <span class="t-b">Starting layout</span>
-<span class="t-accent">❯ App shell</span>
-  Form flow
+<pre class="hd-shell"><span class="t-accent">?</span> <span class="t-b">Starting template</span>
+<span class="t-accent">❯ Storefront</span>
+  Product page
+  Checkout
   Blank page
 &nbsp;</pre>
       <p>Every option looks equally right, so people pick the first one or guess.</p>
     </div>
     <div>
       <p class="hd-vs-head is-good">A recommendation with a reason</p>
-<pre class="hd-shell"><span class="t-accent">?</span> <span class="t-b">Starting layout</span>
-<span class="t-accent">❯ App shell (Recommended)</span>
-  <span class="t-dim">Participants should see something that feels like the product</span>
-  Form flow
+<pre class="hd-shell"><span class="t-accent">?</span> <span class="t-b">Starting template</span>
+<span class="t-accent">❯ Storefront (Recommended)</span>
+  <span class="t-dim">Participants should land somewhere that feels like the real store</span>
+  Product page
+  Checkout
   Blank page</pre>
       <p>The reason comes from an earlier answer. People can still choose differently, and now they know the trade-off.</p>
     </div>
   </div>
 <pre class="hd-pre" style="margin-top:calc(26 * var(--u))"><span class="c">// The recommendation is a rule that sits next to the question, so it can be reviewed like any design decision</span>
 recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
-  ? [<span class="s">'shell'</span>, <span class="s">'Participants should see something that feels like the product'</span>]
+  ? [<span class="s">'storefront'</span>, <span class="s">'Participants should land somewhere that feels like the real store'</span>]
   : [<span class="s">'blank'</span>, <span class="s">'Nothing to remove when sketching an idea'</span>],</pre>
 </section>
 
-<!-- 11 · Answers → scaffold -->
+<!-- 14 · Answers → scaffold -->
 <section>
   <p class="hd-label">The scaffold</p>
   <h2 class="hd-title">Each answer maps to what gets scaffolded</h2>
@@ -228,7 +299,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
       <ul class="hd-list">
         <li><b>Every project</b> gets the tokens, components and lint rules</li>
         <li><b>Content</b> picks realistic mock data or placeholders</li>
-        <li><b>Layout</b> copies one template built from your components</li>
+        <li><b>Template</b> copies one ecommerce template built from your components</li>
         <li><b>Agent</b> writes that agent's rules, plus the hooks where it supports them</li>
       </ul>
     </div>
@@ -239,7 +310,17 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
   </div>
 </section>
 
-<!-- 12 · Section: agentic layer -->
+<!-- 15 · Live in Figma: the checkout template -->
+<section class="dark">
+  <div class="hd-break">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in Figma</p>
+    <h2 class="hd-section-title">The checkout template</h2>
+    <p class="hd-section-sub">What checkout-study starts from: the checkout design in Figma, and the same components in the scaffolded code.</p>
+    <p class="hd-todo">Figma link for this demo</p>
+  </div>
+</section>
+
+<!-- 16 · Section: agentic layer -->
 <section class="dark">
   <div class="hd-section">
     <p class="hd-section-num">03</p>
@@ -249,7 +330,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
   <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span>Agentic layer</span></p>
 </section>
 
-<!-- 13 · The agentic layer -->
+<!-- 17 · The agentic layer -->
 <section>
   <p class="hd-label">The agentic layer</p>
   <h2 class="hd-title">The scaffold sets up the agent too</h2>
@@ -273,7 +354,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
   </div>
 </section>
 
-<!-- 14 · Guardrail hook -->
+<!-- 18 · Guardrail hook -->
 <section>
   <p class="hd-label">Guardrail</p>
   <h2 class="hd-title">A hook that blocks off-system code</h2>
@@ -303,7 +384,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
   </div>
 </section>
 
-<!-- 15 · Session-start check -->
+<!-- 19 · Session-start check -->
 <section>
   <p class="hd-label">Staying current</p>
   <h2 class="hd-title">A session-start check nudges toward updates</h2>
@@ -327,7 +408,7 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
   </div>
 </section>
 
-<!-- 16 · Putting it together -->
+<!-- 20 · Putting it together -->
 <section>
   <p class="hd-label">Putting it together</p>
   <h2 class="hd-title">One command, consistent from the start</h2>
@@ -345,14 +426,14 @@ recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
   <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The design system stops being something people look up, <span>and becomes something they start from.</span></p>
 </section>
 
-<!-- 17 · Fork the starter -->
+<!-- 21 · Fork the starter -->
 <section>
   <p class="hd-label">Take it home</p>
   <h2 class="hd-title">Fork the starter, then add your design system</h2>
   <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
     <ol class="hd-num" style="gap:calc(14 * var(--u));font-size:calc(17.5 * var(--u))">
       <li><b>Packages:</b> point the installer at your token and component packages</li>
-      <li><b>Templates:</b> rebuild the layouts with your components</li>
+      <li><b>Templates:</b> rebuild the storefront, product and checkout templates with your components</li>
       <li><b>Questions:</b> edit the tree and its recommendations, all in one file</li>
       <li><b>Guardrail:</b> map raw values to your tokens, and plain elements to your components</li>
       <li><b>Rules:</b> rewrite <code>CLAUDE.md</code> and <code>AGENTS.md</code> in your system's words</li>
@@ -369,7 +450,7 @@ create-ds-prototype my-first-prototype</pre>
   </div>
 </section>
 
-<!-- 18 · Thank you -->
+<!-- 22 · Thank you -->
 <section class="dark">
   <div class="hd-close">
     <h2>Thank you</h2>

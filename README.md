@@ -53,6 +53,8 @@ paper (`pink/400` #f4c7c2) over the isometric grid in `src/theme/`, Funnel Displ
 - `hd-cover` with `hd-kicker`, `hd-display` and `hd-sub`: the title slide. `hd-people`: speaker names.
 - `hd-band`: a full-width band between thick rules (`span.is-off` dims an item). `hd-giant`: oversized spaced letters.
 - `hd-close`: the closing slide.
+- `hd-tpls` / `hd-tpl` with `hd-wf`: template cards with outline wireframes (storefront, product, checkout, blank).
+- `hd-break` with `hd-break-tag`: a "Live in Figma" pause slide for a demo.
 
 - `hd-label` + `hd-title`: section label and slide title. `hd-lede`: a line under the title.
 - `hd-cols`: two columns (text left, demo right). Override `grid-template-columns` per slide.

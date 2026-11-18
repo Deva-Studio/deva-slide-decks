@@ -24,8 +24,8 @@
     interview: {
       title: 'Terminal — npx create-ds-prototype',
       label: 'Animated terminal: create-ds-prototype asks what you are making, the project name, who will see it, '
-        + 'recommends a starting layout with a reason, asks which AI agent you use, then installs the design system '
-        + 'and writes the agent rules and hooks.',
+        + 'recommends the storefront template with a reason (the team picks checkout instead), asks which AI agent '
+        + 'you use, then installs the design system and writes the agent rules and hooks.',
       steps: [
         { cmd: 'npx create-ds-prototype', prompt: ME },
         { out: '' },
@@ -46,14 +46,15 @@
           ['Realistic mock data', 'Recommended: participants react to content that looks real'],
           ['Placeholder text'],
         ], path: [] },
-        { select: 'Starting layout', options: [
-          ['App shell', 'Recommended: participants should see something that feels like the product'],
-          ['Form flow'],
+        { select: 'Starting template', options: [
+          ['Storefront', 'Recommended: participants should land somewhere that feels like the real store'],
+          ['Product page'],
+          ['Checkout', 'Cart, shipping and payment steps'],
           ['Blank page'],
-        ], path: [1], note: 'Overrode the recommendation' },
+        ], path: [2], note: 'Overrode the recommendation: the study is about checkout' },
         { select: 'Which AI coding agent do you use?', options: [['Claude Code'], ['Cursor'], ['GitHub Copilot'], ['None']], path: [] },
         { out: '' },
-        { spin: 'Copying the form-flow template…', done: 'Template copied' },
+        { spin: 'Copying the checkout template…', done: 'Checkout template copied' },
         { spin: 'Installing @your-ds/tokens and @your-ds/components…', done: 'Design system installed', ms: 1400 },
         { out: '<span class="t-ok">✔</span> Realistic mock data generated', wait: 220 },
         { out: '<span class="t-ok">✔</span> CLAUDE.md written', wait: 220 },
@@ -225,11 +226,11 @@
     { id: 'stack', q: 'Framework', when: (a) => a.kind === 'feature', why: 'features only',
       recommend: () => ['react', 'matches the product codebase engineers will merge it into'],
       options: [{ v: 'react', l: 'React' }, { v: 'vue', l: 'Vue' }, { v: 'wc', l: 'Web components' }] },
-    { id: 'layout', q: 'Starting layout', when: (a) => a.kind !== 'contribution', why: 'not for contributions',
+    { id: 'template', q: 'Starting template', when: (a) => a.kind !== 'contribution', why: 'not for contributions',
       recommend: (a) => (a.kind === 'feature' || a.audience === 'participants'
-        ? ['shell', a.kind === 'feature' ? 'features live inside the product shell' : 'participants should see something that feels like the product']
+        ? ['storefront', a.kind === 'feature' ? "features live inside the store's header and navigation" : 'participants should land somewhere that feels like the real store']
         : ['blank', 'nothing to remove when sketching an idea']),
-      options: [{ v: 'shell', l: 'App shell' }, { v: 'form', l: 'Form flow' }, { v: 'blank', l: 'Blank' }] },
+      options: [{ v: 'storefront', l: 'Storefront' }, { v: 'product', l: 'Product page' }, { v: 'checkout', l: 'Checkout' }, { v: 'blank', l: 'Blank' }] },
     { id: 'component', q: 'Which component?', when: (a) => a.kind === 'contribution', why: 'contributions only', options: [
       { v: 'new', l: 'A new one' }, { v: 'existing', l: 'An existing one' }] },
     { id: 'agent', q: 'AI coding agent', options: [
@@ -241,14 +242,16 @@
     const f = [['package.json', 'tokens and components installed'], ['src/main.tsx', 'imports the token CSS'],
       ['eslint.config.js', 'design system lint rules']];
     if (a.kind === 'prototype') f.push(['.github/workflows/preview.yml', 'deploys a preview URL']);
-    if (a.content === 'realistic') f.push(['src/mocks/data.ts', 'realistic mock data']);
+    if (a.content === 'realistic') f.push(['src/mocks/products.ts', 'realistic products, prices and orders']);
     if (a.content === 'placeholder') f.push(['src/mocks/placeholder.ts', 'placeholder content']);
     if (a.stack === 'react') f.push(['src/app/routes.tsx', 'product routing']);
     if (a.stack === 'vue') f.push(['src/app/router.ts', 'product routing']);
     if (a.stack === 'wc') f.push(['src/app/app-root.ts', 'app entry element']);
-    if (a.layout === 'shell') f.push(['src/layouts/AppShell.tsx', 'nav, header and content areas']);
-    if (a.layout === 'form') f.push(['src/layouts/FormFlow.tsx', 'steps, validation and summary']);
-    if (a.layout === 'blank') f.push(['src/pages/Start.tsx', 'one empty page']);
+    if (a.template) f.push(['src/templates/StoreHeader.tsx', 'logo, search, navigation and cart']);
+    if (a.template === 'storefront') f.push(['src/templates/Storefront.tsx', 'hero and product grid']);
+    if (a.template === 'product') f.push(['src/templates/ProductPage.tsx', 'gallery, price and add to cart']);
+    if (a.template === 'checkout') f.push(['src/templates/Checkout.tsx', 'cart, shipping and payment steps']);
+    if (a.template === 'blank') f.push(['src/pages/Start.tsx', 'the store header and nothing else']);
     if (a.component === 'new') f.push(['src/components/NewComponent/', 'component, stories and tests'], ['CONTRIBUTING.md', 'the review process']);
     if (a.component === 'existing') f.push(['src/sandbox/', 'the component, linked from the library'], ['CONTRIBUTING.md', 'the review process']);
     if (a.agent === 'claude') f.push(['CLAUDE.md', 'design system rules for the agent'], ['.claude/settings.json', 'registers both hooks'],
