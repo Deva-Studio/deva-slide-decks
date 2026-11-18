@@ -1,0 +1,374 @@
+<!--
+  How to build a CLI for your design system. Into Design Systems: AI and Design Systems.
+  One section element per slide (1280 × 720 canvas). Layout classes: src/html-deck.css.
+  Live pieces (src/html-deck.js): data-terminal="interview|guardrail|session-start" and
+  data-interview="tree|files". "create-ds-prototype", "@your-ds/*" and checkout-study
+  are illustrative names for the starter CLI and its example project.
+-->
+
+<!-- 1 · Cover -->
+<section class="dark">
+  <p class="hd-small" style="position:absolute;top:calc(60 * var(--u));left:calc(86 * var(--u))">Into Design Systems · AI and Design Systems</p>
+  <div class="hd-cover" style="top:calc(140 * var(--u));right:calc(610 * var(--u))">
+    <p class="hd-kicker">Conference session</p>
+    <h2 class="hd-display" style="font-size:calc(58 * var(--u))">How to build a CLI for your design system</h2>
+    <p class="hd-sub" style="font-size:calc(20 * var(--u))">Design the setup as a decision tree, scaffold from the answers, and keep the AI agent inside your system's rules</p>
+  </div>
+  <div class="hd-cover" style="top:calc(570 * var(--u));right:calc(610 * var(--u))">
+    <p class="hd-todo" style="padding-block:calc(8 * var(--u))">Speaker names and titles · Deva Studio</p>
+  </div>
+  <div data-terminal="interview" style="position:absolute;left:calc(720 * var(--u));top:calc(104 * var(--u));width:calc(474 * var(--u));height:calc(512 * var(--u));font-size:calc(11.5 * var(--u))"></div>
+</section>
+
+<!-- 2 · How design systems ship -->
+<section>
+  <p class="hd-label">Distribution</p>
+  <h2 class="hd-title">How design systems reach people today</h2>
+  <div class="hd-cards">
+    <div class="hd-card">
+      <span class="hd-card-icon">.fig</span>
+      <h3>Figma libraries</h3>
+      <p>Designers pull components, styles and variables into their files.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">npm</span>
+      <h3>Packages</h3>
+      <p>Engineers install the tokens and components into a product codebase.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">docs</span>
+      <h3>Documentation</h3>
+      <p>Guidance on when to use each piece, and how.</p>
+    </div>
+  </div>
+  <p class="hd-after">That was enough two years ago.<br><span>AI changed who builds prototypes, and how fast.</span></p>
+</section>
+
+<!-- 3 · What changed -->
+<section>
+  <p class="hd-label">What changed</p>
+  <h2 class="hd-title">AI made prototypes fast, and drift easy</h2>
+  <div class="hd-cols">
+    <div class="hd-stack">
+      <p class="hd-text">Anyone can ask an AI coding agent for a working prototype in minutes. Left on its own, the agent reaches for whatever it already knows.</p>
+      <ul class="hd-list">
+        <li>Raw colours, guessed spacing and <b>hand-rolled components</b></li>
+        <li>It looks <b>close enough</b> to pass a quick review</li>
+        <li>Every prototype <b>drifts a little differently</b>, and that drift ships</li>
+      </ul>
+      <p class="hd-text">Libraries, packages and docs tell people what to use. Nothing tells the agent.</p>
+    </div>
+    <div class="hd-stack" style="justify-content:center;gap:calc(16 * var(--u))">
+      <div>
+        <span class="hd-pre-label">What the agent wrote</span>
+<pre class="hd-pre"><span class="k">&lt;button</span>
+  style={{
+    background: <span class="bad">'#2F6FED'</span>,
+    padding: <span class="bad">'9px 18px'</span>,
+    borderRadius: <span class="bad">6</span>,
+  }}<span class="k">&gt;</span>
+  Pay now
+<span class="k">&lt;/button&gt;</span></pre>
+      </div>
+      <div>
+        <span class="hd-pre-label">What the design system already has</span>
+<pre class="hd-pre"><span class="k">&lt;Button</span> variant=<span class="good">"primary"</span><span class="k">&gt;</span>Pay now<span class="k">&lt;/Button&gt;</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · This session -->
+<section>
+  <p class="hd-label">This session</p>
+  <h2 class="hd-title">What you'll learn</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
+    <ol class="hd-num" style="margin-top:calc(10 * var(--u))">
+      <li><b>What a CLI is</b>, and the architecture most of them share</li>
+      <li><b>How to design the setup interview as a decision tree</b>: gate questions on earlier answers, and recommend a choice with a reason instead of showing a blind menu</li>
+      <li><b>How to wire in an agentic layer</b>: a guardrail hook that blocks off-system styles and components, and a session-start check that nudges toward design system and scaffold updates</li>
+    </ol>
+    <div class="hd-quote" style="align-self:start">
+      <p class="hd-quote-text">You'll leave with a forkable starter CLI to add your own design system to.</p>
+      <p class="hd-text" style="font-size:calc(16 * var(--u))">For design system teams who want people to build with the system quickly and consistently, and anyone working out where AI coding agents fit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · Section: what a CLI is -->
+<section class="dark">
+  <div class="hd-section">
+    <p class="hd-section-num">01</p>
+    <h2 class="hd-section-title">What a CLI is,<br>and how one is built</h2>
+    <p class="hd-section-sub">The parts every command-line tool shares, and the one that matters most for a design system.</p>
+  </div>
+</section>
+
+<!-- 6 · What a CLI is -->
+<section>
+  <p class="hd-label">The basics</p>
+  <h2 class="hd-title">A program you run by typing its name</h2>
+  <p class="hd-lede">A CLI (command-line interface) runs in a terminal. It takes what you type, asks for anything missing, and then does the work: here, creating a whole project.</p>
+  <div class="hd-anatomy" style="margin-top:calc(30 * var(--u))">
+    <span style="--seg:#8c9098"><b>npx</b><i><strong>Runner</strong>Downloads and runs the latest version. Nothing to install first.</i></span>
+    <span style="--seg:#ea8a53"><b>create-ds-prototype</b><i><strong>The program</strong>Your CLI, published as a package.</i></span>
+    <span style="--seg:#7ccfc4"><b>checkout-study</b><i><strong>Argument</strong>The project name.</i></span>
+    <span style="--seg:#febc2e"><b>--layout form</b><i><strong>Flag</strong>Answers one setup question up front.</i></span>
+  </div>
+  <div class="hd-cols" style="grid-template-columns:1fr 1fr;height:auto;margin-top:calc(28 * var(--u))">
+    <div><p class="hd-h3">Flags</p><p class="hd-text">For people who already know what they want, and for scripts and CI.</p></div>
+    <div><p class="hd-h3">An interview</p><p class="hd-text">For everyone else. The CLI asks only for what the flags didn't answer.</p></div>
+  </div>
+</section>
+
+<!-- 7 · Architecture -->
+<section>
+  <p class="hd-label">Architecture</p>
+  <h2 class="hd-title">A typical CLI architecture</h2>
+  <div class="hd-flow">
+    <div class="hd-flow-step"><b>Entry</b><p><code>bin</code> in package.json points at the script <code>npx</code> runs.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Parse</b><p>Reads arguments and flags, e.g. with <code>parseArgs</code> from <code>node:util</code>.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Interview</b><p>Asks what the flags didn't answer, e.g. with <code>@inquirer/prompts</code>.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step is-key"><b>Plan</b><p>Turns the answers into one plain object: what to copy, install and write.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Generate</b><p>Copies templates, fills in names and writes config files.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Finish</b><p>Installs dependencies, runs <code>git init</code> and prints the next steps.</p></div>
+  </div>
+  <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;height:auto;margin-top:calc(34 * var(--u))">
+    <div class="hd-stack" style="gap:calc(12 * var(--u))">
+      <p class="hd-h3">Keep the plan separate from the prompts</p>
+      <p class="hd-text">A plain object can be tested, printed with <code>--dry-run</code>, saved in the project, and replayed when the scaffold is updated later.</p>
+    </div>
+<pre class="hd-pre" style="align-self:start">{
+  kind: <span class="s">'prototype'</span>,
+  layout: <span class="s">'form'</span>,
+  content: <span class="s">'realistic'</span>,
+  agent: <span class="s">'claude'</span>,
+  packages: [<span class="s">'@your-ds/tokens'</span>, <span class="s">'@your-ds/components'</span>],
+}</pre>
+  </div>
+</section>
+
+<!-- 8 · Section: the interview -->
+<section class="dark">
+  <div class="hd-section">
+    <p class="hd-section-num">02</p>
+    <h2 class="hd-section-title">The setup interview<br>as a decision tree</h2>
+    <p class="hd-section-sub">Fewer questions, asked in the right order, with a recommendation where one is better.</p>
+  </div>
+</section>
+
+<!-- 9 · Gating -->
+<section>
+  <p class="hd-label">The interview</p>
+  <h2 class="hd-title">Gate each question on the answers before it</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(380 * var(--u)) 1fr">
+    <div class="hd-stack">
+      <ul class="hd-list">
+        <li><b>Ask only what changes the output.</b> If no file depends on an answer, drop the question</li>
+        <li><b>Gate questions.</b> Someone building a feature never sees "Who will see it?"</li>
+        <li><b>Recommend</b> a choice and say why, using what they've already told you</li>
+        <li><b>Give every question a flag</b>, so the same tree runs in CI</li>
+      </ul>
+    </div>
+    <div class="hd-demo" style="align-items:stretch">
+      <span class="hd-anno" style="align-self:center">Answer the questions · the tree updates</span>
+      <div data-interview="tree"></div>
+      <p class="hd-demo-cap">Try changing the first answer to <b>Feature</b> or <b>Contribution</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · Recommend -->
+<section>
+  <p class="hd-label">The interview</p>
+  <h2 class="hd-title">Recommend a choice, and say why</h2>
+  <div class="hd-vs">
+    <div>
+      <p class="hd-vs-head">A blind menu</p>
+<pre class="hd-shell"><span class="t-accent">?</span> <span class="t-b">Starting layout</span>
+<span class="t-accent">❯ App shell</span>
+  Form flow
+  Blank page
+&nbsp;</pre>
+      <p>Every option looks equally right, so people pick the first one or guess.</p>
+    </div>
+    <div>
+      <p class="hd-vs-head is-good">A recommendation with a reason</p>
+<pre class="hd-shell"><span class="t-accent">?</span> <span class="t-b">Starting layout</span>
+<span class="t-accent">❯ App shell (Recommended)</span>
+  <span class="t-dim">Participants should see something that feels like the product</span>
+  Form flow
+  Blank page</pre>
+      <p>The reason comes from an earlier answer. People can still choose differently, and now they know the trade-off.</p>
+    </div>
+  </div>
+<pre class="hd-pre" style="margin-top:calc(26 * var(--u))"><span class="c">// The recommendation is a rule that sits next to the question, so it can be reviewed like any design decision</span>
+recommend: (a) =&gt; a.audience === <span class="s">'participants'</span>
+  ? [<span class="s">'shell'</span>, <span class="s">'Participants should see something that feels like the product'</span>]
+  : [<span class="s">'blank'</span>, <span class="s">'Nothing to remove when sketching an idea'</span>],</pre>
+</section>
+
+<!-- 11 · Answers → scaffold -->
+<section>
+  <p class="hd-label">The scaffold</p>
+  <h2 class="hd-title">Each answer maps to what gets scaffolded</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(380 * var(--u)) 1fr">
+    <div class="hd-stack">
+      <p class="hd-text">Every answer adds, swaps or skips files. Nothing is generated "just in case".</p>
+      <ul class="hd-list">
+        <li><b>Every project</b> gets the tokens, components and lint rules</li>
+        <li><b>Content</b> picks realistic mock data or placeholders</li>
+        <li><b>Layout</b> copies one template built from your components</li>
+        <li><b>Agent</b> writes that agent's rules, plus the hooks where it supports them</li>
+      </ul>
+    </div>
+    <div class="hd-demo" style="align-items:stretch">
+      <span class="hd-anno" style="align-self:center">Answer the questions · new files are highlighted</span>
+      <div data-interview="files"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · Section: agentic layer -->
+<section class="dark">
+  <div class="hd-section">
+    <p class="hd-section-num">03</p>
+    <h2 class="hd-section-title">Keeping the AI agent<br>inside the system</h2>
+    <p class="hd-section-sub">The scaffold doesn't stop at files. It sets up the agent that will keep building in them.</p>
+  </div>
+</section>
+
+<!-- 13 · The agentic layer -->
+<section>
+  <p class="hd-label">The agentic layer</p>
+  <h2 class="hd-title">The scaffold sets up the agent too</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(520 * var(--u)) 1fr">
+    <div class="hd-stack" style="gap:calc(18 * var(--u))">
+      <div><p class="hd-h3">Rules</p><p class="hd-text"><code>CLAUDE.md</code>, <code>AGENTS.md</code> or <code>.cursor/rules</code>: which tokens and components to use, and what never to write.</p></div>
+      <div><p class="hd-h3">A guardrail hook</p><p class="hd-text">Runs before every edit lands, and blocks off-system styles and components.</p></div>
+      <div><p class="hd-h3">A session-start check</p><p class="hd-text">Compares what's installed with what's published, and tells the agent what's new.</p></div>
+      <p class="hd-text"><b>Rules are advice an agent can forget. Hooks are code that always runs.</b></p>
+    </div>
+<pre class="hd-pre" style="align-self:center;font-size:calc(14.5 * var(--u))">checkout-study/
+├── CLAUDE.md              <span class="c">rules</span>
+├── AGENTS.md              <span class="c">rules for any agent</span>
+├── .claude/
+│   ├── settings.json      <span class="c">registers the hooks</span>
+│   └── hooks/
+│       ├── <span class="k">ds-guard.mjs</span>   <span class="c">PreToolUse</span>
+│       └── <span class="k">ds-check.mjs</span>   <span class="c">SessionStart</span>
+├── eslint.config.js       <span class="c">design system lint rules</span>
+└── src/</pre>
+  </div>
+</section>
+
+<!-- 14 · Guardrail hook -->
+<section>
+  <p class="hd-label">Guardrail</p>
+  <h2 class="hd-title">A hook that blocks off-system code</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(32 * var(--u))">
+    <div class="hd-stack" style="gap:calc(12 * var(--u))">
+<pre class="hd-pre" style="font-size:calc(12.5 * var(--u))"><span class="c">// .claude/settings.json</span>
+<span class="s">"PreToolUse"</span>: [{
+  <span class="s">"matcher"</span>: <span class="s">"Edit|Write"</span>,
+  <span class="s">"hooks"</span>: [{ <span class="s">"type"</span>: <span class="s">"command"</span>,
+    <span class="s">"command"</span>: <span class="s">"node .claude/hooks/ds-guard.mjs"</span> }]
+}]</pre>
+<pre class="hd-pre" style="font-size:calc(12.5 * var(--u))"><span class="c">// .claude/hooks/ds-guard.mjs</span>
+<span class="k">const</span> { tool_input } = JSON.parse(<span class="k">await</span> readStdin());
+<span class="k">const</span> code = tool_input.new_string ?? tool_input.content ?? <span class="s">''</span>;
+<span class="k">const</span> problems = [
+  ...rawColours(code).map((c) =&gt;
+    <span class="s">`Raw colour ${c}. Use a token: ${tokenFor(c)}`</span>),
+  ...rawElements(code).map((el) =&gt;
+    <span class="s">`&lt;${el}&gt; found. Use &lt;${componentFor(el)}&gt;`</span>),
+];
+<span class="k">if</span> (problems.length) {
+  console.error(problems.join(<span class="s">'\n'</span>));
+  process.exit(<span class="k">2</span>); <span class="c">// blocks the edit; stderr tells the agent the fix</span>
+}</pre>
+    </div>
+    <div data-terminal="guardrail" style="height:calc(470 * var(--u));font-size:calc(12 * var(--u))"></div>
+  </div>
+</section>
+
+<!-- 15 · Session-start check -->
+<section>
+  <p class="hd-label">Staying current</p>
+  <h2 class="hd-title">A session-start check nudges toward updates</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(32 * var(--u))">
+    <div class="hd-stack" style="gap:calc(12 * var(--u))">
+      <p class="hd-text" style="font-size:calc(17 * var(--u))">Prototypes outlive the version they were made with. When a session starts, the hook compares versions and gives the agent a short note.</p>
+<pre class="hd-pre" style="font-size:calc(12.5 * var(--u))"><span class="c">// .claude/hooks/ds-check.mjs · registered under "SessionStart"</span>
+<span class="k">const</span> installed = installedVersion(<span class="s">'@your-ds/components'</span>);
+<span class="k">const</span> latest = <span class="k">await</span> publishedVersion(<span class="s">'@your-ds/components'</span>);
+<span class="k">if</span> (installed !== latest) {
+  console.log(<span class="s">`Components ${installed} installed · ${latest} available`</span>);
+  console.log(<span class="s">`New: ${</span><span class="k">await</span> <span class="s">newComponents(installed, latest)}`</span>);
+}
+<span class="k">if</span> (scaffoldVersion() &lt; latestScaffold()) {
+  console.log(<span class="s">'Update with: npx create-ds-prototype update'</span>);
+}
+<span class="c">// SessionStart output is added to the agent's context</span></pre>
+      <p class="hd-text" style="font-size:calc(16 * var(--u))">It nudges and never blocks. Updating stays the team's call.</p>
+    </div>
+    <div data-terminal="session-start" style="height:calc(470 * var(--u));font-size:calc(12 * var(--u))"></div>
+  </div>
+</section>
+
+<!-- 16 · Putting it together -->
+<section>
+  <p class="hd-label">Putting it together</p>
+  <h2 class="hd-title">One command, consistent from the start</h2>
+  <div class="hd-flow">
+    <div class="hd-flow-step"><b>Run</b><p>One <code>npx</code> command starts it.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Interview</b><p>A decision tree that gates and recommends.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Scaffold</b><p>Answers become files built on your system.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Build</b><p>The agent works inside rules and a guardrail.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Stay current</b><p>Each session checks for updates.</p></div>
+  </div>
+  <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The design system stops being something people look up, <span>and becomes something they start from.</span></p>
+</section>
+
+<!-- 17 · Fork the starter -->
+<section>
+  <p class="hd-label">Take it home</p>
+  <h2 class="hd-title">Fork the starter, then add your design system</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
+    <ol class="hd-num" style="gap:calc(14 * var(--u));font-size:calc(17.5 * var(--u))">
+      <li><b>Packages:</b> point the installer at your token and component packages</li>
+      <li><b>Templates:</b> rebuild the layouts with your components</li>
+      <li><b>Questions:</b> edit the tree and its recommendations, all in one file</li>
+      <li><b>Guardrail:</b> map raw values to your tokens, and plain elements to your components</li>
+      <li><b>Rules:</b> rewrite <code>CLAUDE.md</code> and <code>AGENTS.md</code> in your system's words</li>
+    </ol>
+    <div class="hd-stack" style="gap:calc(16 * var(--u))">
+      <p class="hd-todo">Starter CLI repository link (and a QR code, if you want one)</p>
+<pre class="hd-shell"><span class="t-dim"># fork the starter on GitHub, then</span>
+git clone &lt;your fork&gt;
+cd create-ds-prototype
+npm install
+npm link
+create-ds-prototype my-first-prototype</pre>
+    </div>
+  </div>
+</section>
+
+<!-- 18 · Thank you -->
+<section class="dark">
+  <div class="hd-cover" style="top:calc(262 * var(--u))">
+    <span style="display:block;width:calc(38 * var(--u));height:calc(3 * var(--u));background:var(--accent)"></span>
+    <h2 class="hd-display" style="font-size:calc(66.7 * var(--u))">Thank you</h2>
+    <p class="hd-sub" style="font-size:calc(18.67 * var(--u))">Questions?</p>
+    <p class="hd-todo" style="margin-top:calc(24 * var(--u));max-width:calc(560 * var(--u))">Speaker names, titles and where to find you</p>
+  </div>
+</section>
