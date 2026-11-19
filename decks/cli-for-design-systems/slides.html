@@ -340,52 +340,23 @@ flowchart TB
   <p class="hd-diagram-cap">If an answer doesn't change a file, it shouldn't be a question. <span>Every project also gets the tokens, components and lint rules.</span></p>
 </section>
 
-<!-- 16 · Architecture -->
-<section>
-  <p class="hd-label">Architecture</p>
-  <h2 class="hd-title">Where the tree sits in the architecture</h2>
-  <div class="hd-diagram" data-label="CLI workflow: Entry, Parse, Interview (where the decision tree runs), Plan, Generate, Install, Publish. Generate copies the chosen template from the templates folder stored in the CLI project. Your design system packages are a dependency in package.json: the templates are built with them, and Install adds them to every project. Publish creates the project repo and a preview URL.">
-<script type="text/x-mermaid">
-%%{init: {"flowchart": {"rankSpacing": 34, "nodeSpacing": 22, "padding": 10}}}%%
-flowchart LR
-  entry("<b>Entry</b><br><small>bin in<br>package.json</small>")
-  parse("<b>Parse</b><br><small>reads the command</small>")
-  ask("<b>Interview</b><br><small>the decision tree</small>"):::on
-  plan[["<b>Plan</b><br><small>one object</small>"]]:::ink
-  gen("<b>Generate</b><br><small>copies the template,<br>writes config</small>"):::on
-  install("<b>Install</b><br><small>design system<br>· git init</small>"):::on
-  pub("<b>Publish</b><br><small>repo and<br>preview URL</small>"):::on
-  tpl[("<b>templates/</b><br><small>in the CLI project<br>one per brand</small>")]:::rec
-  ds[("<b>Your design system</b><br><small>@your-ds/tokens<br>@your-ds/components</small>")]:::rec
-  entry --> parse --> ask --> plan --> gen --> install --> pub
-  tpl ==>|"copied from"| gen
-  ds ==>|"dependency in<br>package.json"| install
-  ds -.->|"built with"| tpl
-  classDef default fill:#fef8f8,stroke:#05237d,stroke-width:2px,color:#05237d
-  classDef on fill:#fef8f8,stroke:#05237d,stroke-width:3.5px,color:#05237d
-  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
-  classDef rec fill:#fcd64d,stroke:#05237d,stroke-width:2px,color:#041c64
-</script>
-  </div>
-  <p class="hd-diagram-cap">The decision tree runs in the Interview step, and its answers become the plan. <span>Keep it separate from the prompts, so it can be tested, printed with <code>--dry-run</code> and replayed when the scaffold updates.</span></p>
-</section>
-
-<!-- 17 · Live in the repo: inside the CLI project -->
+<!-- 16 · Live in the repo: inside the CLI project -->
 <section class="dark">
   <div class="hd-break" style="top:calc(130 * var(--u))">
     <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in the code</p>
     <h2 class="hd-section-title">Inside the CLI project</h2>
-    <p class="hd-section-sub">A walk through the real repo, following the architecture from entry to publish.</p>
+    <p class="hd-section-sub">The architecture, in the real repo: how the decision tree's answers become a project, from entry to publish.</p>
     <ul class="hd-break-list">
-      <li><code>src/</code> entry, questions, plan, generate and publish</li>
+      <li><code>src/</code> entry, the decision tree, plan, generate and publish</li>
       <li><code>templates/</code> one folder per brand, each a runnable project</li>
+      <li><code>package.json</code> your design system, as a dependency</li>
       <li><code>agent/</code> the rules and hooks every project gets</li>
     </ul>
     <p class="hd-todo">Link to the CLI repo for this demo</p>
   </div>
 </section>
 
-<!-- 18 · Live demo: the finished experience -->
+<!-- 17 · Live demo: the finished experience -->
 <section class="dark">
   <div class="hd-break" style="top:calc(130 * var(--u))">
     <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live demo</p>
@@ -399,7 +370,7 @@ flowchart LR
   </div>
 </section>
 
-<!-- 19 · Section: agentic layer -->
+<!-- 18 · Section: agentic layer -->
 <section class="dark">
   <div class="hd-section">
     <p class="hd-section-num">03</p>
@@ -409,7 +380,7 @@ flowchart LR
   <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span>Agentic layer</span></p>
 </section>
 
-<!-- 20 · The agentic layer -->
+<!-- 19 · The agentic layer -->
 <section>
   <p class="hd-label">The agentic layer</p>
   <h2 class="hd-title">The scaffold sets up the agent too</h2>
@@ -433,7 +404,7 @@ flowchart LR
   </div>
 </section>
 
-<!-- 21 · Guardrail hook -->
+<!-- 20 · Guardrail hook -->
 <section>
   <p class="hd-label">Guardrail</p>
   <h2 class="hd-title">A hook that blocks off-system code</h2>
@@ -463,7 +434,7 @@ flowchart LR
   </div>
 </section>
 
-<!-- 22 · Session-start check -->
+<!-- 21 · Session-start check -->
 <section>
   <p class="hd-label">Staying current</p>
   <h2 class="hd-title">A session-start check nudges toward updates</h2>
@@ -487,7 +458,7 @@ flowchart LR
   </div>
 </section>
 
-<!-- 23 · Putting it together -->
+<!-- 22 · Putting it together -->
 <section>
   <p class="hd-label">Putting it together</p>
   <h2 class="hd-title">One command, consistent from the start</h2>
@@ -505,7 +476,7 @@ flowchart LR
   <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The design system stops being something people look up, <span>and becomes something they start from.</span></p>
 </section>
 
-<!-- 24 · Fork the starter -->
+<!-- 23 · Fork the starter -->
 <section>
   <p class="hd-label">Take it home</p>
   <h2 class="hd-title">Fork the starter, then add your design system</h2>
@@ -530,7 +501,7 @@ create-ds-prototype my-first-prototype</pre>
   </div>
 </section>
 
-<!-- 25 · Thank you -->
+<!-- 24 · Thank you -->
 <section class="dark">
   <div class="hd-close">
     <h2>Thank you</h2>
@@ -542,7 +513,7 @@ create-ds-prototype my-first-prototype</pre>
   </div>
 </section>
 
-<!-- 26 · Appendix · Try the interview -->
+<!-- 25 · Appendix · Try the interview -->
 <section>
   <p class="hd-label">Appendix</p>
   <h2 class="hd-title">Try the interview yourself</h2>
