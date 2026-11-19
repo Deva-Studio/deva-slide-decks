@@ -596,3 +596,10 @@
   font-family: var(--display); font-weight: 700; font-size: calc(24 * var(--u)); line-height: 1.25;
 }
 .hd .hd-diagram-cap span { display: block; margin-top: calc(6 * var(--u)); color: var(--muted); font-family: var(--sans); font-weight: 400; font-size: calc(19 * var(--u)); }
+.hd-break-list {
+  list-style: none; padding: 0; margin-top: calc(26 * var(--u)) !important;
+  display: flex; flex-direction: column; gap: calc(10 * var(--u));
+  font-size: calc(20 * var(--u)); color: var(--body);
+}
+.hd .hd-break-list code { display: inline-block; min-width: calc(130 * var(--u)); margin-right: calc(10 * var(--u)); padding: 0; background: none; font-size: 0.9em; color: var(--marigold-300); }
+.hd-break-list b { color: var(--ink); font-family: var(--mono); font-weight: 400; font-size: 0.86em; }

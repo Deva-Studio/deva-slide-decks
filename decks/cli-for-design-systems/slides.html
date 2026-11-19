@@ -4,7 +4,7 @@
   Live pieces (src/html-deck.js): data-terminal="interview|guardrail|session-start" and
   data-interview="files" (appendix), Mermaid diagrams in .hd-diagram. "create-ds-prototype", "@your-ds/*", product-page and Brand A / Brand B
   are illustrative names for the starter CLI and its example project: an ecommerce
-  storefront whose CLI offers templates. "Live in Figma" slides are breaks for a demo.
+  storefront whose CLI offers templates. The "Live in Figma" slide is a break for a demo.
   The walkthrough slide opens pages/decision-tree/ (Mermaid diagrams) over the deck.
 -->
 
@@ -89,8 +89,8 @@
   <h2 class="hd-title">What you'll learn</h2>
   <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
     <ol class="hd-num" style="margin-top:calc(10 * var(--u))">
-      <li><b>What a CLI is</b>, why it's worth building one, its architecture, and what it needs to run for everyone</li>
-      <li><b>How to design the setup interview as a decision tree</b>: gate questions on earlier answers, and recommend a choice with a reason instead of showing a blind menu</li>
+      <li><b>What a CLI is</b>, why it's worth building one, and what it needs to run for everyone</li>
+      <li><b>How to design the setup interview as a decision tree</b>: gate questions on earlier answers, recommend a choice with a reason instead of showing a blind menu, and see how the tree drives the CLI's architecture</li>
       <li><b>How to wire in an agentic layer</b>: a guardrail hook that blocks off-system styles and components, and a session-start check that nudges toward design system and scaffold updates</li>
     </ol>
     <div class="hd-quote" style="align-self:start">
@@ -100,49 +100,17 @@
   </div>
 </section>
 
-<!-- 5 · The example -->
-<section>
-  <p class="hd-label">The example</p>
-  <h2 class="hd-title">One ecommerce site, all the way through</h2>
-  <div class="hd-cols" style="grid-template-columns:calc(400 * var(--u)) 1fr">
-    <div class="hd-stack">
-      <p class="hd-text">We'll follow one team through the talk. They're prototyping a new product item page for one of their brands, Brand A.</p>
-      <ul class="hd-list">
-        <li>The CLI offers each brand its own <b>ecommerce templates</b>, built from design system components</li>
-        <li>The team scaffolds a project called <b>product-page</b> from Brand A's product page template</li>
-        <li>We'll stop along the way to show each template <b>in Figma</b></li>
-      </ul>
-    </div>
-    <div class="hd-tpls">
-      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><i class="wf-hero"></i><span class="wf-row"><i></i><i></i><i></i></span></span><b>Storefront</b><p>Header, navigation and a product grid</p></div>
-      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-split"><i class="wf-img"></i><span class="wf-lines"><i></i><i></i><i class="short"></i><i class="wf-btn"></i></span></span></span><b>Product page</b><p>Gallery, price and add to cart</p></div>
-      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-steps"><i></i><i></i><i></i></span><span class="wf-split"><span class="wf-lines"><i></i><i></i><i></i><i class="wf-btn"></i></span><i class="wf-box"></i></span></span><b>Checkout</b><p>Cart, shipping and payment steps</p></div>
-      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i></span><b>Blank page</b><p>The store header and nothing else</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 6 · Live in Figma: the templates -->
-<section class="dark">
-  <div class="hd-break">
-    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in Figma</p>
-    <h2 class="hd-section-title">The ecommerce templates</h2>
-    <p class="hd-section-sub">Storefront, product page and checkout: the designs each CLI template is built from, using the design system's components.</p>
-    <p class="hd-todo">Figma link for this demo</p>
-  </div>
-</section>
-
-<!-- 7 · Section: what a CLI is -->
+<!-- 5 · Section: what a CLI is -->
 <section class="dark">
   <div class="hd-section">
     <p class="hd-section-num">01</p>
     <h2 class="hd-section-title">What a CLI is,<br>and why build one</h2>
-    <p class="hd-section-sub">What it does, why it suits a design system and AI agents, and the parts every command-line tool shares.</p>
+    <p class="hd-section-sub">What it does, why it suits a design system and AI agents, and what it needs to work for everyone.</p>
   </div>
-  <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Agentic layer</span></p>
+  <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Agentic layer</span></p>
 </section>
 
-<!-- 8 · What a CLI is -->
+<!-- 6 · What a CLI is -->
 <section>
   <p class="hd-label">The basics</p>
   <h2 class="hd-title">A program you run by typing its name</h2>
@@ -159,7 +127,7 @@
   </div>
 </section>
 
-<!-- 9 · Why a CLI -->
+<!-- 7 · Why a CLI -->
 <section>
   <p class="hd-label">Why a CLI</p>
   <h2 class="hd-title">Why it's worth building one</h2>
@@ -195,67 +163,7 @@
   </div>
 </section>
 
-<!-- 10 · Architecture -->
-<section>
-  <p class="hd-label">Architecture</p>
-  <h2 class="hd-title">A typical CLI architecture</h2>
-  <div class="hd-diagram" data-label="CLI workflow: Entry, Parse, Interview, Plan, Generate, Install, Publish. Generate copies the chosen template from the templates folder stored in the CLI project. Publish creates the project repo and a preview URL.">
-<script type="text/x-mermaid">
-flowchart LR
-  entry("<b>Entry</b><br><small>bin in package.json</small>")
-  parse("<b>Parse</b><br><small>arguments and flags</small>")
-  ask("<b>Interview</b><br><small>the decision tree</small>")
-  plan[["<b>Plan</b><br><small>one plain object</small>"]]:::ink
-  gen("<b>Generate</b><br><small>copies the chosen template,<br>writes config and agent files</small>"):::on
-  install("<b>Install</b><br><small>packages · git init</small>")
-  pub("<b>Publish</b><br><small>project repo<br>and preview URL</small>"):::on
-  tpl[("<b>templates/</b><br><small>stored in the CLI project<br>one folder per brand</small>")]:::rec
-  entry --> parse --> ask --> plan --> gen --> install --> pub
-  tpl ==>|"copied from"| gen
-  classDef default fill:#fef8f8,stroke:#05237d,stroke-width:2px,color:#05237d
-  classDef on fill:#fef8f8,stroke:#05237d,stroke-width:3.5px,color:#05237d
-  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
-  classDef rec fill:#fcd64d,stroke:#05237d,stroke-width:2px,color:#041c64
-</script>
-  </div>
-  <p class="hd-diagram-cap">The plan is the hinge: answers in, files out. <span>Keep it separate from the prompts, so it can be tested, printed with <code>--dry-run</code> and replayed when the scaffold updates.</span></p>
-</section>
-
-<!-- 11 · Inside the CLI project -->
-<section>
-  <p class="hd-label">Architecture</p>
-  <h2 class="hd-title">The templates live inside the CLI</h2>
-  <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(40 * var(--u))">
-<pre class="hd-pre" style="font-size:calc(13.5 * var(--u));align-self:start">create-ds-prototype/
-├── package.json         <span class="c">"bin" → src/cli.ts</span>
-├── src/
-│   ├── cli.ts           <span class="c">entry · parses flags</span>
-│   ├── questions.ts     <span class="c">the decision tree</span>
-│   ├── plan.ts          <span class="c">answers → plan</span>
-│   ├── generate.ts      <span class="c">plan → files</span>
-│   └── publish.ts       <span class="c">repo + preview deploy</span>
-├── <span class="k">templates/</span>
-│   ├── <span class="k">brand-a/</span>
-│   │   ├── <span class="k">storefront/</span>
-│   │   ├── <span class="k">product-page/</span>
-│   │   ├── <span class="k">checkout/</span>
-│   │   └── <span class="k">blank/</span>
-│   └── <span class="k">brand-b/</span>     <span class="c">the same four</span>
-└── agent/
-    ├── CLAUDE.md · AGENTS.md
-    └── hooks/           <span class="c">ds-guard.mjs · ds-check.mjs</span></pre>
-    <div class="hd-stack">
-      <p class="hd-text">The starting templates are stored in the CLI's own repo and versioned with it.</p>
-      <ul class="hd-list">
-        <li>Each brand has <b>its own folder</b> of templates, built from design system components</li>
-        <li>Every template is a <b>real, runnable project</b>: designers review it in Figma, engineers in code</li>
-        <li>Changing a template is a <b>CLI release</b>, so the session-start check can tell projects there's a newer one</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- 12 · What your CLI needs -->
+<!-- 8 · What your CLI needs -->
 <section>
   <p class="hd-label">Requirements</p>
   <h2 class="hd-title">What your CLI needs to work for everyone</h2>
@@ -291,17 +199,49 @@ flowchart LR
   </div>
 </section>
 
-<!-- 13 · Section: the interview -->
+<!-- 9 · The example -->
+<section>
+  <p class="hd-label">The example</p>
+  <h2 class="hd-title">One ecommerce site, all the way through</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(400 * var(--u)) 1fr">
+    <div class="hd-stack">
+      <p class="hd-text">From here on, we'll follow one team. They're prototyping a new product item page for one of their brands, Brand A.</p>
+      <ul class="hd-list">
+        <li>The CLI offers each brand its own <b>ecommerce templates</b>, built from design system components</li>
+        <li>The team scaffolds a project called <b>product-page</b> from Brand A's product page template</li>
+        <li>First, a look at the templates <b>in Figma</b>, and why we want them in a CLI</li>
+      </ul>
+    </div>
+    <div class="hd-tpls">
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><i class="wf-hero"></i><span class="wf-row"><i></i><i></i><i></i></span></span><b>Storefront</b><p>Header, navigation and a product grid</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-split"><i class="wf-img"></i><span class="wf-lines"><i></i><i></i><i class="short"></i><i class="wf-btn"></i></span></span></span><b>Product page</b><p>Gallery, price and add to cart</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-steps"><i></i><i></i><i></i></span><span class="wf-split"><span class="wf-lines"><i></i><i></i><i></i><i class="wf-btn"></i></span><i class="wf-box"></i></span></span><b>Checkout</b><p>Cart, shipping and payment steps</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i></span><b>Blank page</b><p>The store header and nothing else</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · Live in Figma: the example -->
+<section class="dark">
+  <div class="hd-break">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in Figma</p>
+    <h2 class="hd-section-title">Our example, in Figma</h2>
+    <p class="hd-section-sub">Each brand's storefront, product page and checkout templates, designed with the design system, and why we want to turn them into a CLI.</p>
+    <p class="hd-todo">Figma link for this demo</p>
+  </div>
+</section>
+
+<!-- 11 · Section: the interview -->
 <section class="dark">
   <div class="hd-section">
     <p class="hd-section-num">02</p>
     <h2 class="hd-section-title">The setup interview<br>as a decision tree</h2>
-    <p class="hd-section-sub">Fewer questions, asked in the right order, with a recommendation where one is better.</p>
+    <p class="hd-section-sub">Fewer questions, asked in the right order, with a recommendation where one is better. Then where the tree sits in the CLI's architecture.</p>
   </div>
-  <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Agentic layer</span></p>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Agentic layer</span></p>
 </section>
 
-<!-- 14 · Walkthrough: planning the decision tree -->
+<!-- 12 · Walkthrough: planning the decision tree -->
 <section class="dark">
   <div class="hd-break">
     <p class="hd-break-tag"><span aria-hidden="true">◇</span> Walkthrough</p>
@@ -311,7 +251,7 @@ flowchart LR
   </div>
 </section>
 
-<!-- 15 · Gate -->
+<!-- 13 · Gate -->
 <section>
   <p class="hd-label">The interview · Gate</p>
   <h2 class="hd-title">Each answer narrows the next question</h2>
@@ -337,7 +277,7 @@ flowchart LR
   <p class="hd-diagram-cap">Pick a brand, and the template question only offers that brand's templates. <span>Ask only what changes the output.</span></p>
 </section>
 
-<!-- 16 · Recommend -->
+<!-- 14 · Recommend -->
 <section>
   <p class="hd-label">The interview · Recommend</p>
   <h2 class="hd-title">Recommend a choice, and say why</h2>
@@ -363,7 +303,7 @@ flowchart LR
   <p class="hd-diagram-cap">The reason comes from an earlier answer. <span>People can still choose differently, and now they know the trade-off.</span></p>
 </section>
 
-<!-- 17 · Scaffold -->
+<!-- 15 · Scaffold -->
 <section>
   <p class="hd-label">The scaffold</p>
   <h2 class="hd-title">Every answer becomes files</h2>
@@ -396,13 +336,62 @@ flowchart TB
   <p class="hd-diagram-cap">If an answer doesn't change a file, it shouldn't be a question. <span>Every project also gets the tokens, components and lint rules.</span></p>
 </section>
 
-<!-- 18 · Live in Figma: the product page template -->
+<!-- 16 · Architecture -->
+<section>
+  <p class="hd-label">Architecture</p>
+  <h2 class="hd-title">Where the tree sits in the architecture</h2>
+  <div class="hd-diagram" data-label="CLI workflow: Entry, Parse, Interview (where the decision tree runs), Plan, Generate, Install, Publish. Generate copies the chosen template from the templates folder stored in the CLI project. Your design system packages are a dependency in package.json: the templates are built with them, and Install adds them to every project. Publish creates the project repo and a preview URL.">
+<script type="text/x-mermaid">
+%%{init: {"flowchart": {"rankSpacing": 34, "nodeSpacing": 22, "padding": 10}}}%%
+flowchart LR
+  entry("<b>Entry</b><br><small>bin in<br>package.json</small>")
+  parse("<b>Parse</b><br><small>flags</small>")
+  ask("<b>Interview</b><br><small>the decision tree</small>"):::on
+  plan[["<b>Plan</b><br><small>one object</small>"]]:::ink
+  gen("<b>Generate</b><br><small>copies the template,<br>writes config</small>"):::on
+  install("<b>Install</b><br><small>design system<br>· git init</small>"):::on
+  pub("<b>Publish</b><br><small>repo and<br>preview URL</small>"):::on
+  tpl[("<b>templates/</b><br><small>in the CLI project<br>one per brand</small>")]:::rec
+  ds[("<b>Your design system</b><br><small>@your-ds/tokens<br>@your-ds/components</small>")]:::rec
+  entry --> parse --> ask --> plan --> gen --> install --> pub
+  tpl ==>|"copied from"| gen
+  ds ==>|"dependency in<br>package.json"| install
+  ds -.->|"built with"| tpl
+  classDef default fill:#fef8f8,stroke:#05237d,stroke-width:2px,color:#05237d
+  classDef on fill:#fef8f8,stroke:#05237d,stroke-width:3.5px,color:#05237d
+  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
+  classDef rec fill:#fcd64d,stroke:#05237d,stroke-width:2px,color:#041c64
+</script>
+  </div>
+  <p class="hd-diagram-cap">The decision tree runs in the Interview step, and its answers become the plan. <span>Keep it separate from the prompts, so it can be tested, printed with <code>--dry-run</code> and replayed when the scaffold updates.</span></p>
+</section>
+
+<!-- 17 · Live in the repo: inside the CLI project -->
 <section class="dark">
-  <div class="hd-break">
-    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in Figma</p>
-    <h2 class="hd-section-title">The product page template</h2>
-    <p class="hd-section-sub">What product-page starts from: Brand A's product item page in Figma, and the same components in the scaffolded code.</p>
-    <p class="hd-todo">Figma link for this demo</p>
+  <div class="hd-break" style="top:calc(130 * var(--u))">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in the code</p>
+    <h2 class="hd-section-title">Inside the CLI project</h2>
+    <p class="hd-section-sub">A walk through the real repo, following the architecture from entry to publish.</p>
+    <ul class="hd-break-list">
+      <li><code>src/</code> entry, questions, plan, generate and publish</li>
+      <li><code>templates/</code> one folder per brand, each a runnable project</li>
+      <li><code>agent/</code> the rules and hooks every project gets</li>
+    </ul>
+    <p class="hd-todo">Link to the CLI repo for this demo</p>
+  </div>
+</section>
+
+<!-- 18 · Live demo: the finished experience -->
+<section class="dark">
+  <div class="hd-break" style="top:calc(130 * var(--u))">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live demo</p>
+    <h2 class="hd-section-title">The finished experience</h2>
+    <p class="hd-section-sub">Run the CLI the way a designer would, then open the project it creates.</p>
+    <ul class="hd-break-list">
+      <li><code>Run</code> <b>npx create-ds-prototype product-page</b>: Prototype → Brand A → Product page → Claude Code</li>
+      <li><code>Open</code> <b>npm run dev</b>: Brand A's product page, built from the design system</li>
+      <li><code>Share</code> the preview URL the CLI printed</li>
+    </ul>
   </div>
 </section>
 
@@ -413,7 +402,7 @@ flowchart TB
     <h2 class="hd-section-title">Keeping the AI agent<br>inside the system</h2>
     <p class="hd-section-sub">The scaffold doesn't stop at files. It sets up the agent that will keep building in them.</p>
   </div>
-  <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span>Agentic layer</span></p>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span>Agentic layer</span></p>
 </section>
 
 <!-- 20 · The agentic layer -->
