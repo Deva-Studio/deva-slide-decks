@@ -113,17 +113,21 @@
 <!-- 6 · What a CLI is -->
 <section>
   <p class="hd-label">The basics</p>
-  <h2 class="hd-title">A program you run by typing its name</h2>
-  <p class="hd-lede">A CLI (command-line interface) runs in a terminal. It takes what you type, asks for anything missing, and then does the work: here, creating a whole project.</p>
-  <div class="hd-anatomy" style="margin-top:calc(30 * var(--u))">
-    <span style="--seg:#8c9098"><b>npx</b><i><strong>Runner</strong>Downloads and runs the latest version. Nothing to install first.</i></span>
-    <span style="--seg:#ea8a53"><b>create-ds-prototype</b><i><strong>The program</strong>Your CLI, published as a package.</i></span>
-    <span style="--seg:#7ccfc4"><b>product-page</b><i><strong>Argument</strong>The project name.</i></span>
-    <span style="--seg:#febc2e"><b>--template product</b><i><strong>Flag</strong>Answers one setup question up front.</i></span>
+  <h2 class="hd-title">A CLI is a tool you use by typing</h2>
+  <p class="hd-lede">CLI stands for command-line interface. Instead of manually creating a project from scratch each time, you type one line into a terminal, and the tool does the work. Here, it sets up a whole project to scaffold a prototyping environment.</p>
+  <div class="hd-anatomy" style="margin-top:calc(26 * var(--u));font-size:calc(28 * var(--u));gap:calc(26 * var(--u))">
+    <span style="--seg:#94a6dd"><b>npx</b><i><strong>"Run this tool"</strong>Downloads it and runs it. Nothing to install first.</i></span>
+    <span style="--seg:#fcd64d"><b>create-ds-prototype</b><i><strong>The tool's name</strong>Our CLI. Yours would have its own name.</i></span>
+    <span style="--seg:#9fe3d6"><b>product-page</b><i><strong>Your project's name</strong>The folder it creates for you.</i></span>
   </div>
-  <div class="hd-cols" style="grid-template-columns:1fr 1fr;height:auto;margin-top:calc(28 * var(--u))">
-    <div><p class="hd-h3">Flags</p><p class="hd-text">For people who already know what they want, and for scripts and CI.</p></div>
-    <div><p class="hd-h3">An interview</p><p class="hd-text">For everyone else. The CLI asks only for what the flags didn't answer.</p></div>
+  <div class="hd-cols" style="grid-template-columns:1fr 1fr;height:auto;margin-top:calc(26 * var(--u));gap:calc(40 * var(--u))">
+    <div class="hd-stack" style="gap:calc(10 * var(--u))">
+      <p class="hd-h3">Then it asks a few questions</p>
+      <p class="hd-text">Like a short form: use the arrow keys to pick an answer, then press Enter.</p>
+    </div>
+<pre class="hd-shell" style="align-self:start"><span class="t-accent">?</span> <span class="t-b">What are you building?</span>
+<span class="t-accent">❯ Prototype</span>
+  App</pre>
   </div>
 </section>
 
@@ -143,9 +147,9 @@
       <p>The same answers produce the same project every time, for every team.</p>
     </div>
     <div class="hd-card">
-      <span class="hd-card-icon">--flags</span>
+      <span class="hd-card-icon">--options</span>
       <h3>Automatable</h3>
-      <p>Flags answer every question, so scripts and CI can run it without anyone at the keyboard.</p>
+      <p>Answers can be typed into the command itself (like <code>--template product</code>), so scripts can run it with no one at the keyboard.</p>
     </div>
     <div class="hd-card">
       <span class="hd-card-icon">fewer tokens</span>
@@ -345,7 +349,7 @@ flowchart TB
 %%{init: {"flowchart": {"rankSpacing": 34, "nodeSpacing": 22, "padding": 10}}}%%
 flowchart LR
   entry("<b>Entry</b><br><small>bin in<br>package.json</small>")
-  parse("<b>Parse</b><br><small>flags</small>")
+  parse("<b>Parse</b><br><small>reads the command</small>")
   ask("<b>Interview</b><br><small>the decision tree</small>"):::on
   plan[["<b>Plan</b><br><small>one object</small>"]]:::ink
   gen("<b>Generate</b><br><small>copies the template,<br>writes config</small>"):::on
