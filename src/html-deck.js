@@ -30,9 +30,9 @@
     interview: {
       title: 'Terminal — npx create-ds-prototype',
       label: `Animated terminal: create-ds-prototype asks what you are building (a prototype), the project name, `
-        + `which brand you work on (${BRAND_A}), and the starting template (the product page). It recommends Claude Code `
-        + 'with a reason, installs the design system and brand theme, writes the agent rules and hooks, then creates '
-        + 'the project repo and deploys a shareable preview URL.',
+        + `which brand you work on (${BRAND_A}), and the starting template (the product page). It installs the latest `
+        + 'design system and brand theme, sets up Claude Code with the design system context and the update check, then '
+        + 'creates the project repo and deploys a shareable preview URL.',
       steps: [
         { cmd: 'npx create-ds-prototype', prompt: ME },
         { out: '' },
@@ -45,8 +45,8 @@
         ], path: [] },
         { input: 'Project name', value: 'product-page' },
         { select: 'What brand do you work on?', options: [
-          [BRAND_A, `${BRAND_A} theme and templates`],
-          [BRAND_B, `${BRAND_B} theme and templates`],
+          [BRAND_A, 'Coffee supply · theme and templates'],
+          [BRAND_B, 'Bar supply · theme and templates'],
         ], path: [] },
         { select: 'Starting template', options: [
           ['Storefront', `${BRAND_A}: header, navigation and a product grid`],
@@ -54,18 +54,12 @@
           ['Checkout', `${BRAND_A}: cart, shipping and payment steps`],
           ['Blank page', `${BRAND_A}: the store header and nothing else`],
         ], path: [1] },
-        { select: 'Which AI coding agent do you use?', options: [
-          ['Claude Code', 'Recommended: gets the guardrail and update hooks as well as rules'],
-          ['Cursor', 'Rules file only'],
-          ['GitHub Copilot', 'Rules file only'],
-          ['None'],
-        ], path: [] },
         { out: '' },
         { spin: `Copying the ${BRAND_A} product page template…`, done: 'Product page template copied' },
         { spin: 'Installing @your-ds/tokens and @your-ds/components…', done: 'Design system installed', ms: 1400 },
         { out: `<span class="t-ok">✔</span> ${BRAND_A} theme applied`, wait: 220 },
         { out: '<span class="t-ok">✔</span> Preview deploy configured', wait: 220 },
-        { out: '<span class="t-ok">✔</span> CLAUDE.md written', wait: 220 },
+        { out: '<span class="t-ok">✔</span> CLAUDE.md written <span class="t-dim">(design system context)</span>', wait: 220 },
         { out: '<span class="t-ok">✔</span> Guardrail hook wired <span class="t-dim">(PreToolUse)</span>', wait: 220 },
         { out: '<span class="t-ok">✔</span> Update check wired <span class="t-dim">(SessionStart)</span>', wait: 220 },
         { spin: 'Creating the project repo…', done: 'Repo created · your-org/product-page' },
@@ -81,24 +75,25 @@
 
     // An agent tries to write off-system code and the PreToolUse hook blocks it.
     guardrail: {
-      title: 'Terminal — AI coding agent in product-page',
-      label: 'Animated agent session: asked to add an Add to cart button, the agent writes a raw hex colour and a plain '
-        + 'button element. The guardrail hook blocks the edit and names the token and component to use. The agent '
-        + 'retries with the design system Button and the edit passes.',
+      title: 'Terminal — Claude Code in product-page',
+      label: 'Animated agent session: asked to add a customer reviews section, the agent writes a raw hex colour and a '
+        + 'plain heading element. The guardrail hook blocks the edit and names the token and component to use. The '
+        + 'agent retries with the design system Heading and Card, and the edit passes.',
       steps: [
-        { cmd: 'Add an "Add to cart" button under the price', prompt: '❯ ' },
+        { cmd: 'Add a customer reviews section under the product details', prompt: '❯ ' },
         { out: '', wait: 600 },
-        { out: '<span class="t-b">●</span> I\'ll add a primary button below the price.', wait: 700 },
+        { out: '<span class="t-b">●</span> I\'ll add a heading and a list of review cards.', wait: 700 },
         { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
-        { out: '  <span class="t-add">+ &lt;button style={{ background: "#2F6FED" }}&gt;Add to cart&lt;/button&gt;</span>', wait: 900 },
+        { out: '  <span class="t-add">+ &lt;h3 style={{ color: "#6B3E1F" }}&gt;Customer reviews&lt;/h3&gt;</span>', wait: 900 },
         { spin: 'Running PreToolUse hook: ds-guard', done: '', ms: 900, quiet: true },
         { out: '  <span class="t-err">⎿ Blocked by ds-guard</span>', wait: 200 },
-        { out: '    <span class="t-err">✖</span> Raw colour #2F6FED. Use a token: var(--ds-color-action-primary)', wait: 200 },
-        { out: '    <span class="t-err">✖</span> &lt;button&gt; found. Use &lt;Button&gt; from @your-ds/components', wait: 1400 },
+        { out: '    <span class="t-err">✖</span> Raw colour #6B3E1F. Use a token: var(--ds-color-text-heading)', wait: 200 },
+        { out: '    <span class="t-err">✖</span> &lt;h3&gt; found. Use &lt;Heading&gt; from @your-ds/components', wait: 1400 },
         { out: '' },
-        { out: '<span class="t-b">●</span> The design system has a Button. Using it instead.', wait: 700 },
+        { out: '<span class="t-b">●</span> The design system has Heading and Card. Using them instead.', wait: 700 },
         { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
-        { out: '  <span class="t-add">+ &lt;Button variant="primary"&gt;Add to cart&lt;/Button&gt;</span>', wait: 900 },
+        { out: '  <span class="t-add">+ &lt;Heading level={3}&gt;Customer reviews&lt;/Heading&gt;</span>', wait: 300 },
+        { out: '  <span class="t-add">+ {reviews.map((r) =&gt; &lt;Card key={r.id}&gt;{r.text}&lt;/Card&gt;)}</span>', wait: 900 },
         { spin: 'Running PreToolUse hook: ds-guard', done: '', ms: 700, quiet: true },
         { out: '  <span class="t-ok">⎿ ✔ Passed ds-guard</span>', wait: 300 },
         { out: '' },
@@ -108,10 +103,10 @@
 
     // A new agent session starts and the SessionStart hook reports what is out of date.
     'session-start': {
-      title: 'Terminal — AI coding agent in product-page',
+      title: 'Terminal — Claude Code in product-page',
       label: 'Animated agent session: when the session starts, the update check finds a newer design system '
-        + 'release with a Rating component and a newer scaffold template. Asked for star ratings, the agent '
-        + 'updates the package first and uses the Rating component.',
+        + 'release with a Rating component and a newer scaffold template. Asked to show each review\'s star rating, '
+        + 'the agent updates the package first and uses the Rating component.',
       steps: [
         { cmd: 'claude', prompt: PROJECT },
         { out: '' },
@@ -121,13 +116,13 @@
         { out: '  <span class="t-warn">!</span> Scaffold template <span class="t-b">1.3</span> · <span class="t-b">1.5</span> available', wait: 250 },
         { out: '    <span class="t-dim">Update with: npx create-ds-prototype update</span>', wait: 1200 },
         { out: '' },
-        { cmd: 'Add star ratings under the product title', prompt: '❯ ' },
+        { cmd: 'Show the star rating on each review', prompt: '❯ ' },
         { out: '', wait: 600 },
         { out: '<span class="t-b">●</span> Version 4.4.0 adds a Rating component, so I\'ll update the package first.', wait: 700 },
         { out: '<span class="t-b">●</span> <span class="t-b">Bash</span> npm install @your-ds/components@4.4.0', wait: 300 },
         { spin: 'Installing…', done: 'Updated @your-ds/components to 4.4.0', ms: 1200 },
         { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
-        { out: '  <span class="t-add">+ &lt;Rating value={product.rating} count={product.reviews} /&gt;</span>', wait: 300 },
+        { out: '  <span class="t-add">+ &lt;Rating value={r.rating} /&gt;</span>', wait: 300 },
         { out: '  <span class="t-ok">⎿ ✔ Passed ds-guard</span>', wait: 300 },
         { out: '' },
         { prompt: '❯ ', end: true },
@@ -233,9 +228,6 @@
     { id: 'template', q: (a) => (a.brand ? `Starting template (${BRANDS[a.brand]})` : 'Starting template'),
       recommend: (a) => (a.build === 'app' ? ['storefront', "apps live inside the store's header and navigation"] : null),
       options: [{ v: 'storefront', l: 'Storefront' }, { v: 'product', l: 'Product page' }, { v: 'checkout', l: 'Checkout' }, { v: 'blank', l: 'Blank' }] },
-    { id: 'agent', q: 'AI coding agent',
-      recommend: () => ['claude', 'gets the guardrail and update hooks as well as rules'],
-      options: [{ v: 'claude', l: 'Claude Code' }, { v: 'cursor', l: 'Cursor' }, { v: 'copilot', l: 'Copilot' }, { v: 'none', l: 'None' }] },
   ];
   const qText = (q, a) => (typeof q.q === 'function' ? q.q(a) : q.q);
 
@@ -252,11 +244,9 @@
     if (a.template === 'product') f.push(['src/templates/ProductPage.tsx', 'gallery, price and add to cart']);
     if (a.template === 'checkout') f.push(['src/templates/Checkout.tsx', 'cart, shipping and payment steps']);
     if (a.template === 'blank') f.push(['src/pages/Start.tsx', 'the store header and nothing else']);
-    if (a.agent === 'claude') f.push(['CLAUDE.md', 'design system rules for the agent'], ['.claude/settings.json', 'registers both hooks'],
+    // Every project starts current and set up for Claude Code, our preferred agent.
+    if (a.template) f.push(['CLAUDE.md', 'design system context for Claude'], ['.claude/settings.json', 'registers both hooks'],
       ['.claude/hooks/ds-guard.mjs', 'PreToolUse: blocks off-system code'], ['.claude/hooks/ds-check.mjs', 'SessionStart: checks for updates']);
-    if (a.agent === 'cursor') f.push(['.cursor/rules/design-system.mdc', 'design system rules for the agent']);
-    if (a.agent === 'copilot') f.push(['.github/copilot-instructions.md', 'design system rules for the agent']);
-    if (a.agent && a.agent !== 'none') f.push(['AGENTS.md', 'shared rules any agent can read']);
     return f;
   }
 

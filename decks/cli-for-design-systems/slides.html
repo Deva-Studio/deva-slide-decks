@@ -2,10 +2,10 @@
   How to build a CLI for your design system. Into Design Systems: AI and Design Systems.
   One section element per slide (1280 × 720 canvas). Layout classes: src/html-deck.css.
   Live pieces (src/html-deck.js): data-terminal="interview|guardrail|session-start" and
-  data-interview="files" (appendix), Mermaid diagrams in .hd-diagram. "create-ds-prototype", "@your-ds/*", product-page and Brand A / Brand B
+  data-interview="files" (appendix). "create-ds-prototype", "@your-ds/*", product-page and Brand A / Brand B
   are illustrative names for the starter CLI and its example project: an ecommerce
   storefront whose CLI offers templates. The "Live in Figma" slide is a break for a demo.
-  The walkthrough slide opens pages/decision-tree/ (Mermaid diagrams) over the deck.
+  The walkthrough slide opens pages/decision-tree/ (the choose-your-own-adventure) over the deck.
 -->
 
 <!-- 1 · Cover -->
@@ -14,7 +14,7 @@
   <div class="hd-cover" style="top:calc(140 * var(--u));right:calc(610 * var(--u))">
     <p class="hd-kicker">Conference session</p>
     <h2 class="hd-display" style="font-size:calc(58 * var(--u))">How to build a CLI for your design system</h2>
-    <p class="hd-sub" style="font-size:calc(20 * var(--u))">Design the setup as a decision tree, scaffold from the answers, and keep the AI agent inside your system's rules</p>
+    <p class="hd-sub" style="font-size:calc(20 * var(--u))">Design the setup as a decision tree, scaffold from the answers, and keep every project current with your design system</p>
   </div>
   <div class="hd-cover" style="top:calc(560 * var(--u));right:calc(610 * var(--u))">
     <div class="hd-people">
@@ -90,8 +90,8 @@
   <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
     <ol class="hd-num" style="margin-top:calc(10 * var(--u))">
       <li><b>What a CLI is</b>, why it's worth building one, and what it needs to run for everyone</li>
-      <li><b>How to design the setup interview as a decision tree</b>: gate questions on earlier answers, recommend a choice with a reason instead of showing a blind menu, and see how the tree drives the CLI's architecture</li>
-      <li><b>How to wire in an agentic layer</b>: a guardrail hook that blocks off-system styles and components, and a session-start check that nudges toward design system and scaffold updates</li>
+      <li><b>How to design the setup interview as a decision tree</b>: start from the outcome you want, gate each question on earlier answers, and see how the tree drives the CLI's architecture</li>
+      <li><b>How to keep it always current</b>: release the CLI with the design system, ship Claude's context inside the package, and check every project for updates when work starts</li>
     </ol>
     <div class="hd-quote" style="align-self:start">
       <p class="hd-quote-text">You'll leave with a forkable starter CLI to add your own design system to.</p>
@@ -107,7 +107,7 @@
     <h2 class="hd-section-title">What a CLI is,<br>and why build one</h2>
     <p class="hd-section-sub">What it does, why it suits a design system and AI agents, and what it needs to work for everyone.</p>
   </div>
-  <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Agentic layer</span></p>
+  <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Staying current</span></p>
 </section>
 
 <!-- 6 · What a CLI is -->
@@ -209,10 +209,10 @@
   <h2 class="hd-title">One ecommerce site, all the way through</h2>
   <div class="hd-cols" style="grid-template-columns:calc(400 * var(--u)) 1fr">
     <div class="hd-stack">
-      <p class="hd-text">From here on, we'll follow one team. They're prototyping a new product item page for one of their brands, Brand A.</p>
+      <p class="hd-text">From here on, we'll follow one designer on Brand A, the coffee supply vertical. Their task: add a customer reviews section to the product item page.</p>
       <ul class="hd-list">
         <li>The CLI offers each brand its own <b>ecommerce templates</b>, built from design system components</li>
-        <li>The team scaffolds a project called <b>product-page</b> from Brand A's product page template</li>
+        <li>They scaffold <b>product-page</b> from Brand A's product page template, then build the reviews with an agent</li>
         <li>First, a look at the templates <b>in Figma</b>, and why we want them in a CLI</li>
       </ul>
     </div>
@@ -240,107 +240,22 @@
   <div class="hd-section">
     <p class="hd-section-num">02</p>
     <h2 class="hd-section-title">The setup interview<br>as a decision tree</h2>
-    <p class="hd-section-sub">Fewer questions, asked in the right order, with a recommendation where one is better. Then where the tree sits in the CLI's architecture.</p>
+    <p class="hd-section-sub">Start from the outcome, and ask only what changes it, in the right order. Then where the tree sits in the CLI's architecture.</p>
   </div>
-  <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Agentic layer</span></p>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Staying current</span></p>
 </section>
 
-<!-- 12 · Walkthrough: planning the decision tree -->
+<!-- 12 · Walkthrough: the decision tree as a choose-your-own-adventure -->
 <section class="dark">
   <div class="hd-break">
-    <p class="hd-break-tag"><span aria-hidden="true">◇</span> Walkthrough</p>
-    <h2 class="hd-section-title">Planning the decision tree</h2>
-    <p class="hd-section-sub">How to plan a decision tree, then our example's tree: what you're building, which brand, its starting templates, and the agent, through to the scaffolded project.</p>
-    <button type="button" class="hd-break-btn" data-walkthrough="decision-tree/">Open the diagrams <kbd>Enter</kbd></button>
+    <p class="hd-break-tag"><span aria-hidden="true">◇</span> Choose your own adventure</p>
+    <h2 class="hd-section-title">You're the author</h2>
+    <p class="hd-section-sub">Write the ending first: a prototyping environment for designers and PMs. Then play it as a designer, where the team you're on decides which templates you get.</p>
+    <button type="button" class="hd-break-btn" data-walkthrough="decision-tree/">Open the story <kbd>Enter</kbd></button>
   </div>
 </section>
 
-<!-- 13 · Gate -->
-<section>
-  <p class="hd-label">The interview · Gate</p>
-  <h2 class="hd-title">Each answer narrows the next question</h2>
-  <div class="hd-diagram" data-label="Decision tree with the brand step highlighted: choosing Brand A means the starting template question only offers Brand A's templates; Brand B's are not offered.">
-<script type="text/x-mermaid">
-flowchart LR
-  build("? What are you building"):::dim -->|Prototype| brand("? What brand do you work on"):::on
-  build -->|App| brand
-  brand -->|Brand A| ta("? Starting template<br><small>Brand A: Storefront · Product page<br>Checkout · Blank</small>"):::on
-  brand -.->|Brand B| tb("Brand B templates<br><small>not offered</small>"):::skip
-  ta --> agent("? AI coding agent"):::dim
-  agent --> plan[["Plan"]]:::dimink
-  classDef on fill:#fef8f8,stroke:#05237d,stroke-width:3px,color:#05237d
-  classDef dim fill:#fcefed,stroke:#94a6dd,stroke-width:2px,color:#637dcd
-  classDef skip fill:transparent,stroke:#94a6dd,stroke-width:2px,stroke-dasharray:6 5,color:#637dcd
-  classDef rec fill:#fcd64d,stroke:#05237d,stroke-width:2px,color:#041c64
-  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
-  classDef dimink fill:#94a6dd,stroke:#94a6dd,color:#fef8f8
-  linkStyle default stroke:#94a6dd,stroke-width:2px
-  linkStyle 2 stroke:#05237d,stroke-width:3px
-</script>
-  </div>
-  <p class="hd-diagram-cap">Pick a brand, and the template question only offers that brand's templates. <span>Ask only what changes the output.</span></p>
-</section>
-
-<!-- 14 · Recommend -->
-<section>
-  <p class="hd-label">The interview · Recommend</p>
-  <h2 class="hd-title">Recommend a choice, and say why</h2>
-  <div class="hd-diagram" data-label="Decision tree on the App path: the earlier answer App leads to a recommendation of the Storefront template, because apps live inside the store's header and navigation.">
-<script type="text/x-mermaid">
-flowchart LR
-  build("? What are you building"):::on -->|App| brand("? What brand do you work on"):::dim
-  brand --> tpl("? Starting template"):::on
-  build -.->|"you said App"| rec["<b>★ Recommended: Storefront</b><br><small>apps live inside the store's<br>header and navigation</small>"]:::rec
-  rec -.-> tpl
-  tpl --> agent("? AI coding agent"):::dim
-  agent --> plan[["Plan"]]:::dimink
-  classDef on fill:#fef8f8,stroke:#05237d,stroke-width:3px,color:#05237d
-  classDef dim fill:#fcefed,stroke:#94a6dd,stroke-width:2px,color:#637dcd
-  classDef skip fill:transparent,stroke:#94a6dd,stroke-width:2px,stroke-dasharray:6 5,color:#637dcd
-  classDef rec fill:#fcd64d,stroke:#05237d,stroke-width:2px,color:#041c64
-  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
-  classDef dimink fill:#94a6dd,stroke:#94a6dd,color:#fef8f8
-  linkStyle default stroke:#94a6dd,stroke-width:2px
-  linkStyle 2,3 stroke:#05237d,stroke-width:3px
-</script>
-  </div>
-  <p class="hd-diagram-cap">The reason comes from an earlier answer. <span>People can still choose differently, and now they know the trade-off.</span></p>
-</section>
-
-<!-- 15 · Scaffold -->
-<section>
-  <p class="hd-label">The scaffold</p>
-  <h2 class="hd-title">Every answer becomes files</h2>
-  <div class="hd-diagram" data-label="product-page's answers and the files each one adds. Prototype: preview deploy workflow and mock products. Brand A: its theme. Product page: the store header and product page template. Claude Code: CLAUDE.md and the two hooks.">
-<script type="text/x-mermaid">
-flowchart TB
-  subgraph a4 ["Claude Code"]
-    direction TB
-    f6["CLAUDE.md"] ~~~ f7[".claude/hooks/ds-guard.mjs"] ~~~ f8[".claude/hooks/ds-check.mjs"]
-  end
-  subgraph a3 ["Product page"]
-    direction TB
-    f4["src/templates/StoreHeader.tsx"] ~~~ f5["src/templates/ProductPage.tsx"]
-  end
-  subgraph a2 ["Brand A"]
-    direction TB
-    f3["src/theme/brand-a.css"]
-  end
-  subgraph a1 ["Prototype"]
-    direction TB
-    f1[".github/workflows/preview.yml"] ~~~ f2["src/mocks/products.ts"]
-  end
-  classDef default fill:#fef8f8,stroke:#05237d,stroke-width:2px,color:#05237d
-  style a1 fill:#f9e2df,stroke:#05237d,stroke-width:2px,color:#05237d
-  style a2 fill:#f9e2df,stroke:#05237d,stroke-width:2px,color:#05237d
-  style a3 fill:#f9e2df,stroke:#05237d,stroke-width:2px,color:#05237d
-  style a4 fill:#f9e2df,stroke:#05237d,stroke-width:2px,color:#05237d
-</script>
-  </div>
-  <p class="hd-diagram-cap">If an answer doesn't change a file, it shouldn't be a question. <span>Every project also gets the tokens, components and lint rules.</span></p>
-</section>
-
-<!-- 16 · Live in the repo: inside the CLI project -->
+<!-- 13 · Live in the repo: inside the CLI project -->
 <section class="dark">
   <div class="hd-break" style="top:calc(130 * var(--u))">
     <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in the code</p>
@@ -350,64 +265,108 @@ flowchart TB
       <li><code>src/</code> entry, the decision tree, plan, generate and publish</li>
       <li><code>templates/</code> one folder per brand, each a runnable project</li>
       <li><code>package.json</code> your design system, as a dependency</li>
-      <li><code>agent/</code> the rules and hooks every project gets</li>
+      <li><code>agent/</code> the <code>CLAUDE.md</code> and hooks every project gets</li>
     </ul>
     <p class="hd-todo">Link to the CLI repo for this demo</p>
   </div>
 </section>
 
-<!-- 17 · Live demo: the finished experience -->
+<!-- 14 · Live demo: the finished experience -->
 <section class="dark">
   <div class="hd-break" style="top:calc(130 * var(--u))">
     <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live demo</p>
     <h2 class="hd-section-title">The finished experience</h2>
     <p class="hd-section-sub">Run the CLI the way a designer would, then open the project it creates.</p>
     <ul class="hd-break-list">
-      <li><code>Run</code> <b>npx create-ds-prototype product-page</b>: Prototype → Brand A → Product page → Claude Code</li>
+      <li><code>Run</code> <b>npx create-ds-prototype product-page</b>: Prototype → Brand A → Product page, set up for Claude</li>
       <li><code>Open</code> <b>npm run dev</b>: Brand A's product page, built from the design system</li>
+      <li><code>Build</code> ask the agent to add a customer reviews section</li>
       <li><code>Share</code> the preview URL the CLI printed</li>
     </ul>
   </div>
 </section>
 
-<!-- 18 · Section: agentic layer -->
+<!-- 15 · Section: staying current -->
 <section class="dark">
   <div class="hd-section">
     <p class="hd-section-num">03</p>
-    <h2 class="hd-section-title">Keeping the AI agent<br>inside the system</h2>
-    <p class="hd-section-sub">The scaffold doesn't stop at files. It sets up the agent that will keep building in them.</p>
+    <h2 class="hd-section-title">Always current</h2>
+    <p class="hd-section-sub">Projects outlive the design system version they were made with. Keep the CLI, every project and what Claude knows in sync with the latest release.</p>
   </div>
-  <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span>Agentic layer</span></p>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span>Staying current</span></p>
 </section>
 
-<!-- 19 · The agentic layer -->
+<!-- 16 · What goes out of date -->
 <section>
-  <p class="hd-label">The agentic layer</p>
-  <h2 class="hd-title">The scaffold sets up the agent too</h2>
-  <div class="hd-cols" style="grid-template-columns:calc(520 * var(--u)) 1fr">
-    <div class="hd-stack" style="gap:calc(18 * var(--u))">
-      <div><p class="hd-h3">Rules</p><p class="hd-text"><code>CLAUDE.md</code>, <code>AGENTS.md</code> or <code>.cursor/rules</code>: which tokens and components to use, and what never to write.</p></div>
-      <div><p class="hd-h3">A guardrail hook</p><p class="hd-text">Runs before every edit lands, and blocks off-system styles and components.</p></div>
-      <div><p class="hd-h3">A session-start check</p><p class="hd-text">Compares what's installed with what's published, and tells the agent what's new.</p></div>
-      <p class="hd-text"><b>Rules are advice an agent can forget. Hooks are code that always runs.</b></p>
+  <p class="hd-label">Staying current</p>
+  <h2 class="hd-title">Three things fall behind the design system</h2>
+  <div class="hd-cards">
+    <div class="hd-card">
+      <span class="hd-card-icon">cli</span>
+      <h3>The CLI</h3>
+      <p>Its templates and packages are a snapshot. <b>Release it with the design system</b>, so <code>npx create-ds-prototype@latest</code> always starts from the newest version.</p>
     </div>
-<pre class="hd-pre" style="align-self:center;font-size:calc(14.5 * var(--u))">product-page/
-├── CLAUDE.md              <span class="c">rules</span>
-├── AGENTS.md              <span class="c">rules for any agent</span>
-├── .claude/
-│   ├── settings.json      <span class="c">registers the hooks</span>
-│   └── hooks/
-│       ├── <span class="k">ds-guard.mjs</span>   <span class="c">PreToolUse</span>
-│       └── <span class="k">ds-check.mjs</span>   <span class="c">SessionStart</span>
-├── eslint.config.js       <span class="c">design system lint rules</span>
-└── src/</pre>
+    <div class="hd-card">
+      <span class="hd-card-icon">context</span>
+      <h3>What Claude knows</h3>
+      <p>Rules written once go stale. <b>Ship the context in the package</b>, so <code>CLAUDE.md</code> updates with <code>npm install</code>.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">project</span>
+      <h3>Existing projects</h3>
+      <p>Last month's prototype is still on last month's release. <b>Check when work starts</b>, and tell Claude what's new.</p>
+    </div>
+  </div>
+  <p class="hd-after">Make the latest design system the default,<br><span>not something people have to remember to fetch.</span></p>
+</section>
+
+<!-- 17 · The CLI releases with the design system -->
+<section>
+  <p class="hd-label">The CLI</p>
+  <h2 class="hd-title">Release the CLI with the design system</h2>
+  <div class="hd-flow">
+    <div class="hd-flow-step"><b>Design system release</b><p>Components 4.4.0 is published, with a new <code>Rating</code>.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Bump</b><p>Renovate or Dependabot opens a pull request on the CLI.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step is-key"><b>Scaffold every path</b><p>CI answers each path of the decision tree, then builds each project.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Publish</b><p>Merge, and a new CLI version goes to the registry.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Start current</b><p>The next <code>npx</code> run gets the new templates and packages.</p></div>
+  </div>
+  <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The decision tree doubles as the test plan: <span>every answer is an option, so CI can scaffold every path on every release.</span></p>
+</section>
+
+<!-- 18 · Context ships in the package -->
+<section>
+  <p class="hd-label">What Claude knows</p>
+  <h2 class="hd-title">Ship the context with the components</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(500 * var(--u)) 1fr;gap:calc(36 * var(--u))">
+    <div class="hd-stack" style="gap:calc(18 * var(--u))">
+      <p class="hd-text">The design system team writes the guidance once, and publishes it inside the package: which components exist, when to use them, and what never to write.</p>
+      <p class="hd-text">The project's <code>CLAUDE.md</code> imports it instead of copying it. When the package updates, so does what Claude reads.</p>
+      <p class="hd-text">The guardrail reads its token and component map from the same package, so it can't fall behind either.</p>
+    </div>
+    <div class="hd-stack" style="gap:calc(12 * var(--u))">
+<pre class="hd-pre" style="font-size:calc(14 * var(--u))"><span class="c"># product-page/CLAUDE.md · written by the CLI</span>
+Prototype for Brand A, built with @your-ds.
+
+@node_modules/@your-ds/components/CLAUDE.md
+@node_modules/@your-ds/tokens/tokens.md</pre>
+<pre class="hd-pre" style="font-size:calc(14 * var(--u))">@your-ds/components/      <span class="c">published by the DS team</span>
+├── dist/
+├── <span class="k">CLAUDE.md</span>             <span class="c">usage rules for Claude</span>
+├── <span class="k">components.json</span>       <span class="c">every component and its props</span>
+└── <span class="k">guard-map.json</span>        <span class="c">what the guardrail swaps in</span></pre>
+    </div>
   </div>
 </section>
 
-<!-- 20 · Guardrail hook -->
+<!-- 19 · Guardrail hook -->
 <section>
-  <p class="hd-label">Guardrail</p>
-  <h2 class="hd-title">A hook that blocks off-system code</h2>
+  <p class="hd-label">What Claude writes</p>
+  <h2 class="hd-title">A guardrail keeps edits on the latest system</h2>
   <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(32 * var(--u))">
     <div class="hd-stack" style="gap:calc(12 * var(--u))">
 <pre class="hd-pre" style="font-size:calc(12.5 * var(--u))"><span class="c">// .claude/settings.json</span>
@@ -434,9 +393,9 @@ flowchart TB
   </div>
 </section>
 
-<!-- 21 · Session-start check -->
+<!-- 20 · Session-start check -->
 <section>
-  <p class="hd-label">Staying current</p>
+  <p class="hd-label">Existing projects</p>
   <h2 class="hd-title">A session-start check nudges toward updates</h2>
   <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(32 * var(--u))">
     <div class="hd-stack" style="gap:calc(12 * var(--u))">
@@ -458,25 +417,25 @@ flowchart TB
   </div>
 </section>
 
-<!-- 22 · Putting it together -->
+<!-- 21 · Putting it together -->
 <section>
   <p class="hd-label">Putting it together</p>
   <h2 class="hd-title">One command, consistent from the start</h2>
   <div class="hd-flow">
     <div class="hd-flow-step"><b>Run</b><p>One <code>npx</code> command starts it.</p></div>
     <span class="hd-flow-arrow" aria-hidden="true">→</span>
-    <div class="hd-flow-step"><b>Interview</b><p>A decision tree that gates and recommends.</p></div>
+    <div class="hd-flow-step"><b>Interview</b><p>A decision tree, planned from the ending.</p></div>
     <span class="hd-flow-arrow" aria-hidden="true">→</span>
     <div class="hd-flow-step"><b>Scaffold</b><p>Answers become files built on your system.</p></div>
     <span class="hd-flow-arrow" aria-hidden="true">→</span>
-    <div class="hd-flow-step"><b>Build</b><p>The agent works inside rules and a guardrail.</p></div>
+    <div class="hd-flow-step"><b>Build</b><p>Claude works from the design system's own context.</p></div>
     <span class="hd-flow-arrow" aria-hidden="true">→</span>
-    <div class="hd-flow-step"><b>Stay current</b><p>Each session checks for updates.</p></div>
+    <div class="hd-flow-step is-key"><b>Stay current</b><p>The CLI releases with the system; projects check each session.</p></div>
   </div>
   <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The design system stops being something people look up, <span>and becomes something they start from.</span></p>
 </section>
 
-<!-- 23 · Fork the starter -->
+<!-- 22 · Fork the starter -->
 <section>
   <p class="hd-label">Take it home</p>
   <h2 class="hd-title">Fork the starter, then add your design system</h2>
@@ -484,9 +443,9 @@ flowchart TB
     <ol class="hd-num" style="gap:calc(12 * var(--u));font-size:calc(17 * var(--u))">
       <li><b>Packages:</b> point the installer at your token and component packages</li>
       <li><b>Templates:</b> rebuild the storefront, product and checkout templates with your components</li>
-      <li><b>Questions:</b> edit the tree and its recommendations, all in one file</li>
-      <li><b>Guardrail:</b> map raw values to your tokens, and plain elements to your components</li>
-      <li><b>Rules:</b> rewrite <code>CLAUDE.md</code> and <code>AGENTS.md</code> in your system's words</li>
+      <li><b>Questions:</b> edit the tree and its gates, all in one file</li>
+      <li><b>Context:</b> publish a <code>CLAUDE.md</code> and guardrail map inside your component package</li>
+      <li><b>Releases:</b> let a bot bump the CLI and scaffold every path when your system publishes</li>
       <li><b>Publishing:</b> connect your repo host, package registry and hosting</li>
     </ol>
     <div class="hd-stack" style="gap:calc(16 * var(--u))">
@@ -501,7 +460,7 @@ create-ds-prototype my-first-prototype</pre>
   </div>
 </section>
 
-<!-- 24 · Thank you -->
+<!-- 23 · Thank you -->
 <section class="dark">
   <div class="hd-close">
     <h2>Thank you</h2>
@@ -513,7 +472,7 @@ create-ds-prototype my-first-prototype</pre>
   </div>
 </section>
 
-<!-- 25 · Appendix · Try the interview -->
+<!-- 24 · Appendix · Try the interview -->
 <section>
   <p class="hd-label">Appendix</p>
   <h2 class="hd-title">Try the interview yourself</h2>

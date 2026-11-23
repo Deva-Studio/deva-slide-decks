@@ -80,19 +80,24 @@ Both respect reduced motion (the terminal shows its finished session).
   `parent.postMessage({ type: 'walkthrough-close', finished })`; `finished` moves on to the next slide.
   `Enter` on that slide opens it too.
 
-### Decision tree walkthrough (Mermaid)
+### Decision tree: choose your own adventure
 
-`decks/cli-for-design-systems/pages/decision-tree/index.html` is a page of Mermaid diagrams shown one at a time,
-outside the slide format, opened from the "Planning the decision tree" slide: how to plan a tree, then the
-example's tree (what you're building → brand → starting templates → agent → plan → project) and one path through it.
-Edit the diagrams in its `<script type="text/x-mermaid">` blocks; the two brand names are set once in `BRANDS`.
+`decks/cli-for-design-systems/pages/decision-tree/index.html` tells the decision tree as a choose-your-own-adventure,
+outside the slide format, opened from the "You're the author" slide. Part 1 (writing it) plans the story from the
+ending back: the outcome (a prototyping environment for designers and PMs), the readers and their two product
+verticals, the turning point (which team you're on), and the story map. Part 2 (reading it) plays it as a designer:
+pick a team, then one of that team's templates (gated), then an agent (recommended), and reach a themed ending with
+the files each answer wrote. Each page has an author's note on what it becomes in the CLI.
 
-The example's fictional brands (placeholders "Brand A" and "Brand B") appear in three places: `BRANDS` in the
-walkthrough page, `BRAND_A` / `BRAND_B` at the top of `src/html-deck.js` (interview and terminals), and the text of
-`decks/cli-for-design-systems/slides.html`. `←` / `→` step through, `Esc` goes back to the slides, and `→` on the
-last diagram continues the deck. It also works on its own at `/cli-for-design-systems/decision-tree/`.
+The teams, verticals, templates, themes and agents are set once in `STORY` at the top of its script. `←` / `→` turn
+pages, `1`–`4` pick a choice, `Esc` goes back to the slides, and `→` on the ending continues the deck. It also works on
+its own at `/cli-for-design-systems/decision-tree/`.
 
-Files in `decks/<dir>/pages/` are copied next to the deck as they are. Mermaid comes from the `mermaid` npm
+The example's fictional brands (placeholders "Brand A" and "Brand B") appear in three places: `STORY` in that page,
+`BRAND_A` / `BRAND_B` at the top of `src/html-deck.js` (interview and terminals), and the text of
+`decks/cli-for-design-systems/slides.html`.
+
+Files in `decks/<dir>/pages/` are copied next to the deck as they are. Mermaid (used by the diagrams on the slides) comes from the `mermaid` npm
 package and is copied to `dist/vendor/`, so the diagrams work without a network connection.
 
 ## Viewing a deck

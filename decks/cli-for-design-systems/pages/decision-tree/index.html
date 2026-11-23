@@ -3,23 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Decision tree walkthrough · How to build a CLI for your design system</title>
+  <title>Choose your own adventure · How to build a CLI for your design system</title>
   <link rel="icon" type="image/png" href="../../favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;700;800&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cousine&display=swap">
   <!--
-    Decision tree walkthrough: Mermaid diagrams shown one at a time, outside the slide format.
+    The decision tree as a choose-your-own-adventure, outside the slide format.
+    Part 1 (the author): plan the story from the ending back.
+    Part 2 (the reader): play it as a designer, one choice per page, with the story map and
+    an author's note showing what each page becomes in the CLI.
+
     Opened from the deck (as a layer over it, so Present mode stays on) or on its own.
-    ← / → step through; Esc goes back to the slides; → on the last diagram continues the deck.
-    Opened on its own, ?return=<slide> says which slide to continue from.
-    Brand names: set BRANDS at the top of the script below.
+    ← / → turn pages, 1–4 pick a choice, Esc goes back to the slides; → on the last page
+    continues the deck. Opened on its own, ?return=<slide> says which slide to continue from.
+
+    The teams (brands) and their templates are set in STORY at the top of the script.
   -->
   <style>
     :root {
-      --indigo-50: #e6eaf7; --indigo-200: #94a6dd; --indigo-500: #0731b0; --indigo-700: #05237d; --indigo-800: #041c64;
-      --pink-50: #fef8f8; --pink-100: #fcefed; --pink-200: #f9e2df; --pink-400: #f4c7c2; --marigold-300: #fcd64d;
+      --indigo-50: #e6eaf7; --indigo-100: #c2cbec; --indigo-200: #94a6dd; --indigo-300: #637dcd; --indigo-500: #0731b0;
+      --indigo-700: #05237d; --indigo-800: #041c64; --indigo-900: #03154b;
+      --pink-50: #fef8f8; --pink-100: #fcefed; --pink-200: #f9e2df; --pink-400: #f4c7c2;
+      --marigold-300: #fcd64d; --marigold-100: #fef3c7;
+      --display: 'Funnel Display', 'Funnel Sans', system-ui, sans-serif;
+      --mono: 'Cousine', ui-monospace, monospace;
       color-scheme: light;
     }
     * { box-sizing: border-box; }
@@ -30,13 +40,21 @@
       color: var(--indigo-700);
       font-family: 'Funnel Sans', system-ui, sans-serif;
     }
+    code { font-family: var(--mono); font-size: 0.9em; background: var(--pink-200); padding: 0.05em 0.35em; border-radius: 4px; }
+
+    /* Header and footer */
     header {
-      display: flex; align-items: center; gap: 16px;
-      padding: 18px clamp(16px, 4vw, 48px);
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      padding: 16px clamp(16px, 4vw, 48px);
       border-bottom: 4px solid var(--indigo-700);
     }
     .tag { font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-    .count { margin-left: auto; font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .parts { display: flex; gap: 6px; margin-left: auto; }
+    .parts span {
+      font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+      border: 2px solid var(--indigo-700); opacity: 0.4;
+    }
+    .parts span.is-on { opacity: 1; background: var(--indigo-700); color: var(--pink-50); }
     button, .btn {
       font: inherit; font-size: 15px; font-weight: 600; color: inherit; text-decoration: none; cursor: pointer;
       display: inline-flex; align-items: center; gap: 8px;
@@ -47,190 +65,504 @@
     button:disabled { opacity: 0.35; cursor: default; background: transparent; }
     .primary { background: var(--indigo-700); color: var(--pink-50); }
     .primary:hover { background: var(--indigo-800); }
-    main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 22px clamp(16px, 4vw, 48px) 0; }
-    .step { display: none; flex: 1; min-height: 0; flex-direction: column; }
-    .step.is-on { display: flex; }
-    h1 { margin: 0; font-family: 'Funnel Display', 'Funnel Sans', sans-serif; font-weight: 700; font-size: clamp(26px, 3.4vw, 44px); line-height: 1.1; }
-    .caption { margin: 8px 0 0; max-width: 72ch; font-size: clamp(15px, 1.4vw, 19px); line-height: 1.45; color: var(--indigo-800); }
-    .diagram {
-      flex: 1; min-height: 0; margin: 18px 0 0; padding: 18px;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--pink-100); border: 2px solid var(--indigo-700); border-radius: 8px;
-    }
-    .diagram svg { width: 100%; height: 100%; max-width: none !important; }
-    .diagram .error { font-family: ui-monospace, monospace; white-space: pre-wrap; }
-    footer { display: flex; align-items: center; gap: 12px; padding: 16px clamp(16px, 4vw, 48px) 20px; }
+    footer { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px clamp(16px, 4vw, 48px) 18px; }
     footer .hint { font-size: 14px; color: var(--indigo-500); }
     footer .spacer { flex: 1; }
     kbd { font-family: inherit; font-size: 13px; padding: 1px 6px; border: 1.5px solid var(--indigo-500); border-radius: 4px; }
-    /* Mermaid label details */
-    .diagram .nodeLabel small, .diagram .nodeLabel i { font-size: 0.8em; font-style: normal; opacity: 0.85; }
+
+    main { flex: 1; min-height: 0; overflow: auto; padding: 22px clamp(16px, 4vw, 48px) 0; }
+    .page { min-height: 100%; display: flex; flex-direction: column; animation: turn 0.35s ease both; }
+    @keyframes turn { from { opacity: 0; transform: translateX(18px); } }
+    @media (prefers-reduced-motion: reduce) { .page, .chip, .preview { animation: none !important; transition: none !important; } }
+
+    .eyebrow { margin: 0 0 6px; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--indigo-500); }
+    h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(28px, 3.4vw, 46px); line-height: 1.08; }
+    .lede { margin: 10px 0 0; max-width: 70ch; font-size: clamp(16px, 1.45vw, 20px); line-height: 1.45; color: var(--indigo-800); }
+
+    /* Shared cards */
+    .card { background: var(--pink-50); border: 2px solid var(--indigo-700); border-radius: 10px; padding: clamp(14px, 1.6vw, 22px); }
+    .card h2 { margin: 0 0 8px; font-family: var(--display); font-size: clamp(19px, 1.7vw, 24px); line-height: 1.15; }
+    .card p { margin: 0; font-size: clamp(15px, 1.25vw, 17px); line-height: 1.45; }
+    .card ul { margin: 0; padding-left: 1.1em; font-size: clamp(15px, 1.25vw, 17px); line-height: 1.5; }
+    .ink { background: var(--indigo-700); color: var(--pink-100); border-color: var(--indigo-700); }
+    .ink code { background: var(--indigo-800); color: var(--pink-100); }
+    .grid { display: grid; gap: clamp(12px, 1.4vw, 20px); margin-top: clamp(16px, 2vw, 26px); }
+
+    /* Author 1: the ending */
+    .the-end { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(16px, 2vw, 28px); margin-top: clamp(16px, 2vw, 28px); align-items: start; }
+    .the-end .card.ink h2 { font-size: clamp(34px, 4vw, 56px); font-weight: 800; margin-bottom: 14px; }
+    .the-end .card.ink li { margin: 6px 0; }
+    .tick { list-style: none; padding: 0 !important; }
+    .tick li { position: relative; padding-left: 1.6em; }
+    .tick li::before { content: '✓'; position: absolute; left: 0; font-weight: 700; color: var(--marigold-300); }
+
+    /* Author 2: readers and world */
+    .readers { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr); }
+    .vertical .who { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--indigo-500); margin-bottom: 4px; }
+    .vertical .tpls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .vertical .tpls span { font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 999px; border: 1.5px solid var(--indigo-700); }
+    .swatch { display: inline-block; width: 1.1em; height: 1.1em; border-radius: 4px; vertical-align: -0.15em; margin-right: 6px; border: 1.5px solid var(--indigo-700); }
+
+    /* Author 3: the turning point */
+    .turning { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(16px, 2vw, 28px); margin-top: clamp(16px, 2vw, 28px); align-items: start; }
+    .card .question-big { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 3.6vw, 52px); line-height: 1.05; margin: 0 0 14px; }
+    .changes { width: 100%; border-collapse: collapse; font-size: clamp(14px, 1.2vw, 16px); }
+    .changes th, .changes td { text-align: left; padding: 9px 10px; border-bottom: 1.5px solid var(--indigo-100); vertical-align: top; }
+    .changes th { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--indigo-500); border-bottom: 2px solid var(--indigo-700); }
+    .changes td:first-child { font-weight: 600; }
+
+
+    /* Story map */
+    .map { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; position: relative; }
+    .map .col { display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 10px; border: 2px solid transparent; position: relative; }
+    .map .col:not(:last-child)::after {
+      content: '→'; position: absolute; right: -11px; top: 8px; font-weight: 700; font-size: 16px; color: var(--indigo-300);
+    }
+    .map .col.is-here { border-color: var(--indigo-700); background: var(--pink-100); }
+    .map .col-title { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--indigo-500); margin-bottom: 2px; }
+    .map .group { display: flex; flex-direction: column; gap: 4px; padding: 6px; border-radius: 8px; border: 1.5px solid var(--indigo-100); }
+    .map .group-title { font-size: 12px; font-weight: 600; color: var(--indigo-500); }
+    .map .group.is-gated { border-style: dashed; border-color: var(--indigo-200); opacity: 0.55; }
+    .map .group.is-gated .group-title::after { content: ' · not offered'; }
+    .chip {
+      font-size: 13px; font-weight: 600; line-height: 1.2; padding: 5px 8px; border-radius: 6px;
+      background: var(--pink-50); border: 1.5px solid var(--indigo-700);
+      transition: background 0.2s, color 0.2s, opacity 0.2s;
+    }
+    .chip.is-picked { background: var(--indigo-700); color: var(--pink-50); }
+    .chip.is-faded { opacity: 0.4; }
+    .chip.is-rec::after { content: ' ★'; color: #b98900; }
+    .chip.is-picked.is-rec::after { color: var(--marigold-300); }
+    .chip.end { background: var(--indigo-700); color: var(--pink-50); }
+    .chip.end small { display: block; font-weight: 400; opacity: 0.85; margin-top: 2px; font-family: var(--mono); font-size: 11px; word-break: break-all; }
+    .map .note { font-size: 12px; line-height: 1.35; color: var(--indigo-800); margin-top: 4px; padding: 6px 8px; background: var(--marigold-100); border-radius: 6px; border-left: 3px solid var(--marigold-300); }
+    .map { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1.2fr); }
+    .map .col-template { display: grid; grid-template-columns: 1fr 1fr; align-content: start; }
+    .map .col-template > .col-title, .map .col-template > .note { grid-column: 1 / -1; }
+    .map-big .chip { font-size: 14px; }
+    .map-big .col-title { font-size: 13px; }
+    .map-big .note { font-size: 13px; }
+
+    /* Story pages (the reader) */
+    .story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(16px, 2.4vw, 36px); flex: 1; align-items: start; }
+    .book {
+      background: var(--pink-50); border: 2px solid var(--indigo-700); border-radius: 4px 14px 14px 4px;
+      box-shadow: 8px 8px 0 var(--indigo-700);
+      padding: clamp(18px, 2.2vw, 32px); position: relative;
+    }
+    .book .prose { margin: 0 0 18px; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.5; }
+    .book .ask { margin: 0 0 14px; font-family: var(--display); font-weight: 700; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.15; }
+    .choices { display: grid; gap: 8px; }
+    .choice {
+      display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; text-align: left;
+      width: 100%; padding: 9px 14px; border-radius: 10px; background: var(--pink-100);
+    }
+    .choice:hover { background: var(--pink-200); }
+    .choice.is-picked { background: var(--indigo-700); color: var(--pink-50); }
+    .choice .key { font-size: 13px; width: 1.8em; height: 1.8em; display: grid; place-items: center; border-radius: 6px; border: 1.5px solid currentColor; }
+    .choice .label { font-size: clamp(16px, 1.4vw, 19px); }
+    .choice .label small { display: block; font-weight: 400; font-size: 0.8em; opacity: 0.8; margin-top: 2px; }
+    .choice .rec { display: inline-block; margin-left: 6px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--marigold-300); color: var(--indigo-900); vertical-align: 0.1em; }
+    .choice .rec.is-you { background: var(--pink-200); color: var(--indigo-800); border: 1.5px solid currentColor; }
+    .choice.is-picked .rec.is-you { background: transparent; color: var(--pink-50); }
+    .side { display: flex; flex-direction: column; gap: 14px; }
+    .side .map { background: var(--pink-50); border: 2px solid var(--indigo-700); border-radius: 10px; padding: 6px; gap: 6px; }
+    .side .map .col { padding: 6px; }
+    .side .map .col:not(:last-child)::after { right: -9px; }
+    .authors-note { background: var(--marigold-100); border: 2px solid var(--indigo-700); border-radius: 10px; padding: 14px 16px; }
+    .authors-note .eyebrow { color: var(--indigo-800); margin-bottom: 6px; }
+    .authors-note p { margin: 0; font-size: clamp(14px, 1.2vw, 16px); line-height: 1.5; }
+    .authors-note p + p { margin-top: 8px; }
+    .side-title { margin: 0 0 -6px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--indigo-500); }
+
+    /* The ending */
+    .ending-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+    .ending-head .the { font-family: var(--display); font-weight: 800; font-size: clamp(36px, 4vw, 56px); line-height: 1; }
+    .path { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 16px; }
+    .path span { font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--indigo-700); color: var(--pink-50); }
+    .preview {
+      border-radius: var(--r); background: var(--bg); color: var(--fg); border: 2px solid var(--indigo-700);
+      overflow: hidden; animation: pop 0.45s ease both;
+    }
+    @keyframes pop { from { opacity: 0; transform: scale(0.96); } }
+    .preview .bar { display: flex; gap: 6px; align-items: center; padding: 8px 10px; background: rgba(0,0,0,0.08); font-family: var(--mono); font-size: 12px; }
+    .preview .bar i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; opacity: 0.35; }
+    .preview .bar span { margin-left: 6px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .preview .site { padding: 14px; }
+    .preview .nav { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 700; font-size: 14px; }
+    .preview .nav .dots { margin-left: auto; display: flex; gap: 6px; }
+    .preview .nav .dots i { width: 28px; height: 6px; border-radius: 3px; background: currentColor; opacity: 0.3; }
+    .wf { display: grid; gap: 10px; }
+    .wf .img { background: var(--accent); opacity: 0.85; border-radius: var(--r); min-height: 86px; }
+    .wf .ln { height: 8px; border-radius: 4px; background: currentColor; opacity: 0.25; }
+    .wf .ln.t { height: 14px; opacity: 0.6; width: 70%; }
+    .wf .btn-wf { height: 26px; width: 55%; border-radius: var(--r); background: var(--accent); }
+    .wf .box { border: 2px solid currentColor; opacity: 0.55; border-radius: var(--r); min-height: 70px; padding: 8px; display: grid; gap: 6px; align-content: start; }
+    .wf .row { display: grid; gap: 10px; }
+    .todo-wf { border: 2px dashed var(--accent); border-radius: var(--r); padding: 10px; text-align: center; font-size: 13px; font-weight: 700; }
+    .next-prompt { margin: 12px 0 0; padding: 10px 14px; border-radius: 8px; background: var(--indigo-900); color: var(--pink-100); font-family: var(--mono); font-size: 14px; }
+    .next-prompt span { color: var(--marigold-300); }
+    .files { margin: 0; padding: 0; list-style: none; font-family: var(--mono); font-size: clamp(12px, 1.05vw, 14px); }
+    .files li { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--indigo-100); }
+    .files li b { font-family: 'Funnel Sans', sans-serif; font-weight: 600; font-size: 12px; color: var(--indigo-500); margin-left: auto; white-space: nowrap; }
+
+    @media (max-width: 900px) {
+      .the-end, .turning, .story, .readers { grid-template-columns: 1fr; }
+      .map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .map .col::after { display: none; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <span class="tag">Decision tree walkthrough</span>
-    <span class="count" aria-live="polite" data-count>1 / 3</span>
+    <span class="tag">Choose your own adventure</span>
+    <span class="parts" aria-hidden="true"><span data-part="author">1 · Writing it</span><span data-part="reader">2 · Reading it</span></span>
     <a class="btn" href="../" data-back>Back to the slides</a>
   </header>
 
-  <main>
-    <section class="step" aria-label="Diagram 1">
-      <h1>Plan the tree from the outputs back</h1>
-      <p class="caption">Start with what the scaffold has to produce, then work back to the question that decides each piece. The order, gates and recommendations follow from that.</p>
-      <div class="diagram"><script type="text/x-mermaid" class="mermaid-src">
-flowchart TB
-  subgraph r1 [" "]
-    direction LR
-    o1 --> o2 --> o3 --> o4
-  end
-  subgraph r2 [" "]
-    direction LR
-    o5 --> o6 --> o7
-  end
-  r1 --> r2
-  o1["<b>1 · List every output</b><br><small>files, packages, rules, hooks</small>"]:::box
-  o2["<b>2 · Find the question</b><br><small>that each output depends on</small>"]:::box
-  o3["<b>3 · Order the questions</b><br><small>what has to be known first?</small>"]:::box
-  o4["<b>4 · Gate</b><br><small>skip what a path never needs</small>"]:::box
-  o5["<b>5 · Recommend</b><br><small>a rule, plus the reason</small>"]:::box
-  o6["<b>6 · Add an option</b><br><small>so every question can be<br>answered in the command</small>"]:::box
-  o7["<b>7 · Test every path</b><br><small>--dry-run prints the plan</small>"]:::ink
-  style r1 fill:transparent,stroke:transparent
-  style r2 fill:transparent,stroke:transparent
-  classDef box fill:#fef8f8,stroke:#05237d,stroke-width:2px,color:#05237d
-  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
-      </script></div>
-    </section>
-
-    <section class="step" aria-label="Diagram 2">
-      <h1>Our example's decision tree</h1>
-      <p class="caption">Two questions decide what the project starts from: what you're building, and which brand it's for. Each brand has its own starting templates, built from the design system.</p>
-      <div class="diagram"><script type="text/x-mermaid" class="mermaid-src">
-flowchart LR
-  start(["npx create-ds-prototype"]):::ink --> build("? What are you building")
-  build -->|Prototype| brand("? What brand do you work on")
-  build -->|App| brand
-  brand -->|"{{BRAND_A}}"| ta("? Starting template<br><small>{{BRAND_A}} templates</small><br><small>Storefront · Product page · Checkout</small>")
-  brand -->|"{{BRAND_B}}"| tb("? Starting template<br><small>{{BRAND_B}} templates</small><br><small>Storefront · Product page · Checkout</small>")
-  ta --> agent("? AI coding agent<br><small>Claude Code · Cursor · Copilot · None</small>")
-  tb --> agent
-  agent --> plan[["Plan"]]:::ink
-  plan --> out(["Scaffolded project"]):::ink
-  classDef default fill:#fef8f8,stroke:#05237d,stroke-width:2px,color:#05237d
-  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
-      </script></div>
-    </section>
-
-    <section class="step" aria-label="Diagram 3">
-      <h1>One path: product-page</h1>
-      <p class="caption">Our example: a prototype of a new product item page for {{BRAND_A}}, starting from {{BRAND_A}}'s product page template. Paths not taken are dashed.</p>
-      <div class="diagram"><script type="text/x-mermaid" class="mermaid-src">
-flowchart LR
-  build("? What are you building"):::done -->|Prototype| brand("? What brand do you work on"):::done
-  build -.->|App| app("App setup<br><small>not taken</small>"):::skip
-  brand -->|"{{BRAND_A}}"| tpl("? Starting template<br><small>{{BRAND_A}} templates</small>"):::done
-  brand -.->|"{{BRAND_B}}"| other("{{BRAND_B}} templates<br><small>not taken</small>"):::skip
-  tpl -->|Product page| agent("? AI coding agent"):::done
-  agent -->|Claude Code| plan[["Plan"]]:::ink
-  plan --> out(["product-page<br><small>{{BRAND_A}} product page · design system<br>agent rules and hooks</small>"]):::ink
-  classDef done fill:#fef8f8,stroke:#05237d,stroke-width:3px,color:#05237d
-  classDef skip fill:transparent,stroke:#0731b0,stroke-width:2px,stroke-dasharray:6 5,color:#0731b0
-  classDef ink fill:#05237d,stroke:#05237d,color:#f9e2df
-      </script></div>
-    </section>
-  </main>
+  <main aria-live="polite"></main>
 
   <footer>
-    <button type="button" data-prev aria-label="Previous diagram">‹ Previous</button>
+    <button type="button" data-prev>‹ Previous</button>
     <button type="button" class="primary" data-next>Next ›</button>
     <span class="spacer"></span>
-    <span class="hint"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Esc</kbd> back to the slides</span>
+    <span class="hint" data-hint></span>
   </footer>
 
-  <script src="../../vendor/mermaid.min.js"></script>
   <script>
     (() => {
-      // The two fictional brands in the example. Change the names here; they fill
-      // {{BRAND_A}} and {{BRAND_B}} in the titles, captions and diagrams.
-      const BRANDS = { BRAND_A: 'Brand A', BRAND_B: 'Brand B' };
-      const main = document.querySelector('main');
-      main.innerHTML = main.innerHTML.replace(/\{\{(BRAND_[AB])\}\}/g, (m, k) => BRANDS[k]);
+      // ------------------------------------------------------------------------------------------
+      // The story. Change team names, verticals and templates here; every page reads from it.
+      // ------------------------------------------------------------------------------------------
+      // The starting templates. Both brands have their own version of each, built from the design system
+      // (the same four as the deck and the CLI's interview).
+      const TEMPLATES = [
+        { id: 'storefront', name: 'Storefront', about: 'Header, navigation and a product grid', file: 'src/templates/Storefront.tsx', wf: 'grid' },
+        { id: 'product-page', name: 'Product page', about: 'Gallery, price and add to cart', file: 'src/templates/ProductPage.tsx', wf: 'product' },
+        { id: 'checkout', name: 'Checkout', about: 'Cart, shipping and payment steps', file: 'src/templates/Checkout.tsx', wf: 'checkout' },
+        { id: 'blank', name: 'Blank page', about: 'The store header and nothing else', file: 'src/pages/Start.tsx', wf: 'blank' },
+      ];
+      const STORY = {
+        teams: {
+          a: {
+            name: 'Brand A', vertical: 'Coffee supply', mocks: 'coffee',
+            // How the ending's preview is themed for this team.
+            theme: { bg: '#fff4dc', fg: '#4a2a12', accent: '#f2a93b', r: '14px' },
+            templates: TEMPLATES,
+          },
+          b: {
+            name: 'Brand B', vertical: 'Bar supply', mocks: 'bar',
+            theme: { bg: '#151a3d', fg: '#f5ecff', accent: '#ff4fa3', r: '2px' },
+            templates: TEMPLATES,
+          },
+        },
+        // Our scenario: the path the talk follows, and the job the designer has to do.
+        scenario: {
+          team: 'a', template: 'product-page',
+          prompt: 'Add a customer reviews section under the product details',
+        },
+        previewHost: 'preview.your-org.example',
+      };
+      const { teams, scenario } = STORY;
+      const T = (k) => teams[k];
 
-      const steps = [...document.querySelectorAll('.step')];
-      const count = document.querySelector('[data-count]');
+      // ------------------------------------------------------------------------------------------
+      // State and navigation
+      // ------------------------------------------------------------------------------------------
+      const PAGES = ['ending', 'readers', 'turning', 'map', 'team', 'template', 'end'];
+      const AUTHOR_PAGES = 4;
+      const pick = { team: null, template: null };
+      let at = 0;
+
+      const main = document.querySelector('main');
       const prev = document.querySelector('[data-prev]');
       const next = document.querySelector('[data-next]');
+      const hint = document.querySelector('[data-hint]');
       const back = document.querySelector('[data-back]');
       const embedded = window.parent !== window;
       const ret = new URLSearchParams(location.search).get('return');
       back.href = ret ? `../#${ret}` : '../';
-      let at = 0;
 
-      // Leave the walkthrough: inside the deck, tell it to close this layer
-      // (and move on when finished); on its own, go back to the deck.
       function leave(finished) {
         if (embedded) parent.postMessage({ type: 'walkthrough-close', finished }, '*');
         else location.href = back.href;
       }
       back.addEventListener('click', (e) => { e.preventDefault(); leave(false); });
 
+      const tplOf = () => pick.team && T(pick.team).templates.find((t) => t.id === pick.template);
+      // A story page can't be passed until its choice is made.
+      const blocked = () => ({ team: !pick.team, template: !pick.template })[PAGES[at]] || false;
+
       function show(i) {
-        at = Math.max(0, Math.min(steps.length - 1, i));
-        steps.forEach((s, n) => s.classList.toggle('is-on', n === at));
-        count.textContent = `${at + 1} / ${steps.length}`;
+        at = Math.max(0, Math.min(PAGES.length - 1, i));
+        // Can't skip ahead past an unmade choice.
+        for (const k of ['team', 'template']) {
+          const p = PAGES.indexOf(k);
+          if (at > p && !pick[k]) { at = p; break; }
+        }
+        main.innerHTML = `<article class="page">${RENDER[PAGES[at]]()}</article>`;
+        main.scrollTop = 0;
+        const reading = at >= AUTHOR_PAGES;
+        document.querySelectorAll('[data-part]').forEach((el) => el.classList.toggle('is-on', (el.dataset.part === 'reader') === reading));
         prev.disabled = at === 0;
-        next.textContent = at === steps.length - 1 ? 'Continue the slides ›' : 'Next ›';
+        next.disabled = blocked();
+        next.textContent = at === PAGES.length - 1 ? 'Back to the slides ›'
+          : at === AUTHOR_PAGES - 1 ? 'Read the story ›' : 'Next ›';
+        hint.innerHTML = reading && at < PAGES.length - 1
+          ? '<kbd>1</kbd>–<kbd>4</kbd> choose · <kbd>←</kbd> <kbd>→</kbd> turn the page · <kbd>Esc</kbd> back to the slides'
+          : '<kbd>←</kbd> <kbd>→</kbd> turn the page · <kbd>Esc</kbd> back to the slides';
         history.replaceState(null, '', `${location.search}#${at + 1}`);
+        main.querySelectorAll('[data-choose]').forEach((b) => b.addEventListener('click', () => choose(+b.dataset.choose)));
+        main.querySelector('[data-again]')?.addEventListener('click', () => {
+          const other = pick.team === 'a' ? 'b' : 'a';
+          Object.assign(pick, { team: null, template: null });
+          show(PAGES.indexOf('team'));
+          main.querySelector(`[data-choose="${other === 'a' ? 0 : 1}"]`)?.focus();
+        });
       }
+
+      // Pick the nth choice on the current story page, then turn the page.
+      function choose(n) {
+        const page = PAGES[at];
+        if (page === 'team') {
+          const key = Object.keys(teams)[n]; if (!key) return;
+          if (pick.team !== key) { pick.template = null; }
+          pick.team = key;
+        } else if (page === 'template') {
+          const t = T(pick.team).templates[n]; if (!t) return;
+          pick.template = t.id;
+        } else return;
+        // Show the pick on the page and the map, then turn.
+        main.querySelectorAll('[data-choose]').forEach((b) => b.classList.toggle('is-picked', +b.dataset.choose === n));
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        setTimeout(() => show(at + 1), reduce ? 0 : 380);
+      }
+
       prev.addEventListener('click', () => show(at - 1));
-      next.addEventListener('click', () => (at === steps.length - 1 ? leave(true) : show(at + 1)));
+      next.addEventListener('click', () => (at === PAGES.length - 1 ? leave(true) : !blocked() && show(at + 1)));
       document.addEventListener('keydown', (e) => {
         if (e.metaKey || e.ctrlKey || e.altKey) return;
         if (e.key === 'ArrowRight' || e.key === 'PageDown' || (e.key === ' ' && !e.target.closest('button, a'))) next.click();
         else if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(at - 1);
         else if (e.key === 'Escape') leave(false);
+        else if (/^[1-4]$/.test(e.key)) choose(+e.key - 1);
         else if (!embedded && (e.key === 'p' || e.key === 'f')) {
           if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.().catch(() => {});
         } else return;
         e.preventDefault();
       });
 
+      // ------------------------------------------------------------------------------------------
+      // The story map: every chapter (question) and choice, from the first page to the ending.
+      // `author` shows the planning notes; otherwise it follows the reader's path.
+      // ------------------------------------------------------------------------------------------
+      function storyMap({ author = false, big = false } = {}) {
+        const here = author ? null : PAGES[at];
+        const col = (id, title, body, note) =>
+          `<div class="col col-${id}${here === id ? ' is-here' : ''}"><div class="col-title">${title}</div>${body}${author && note ? `<div class="note">${note}</div>` : ''}</div>`;
+        const chip = (label, { picked, faded, rec, cls = '' } = {}) =>
+          `<div class="chip${picked ? ' is-picked' : ''}${faded ? ' is-faded' : ''}${rec ? ' is-rec' : ''} ${cls}">${label}</div>`;
+
+        const teamCol = Object.entries(teams).map(([k, t]) =>
+          chip(`${t.name}<br><small style="font-weight:400">${t.vertical}</small>`, { picked: pick.team === k, faded: pick.team && pick.team !== k })).join('');
+        const tplCol = Object.entries(teams).map(([k, t]) => {
+          const gated = pick.team && pick.team !== k;
+          return `<div class="group${gated ? ' is-gated' : ''}"><div class="group-title">${t.name}</div>${
+            t.templates.map((x) => chip(x.name, { picked: pick.team === k && pick.template === x.id, faded: pick.team === k && pick.template && pick.template !== x.id })).join('')
+          }</div>`;
+        }).join('');
+        const done = pick.team && pick.template;
+        const endCol = chip(done
+          ? `${pick.template}<small>${STORY.previewHost}/${pick.template}</small>`
+          : author ? `A running prototype<small style="font-family:inherit">themed · from the design system · shareable</small>` : 'A running prototype', { cls: 'end' });
+
+        return `<div class="map${big ? ' map-big' : ''}" role="img" aria-label="Story map: which team, starting template, then the ending.">
+          ${col('team', 'Which team?', teamCol, 'The turning point: asked first, because it changes the most.')}
+          ${col('template', 'Starting template', tplCol, 'Gate: only offer what fits earlier answers. Each team sees only its own templates.')}
+          ${col('end', 'The ending', endCol, 'Written first. Every path reaches it, and every choice changes it: if an answer changes no file, cut the page.')}
+        </div>`;
+      }
+
+      // The files an ending is made of, and which answer added each one.
+      function filesFor() {
+        const t = T(pick.team), tpl = tplOf();
+        return [
+          ['package.json', 'latest design system'],
+          ['.github/workflows/preview.yml', 'every ending'],
+          [`src/theme/${t.name.toLowerCase().replace(/\s+/g, '-')}.css`, t.name],
+          [`src/mocks/${t.mocks}.ts`, t.name],
+          [tpl.file, tpl.name],
+          ['CLAUDE.md', 'design system context'],
+          ['.claude/hooks/ds-check.mjs', 'stays current'],
+        ];
+      }
+
+      // A small wireframe of the chosen template, in the team's theme.
+      function preview() {
+        const t = T(pick.team), tpl = tplOf();
+        const ln = (w = 100, c = '') => `<div class="ln ${c}" style="width:${w}%"></div>`;
+        const body = {
+          product: `<div class="row" style="grid-template-columns:1fr 1fr"><div class="img"></div><div class="wf">${ln(80, 't')}${ln(90)}${ln(70)}${ln(40)}<div class="btn-wf"></div></div></div>`,
+          checkout: `<div class="row" style="grid-template-columns:repeat(3,1fr)">${ln(80)}${ln(80)}${ln(80)}</div><div class="row" style="grid-template-columns:1.3fr 1fr"><div class="wf">${ln(60, 't')}${ln(95)}${ln(95)}${ln(70)}<div class="btn-wf" style="width:45%"></div></div><div class="box">${ln(70)}${ln(50)}${ln(80)}</div></div>`,
+          grid: `${ln(45, 't')}<div class="row" style="grid-template-columns:repeat(4,1fr)">${'<div class="wf"><div class="img" style="min-height:54px"></div>' + ln(80) + '</div>'.repeat(1)}${'<div class="wf"><div class="img" style="min-height:54px"></div>' + ln(80) + '</div>'}${'<div class="wf"><div class="img" style="min-height:54px"></div>' + ln(80) + '</div>'}${'<div class="wf"><div class="img" style="min-height:54px"></div>' + ln(80) + '</div>'}</div><div class="btn-wf" style="width:35%"></div>`,
+          blank: `<div class="box" style="min-height:120px;place-content:center;text-align:center;font-weight:700;opacity:0.7">Start here</div>`,
+        }[tpl.wf];
+        // On the scenario's path, mark where the reviews section will go.
+        const todo = pick.team === scenario.team && tpl.id === scenario.template
+          ? `<div class="todo-wf">+ Customer reviews · your task</div>` : '';
+        const th = t.theme;
+        return `<div class="preview" style="--bg:${th.bg};--fg:${th.fg};--accent:${th.accent};--r:${th.r}">
+          <div class="bar"><i></i><i></i><i></i><span>${STORY.previewHost}/${tpl.id}</span></div>
+          <div class="site"><div class="nav">${t.name}<span class="dots"><i></i><i></i><i></i></span></div><div class="wf">${body}${todo}</div></div>
+        </div>`;
+      }
+
+      const note = (html) => `<div class="authors-note"><p class="eyebrow">✎ Author’s note</p>${html}</div>`;
+      const side = (authorHtml) => `<div class="side">${note(authorHtml)}<p class="side-title">Story map</p>${storyMap()}</div>`;
+      const choiceBtn = (i, label, sub, { picked, rec, badge } = {}) =>
+        `<button type="button" class="choice${picked ? ' is-picked' : ''}" data-choose="${i}">
+          <span class="key">${i + 1}</span>
+          <span class="label">${label}${rec ? '<span class="rec">★ Recommended</span>' : ''}${badge ? `<span class="rec is-you">${badge}</span>` : ''}${sub ? `<small>${sub}</small>` : ''}</span>
+        </button>`;
+
+      // ------------------------------------------------------------------------------------------
+      // Pages
+      // ------------------------------------------------------------------------------------------
+      const [A, B] = [T('a'), T('b')];
+      const RENDER = {
+        // Part 1 · Writing it (the author)
+        ending: () => `
+          <p class="eyebrow">Writing it · 1 of 4</p>
+          <h1>Start with the ending</h1>
+          <p class="lede">In a choose-your-own-adventure, the reader makes the choices, but the author knows every ending before writing page one. A CLI is the same: decide the outcome first, then write only the choices that lead there.</p>
+          <div class="the-end">
+            <div class="card ink">
+              <h2>The end.</h2>
+              <ul class="tick">
+                <li>A designer or PM has a running prototype on their laptop</li>
+                <li>In their team’s brand, built from the design system</li>
+                <li>On the latest design system, with Claude set up to use it</li>
+                <li>And a link they can share with the team</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h2>Our outcome</h2>
+              <p>A <b>prototyping environment</b> for designers and product managers. Not an app setup, not a component library: somewhere to try an idea this week and show it to people.</p>
+              <p style="margin-top:12px">Every path through the story has to reach this page. If a choice can’t, it doesn’t belong in the book.</p>
+            </div>
+          </div>`,
+
+        readers: () => `
+          <p class="eyebrow">Writing it · 2 of 4</p>
+          <h1>Know your readers, and their world</h1>
+          <p class="lede">Who’s holding the book decides how it’s written. Where they work decides which stories they need.</p>
+          <div class="grid readers">
+            <div class="card">
+              <h2>Readers</h2>
+              <p><b>Designers and product managers.</b> They want to try an idea, not set up a project.</p>
+              <ul style="margin-top:10px">
+                <li>Plain questions, no flags</li>
+                <li>A good default for every choice</li>
+                <li>As few pages as possible</li>
+              </ul>
+            </div>
+            ${[A, B].map((t) => `
+              <div class="card vertical">
+                <div class="who">Product vertical</div>
+                <h2><span class="swatch" style="background:${t.theme.bg}"></span>${t.name}</h2>
+                <p>${t.vertical}. Its own theme, mock products and its own version of each starting template, all from the one design system.</p>
+                <div class="tpls">${t.templates.map((x) => `<span>${x.name}</span>`).join('')}</div>
+              </div>`).join('')}
+          </div>
+          <p class="lede" style="margin-top:18px">One company, two product verticals, one design system. Designers work on one team or the other, and each team needs different starting points.</p>`,
+
+        turning: () => `
+          <p class="eyebrow">Writing it · 3 of 4</p>
+          <h1>Find the turning point</h1>
+          <p class="lede">Most stories have one choice that sends the reader down a different path. Ours is the team: it decides which version of the story they read.</p>
+          <div class="turning">
+            <div class="card ink">
+              <p class="question-big">Which team are you on?</p>
+              <p>${A.name} · ${A.vertical.toLowerCase()}, or ${B.name} · ${B.vertical.toLowerCase()}.</p>
+              <p style="margin-top:12px">Ask it first. Every later page depends on it, and nothing depends on the pages after it.</p>
+            </div>
+            <div class="card">
+              <table class="changes">
+                <thead><tr><th>The team decides</th><th>${A.name}</th><th>${B.name}</th></tr></thead>
+                <tbody>
+                  <tr><td>Theme</td><td>${A.name} tokens</td><td>${B.name} tokens</td></tr>
+                  <tr><td>Templates offered</td><td>${A.name}’s versions</td><td>${B.name}’s versions</td></tr>
+                  <tr><td>Mock products</td><td>${A.vertical.toLowerCase()}</td><td>${B.vertical.toLowerCase()}</td></tr>
+                  <tr><td>Same for both</td><td colspan="2">Latest design system, Claude setup, update check, preview link</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>`,
+
+        map: () => `
+          <p class="eyebrow">Writing it · 4 of 4</p>
+          <h1>Map it back from the ending</h1>
+          <p class="lede">Work right to left: what does the ending need, and which page decides it? Each page is a question in the CLI; each choice is an answer.</p>
+          <div style="margin-top:22px" class="card">${storyMap({ author: true, big: true })}</div>`,
+
+        // Part 2 · Reading it (the reader, playing as a designer)
+        team: () => `
+          <p class="eyebrow">Reading it · You’re the designer</p>
+          <div class="story">
+            <div class="book">
+              <p class="prose">You design for ${T(scenario.team).name}’s ${T(scenario.team).vertical.toLowerCase()} team. Your PM wants a <b>customer reviews section</b> on the product item page, prototyped by Friday. Instead of waiting on an engineer, you type one line:</p>
+              <p class="prose"><code>npx create-ds-prototype</code></p>
+              <p class="ask">Which team are you on?</p>
+              <div class="choices">
+                ${Object.entries(teams).map(([k, t], i) => choiceBtn(i, t.name, t.vertical, { picked: pick.team === k, badge: k === scenario.team && 'Your team' })).join('')}
+              </div>
+            </div>
+            ${side(`<p>The turning point. In the CLI it’s the question <code>team</code>, and it can be answered in the command with <code>--team a</code>.</p>
+                    <p>Ask it first: it picks the theme, the mock products, and which templates the next page offers.</p>`)}
+          </div>`,
+
+        template: () => {
+          const t = T(pick.team);
+          return `
+          <p class="eyebrow">Reading it · You’re on ${t.name}</p>
+          <div class="story">
+            <div class="book">
+              <p class="prose">${t.name}. ${t.vertical}. The CLI already knows your brand, so the next question only shows your team’s starting points.</p>
+              <p class="ask">What do you want to start from?</p>
+              <div class="choices">
+                ${t.templates.map((x, i) => choiceBtn(i, x.name, x.about, { picked: pick.template === x.id, badge: pick.team === scenario.team && x.id === scenario.template && 'Your brief' })).join('')}
+              </div>
+            </div>
+            ${side(`<p><b>Gate.</b> This question only offers ${t.name}’s versions of each template. ${pick.team === 'a' ? B.name : A.name}’s aren’t shown, so nobody can start from the wrong brand.</p>
+                    <p>In the CLI: <code>--template ${scenario.template}</code>. Each template is a folder in the CLI’s <code>templates/</code>.</p>`)}
+          </div>`;
+        },
+
+        end: () => {
+          const t = T(pick.team), tpl = tplOf();
+          return `
+          <div class="story">
+            <div>
+              <div class="ending-head"><span class="the">The end.</span></div>
+              <div class="path"><span>${t.name}</span><span>${tpl.name}</span></div>
+              ${preview()}
+              ${pick.team === scenario.team && tpl.id === scenario.template
+                ? `<p class="lede" style="font-size:16px">Your <b>${tpl.id}</b> prototype is running in ${t.name}’s theme. Now the real work: ask Claude for the reviews section.</p>
+                   <p class="next-prompt"><span>❯</span> ${scenario.prompt}</p>`
+                : `<p class="lede" style="font-size:16px">Your <b>${tpl.id}</b> prototype is running in ${t.name}’s theme, and the preview link is ready to share. Same ending as every other reader, with your answers in it.</p>`}
+              <p style="margin-top:14px"><button type="button" data-again>↺ Read it again as ${pick.team === 'a' ? B.name : A.name}</button></p>
+            </div>
+            <div class="side">
+              <p class="side-title">What your answers wrote</p>
+              <div class="card" style="padding:10px 14px"><ul class="files">${filesFor().map(([f, why]) => `<li>${f}<b>${why}</b></li>`).join('')}</ul></div>
+              ${note(`<p>Every reader reaches this page, on the latest design system and its context. The files differ by the answers, and each traces back to a choice.</p><p>Keeping every project that current after today is the next part of the story.</p>`)}
+            </div>
+          </div>`;
+        },
+      };
+
       const n = parseInt(location.hash.slice(1), 10);
       show(Number.isFinite(n) ? n - 1 : 0);
-
-      // Render every diagram up front, in the Deva Kit colours.
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: 'base',
-        securityLevel: 'loose',
-        themeVariables: {
-          fontFamily: '"Funnel Sans", system-ui, sans-serif',
-          fontSize: '22px',
-          primaryColor: '#fef8f8',
-          primaryTextColor: '#05237d',
-          primaryBorderColor: '#05237d',
-          lineColor: '#05237d',
-          textColor: '#05237d',
-          edgeLabelBackground: '#fcefed',
-        },
-        flowchart: { curve: 'basis', htmlLabels: true, padding: 14, nodeSpacing: 34, rankSpacing: 48 },
-      });
-      document.fonts.ready.then(async () => {
-        for (const [i, box] of [...document.querySelectorAll('.diagram')].entries()) {
-          const code = box.querySelector('.mermaid-src').textContent;
-          try {
-            const { svg } = await mermaid.render(`tree-${i + 1}`, code);
-            box.innerHTML = svg;
-            const el = box.querySelector('svg');
-            el.removeAttribute('height');
-            el.setAttribute('role', 'img');
-            el.setAttribute('aria-label', steps[i].querySelector('h1').textContent);
-          } catch (err) {
-            box.innerHTML = `<p class="error">Diagram ${i + 1} could not be drawn: ${String(err.message || err)}</p>`;
-          }
-        }
-      });
     })();
   </script>
 </body>
