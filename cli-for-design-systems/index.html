@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>How to build a CLI for your design system · Deva Studio</title>
+    <meta name="description" content="Into Design Systems · AI and Design Systems. How a prototyping CLI is put together: a decision-tree setup interview, a scaffold that follows the answers, and how to keep the CLI, every project and Claude's context in sync with the latest design system.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;700;800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="apple-touch-icon" href="../favicon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../html-deck.css">
+    <script src="../html-deck.js" defer></script>
+  </head>
+  <body class="deck-page">
+    <header class="deck-bar">
+      <a class="back" href="../" aria-label="All decks"><span aria-hidden="true">←</span> <span class="back-label">All decks</span></a>
+      <h1 class="deck-title">How to build a CLI for your design system</h1>
+      <span class="deck-count">25 slides</span>
+      <button class="notes-btn" type="button" data-presenter title="Open the presenter view (N)">Presenter view</button>
+      <button class="present-btn" type="button" data-present>Present</button>
+    </header>
+    <main class="deck" data-deck style="--w:1280;--h:720">
+      <div class="stage">
+      <section class="slide-frame" id="1" data-index="0">
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 1"><div class="hd dark">
+  <p class="hd-small" style="position:absolute;top:calc(60 * var(--u));left:calc(86 * var(--u))">Into Design Systems · AI and Design Systems</p>
+  <div class="hd-cover" style="top:calc(140 * var(--u));right:calc(610 * var(--u))">
+    <p class="hd-kicker">Conference session</p>
+    <h2 class="hd-display" style="font-size:calc(58 * var(--u))">How to build a CLI for your design system</h2>
+    <p class="hd-sub" style="font-size:calc(20 * var(--u))">Design the setup as a decision tree, scaffold from the answers, and keep every project current with your design system</p>
+  </div>
+  <div class="hd-cover" style="top:calc(560 * var(--u));right:calc(610 * var(--u))">
+    <div class="hd-people">
+      <p><b>Aimee Maroney</b>Design Engineer · Deva Studio</p>
+      <p><b>Hannah Clarke</b>Design System Architect · Deva Studio</p>
+    </div>
+  </div>
+  <div data-terminal="interview" style="position:absolute;left:calc(720 * var(--u));top:calc(104 * var(--u));width:calc(474 * var(--u));height:calc(512 * var(--u));font-size:calc(11.5 * var(--u))"></div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="2" data-index="1" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 2"><div class="hd ">
+  <p class="hd-label">Distribution</p>
+  <h2 class="hd-title">How design systems reach people today</h2>
+  <div class="hd-cards">
+    <div class="hd-card">
+      <span class="hd-card-icon">.fig</span>
+      <h3>Figma libraries</h3>
+      <p>Designers pull components, styles and variables into their files.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">npm</span>
+      <h3>Packages</h3>
+      <p>Engineers install the tokens and components into a product codebase.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">docs</span>
+      <h3>Documentation</h3>
+      <p>Guidance on when to use each piece, and how.</p>
+    </div>
+  </div>
+  <p class="hd-after">That was enough two years ago.<br><span>AI changed who builds prototypes, and how fast.</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="3" data-index="2" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 3"><div class="hd ">
+  <p class="hd-label">What changed</p>
+  <h2 class="hd-title">AI made prototypes fast, and drift easy</h2>
+  <div class="hd-cols">
+    <div class="hd-stack">
+      <p class="hd-text">Anyone can ask an AI coding agent for a working prototype in minutes. Left on its own, the agent reaches for whatever it already knows.</p>
+      <ul class="hd-list">
+        <li>Raw colours, guessed spacing and <b>hand-rolled components</b></li>
+        <li>It looks <b>close enough</b> to pass a quick review</li>
+        <li>Every prototype <b>drifts a little differently</b>, and that drift ships</li>
+      </ul>
+      <p class="hd-text">Libraries, packages and docs tell people what to use. Nothing tells the agent.</p>
+    </div>
+    <div class="hd-stack" style="justify-content:center;gap:calc(16 * var(--u))">
+      <div>
+        <span class="hd-pre-label">What the agent wrote</span>
+<pre class="hd-pre"><span class="k">&lt;button</span>
+  style={{
+    background: <span class="bad">'#2F6FED'</span>,
+    padding: <span class="bad">'9px 18px'</span>,
+    borderRadius: <span class="bad">6</span>,
+  }}<span class="k">&gt;</span>
+  Pay now
+<span class="k">&lt;/button&gt;</span></pre>
+      </div>
+      <div>
+        <span class="hd-pre-label">What the design system already has</span>
+<pre class="hd-pre"><span class="k">&lt;Button</span> variant=<span class="good">"primary"</span><span class="k">&gt;</span>Pay now<span class="k">&lt;/Button&gt;</span></pre>
+      </div>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="4" data-index="3" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 4"><div class="hd ">
+  <p class="hd-label">This session</p>
+  <h2 class="hd-title">What you'll learn</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
+    <ol class="hd-num" style="margin-top:calc(10 * var(--u))">
+      <li><b>What a CLI is</b>, why it's worth building one, and what it needs to run for everyone</li>
+      <li><b>How to design the setup interview as a decision tree</b>: start from the outcome you want, gate each question on earlier answers, and see how the tree drives the CLI's architecture</li>
+      <li><b>How to keep it always current</b>: release the CLI with the design system, ship Claude's context inside the package, make sure it uses the right components instead of inventing new ones, and check every project for updates</li>
+    </ol>
+    <div class="hd-quote" style="align-self:start">
+      <p class="hd-quote-text">You'll leave with a forkable starter CLI to add your own design system to.</p>
+      <p class="hd-text" style="font-size:calc(16 * var(--u))">For design system teams who want people to build with the system quickly and consistently, and anyone working out where AI coding agents fit.</p>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="5" data-index="4" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 5"><div class="hd dark">
+  <div class="hd-section">
+    <p class="hd-section-num">01</p>
+    <h2 class="hd-section-title">What a CLI is,<br>and why build one</h2>
+    <p class="hd-section-sub">What it does, why it suits a design system and AI agents, and what it needs to work for everyone.</p>
+  </div>
+  <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Staying current</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="6" data-index="5" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 6"><div class="hd ">
+  <p class="hd-label">The basics</p>
+  <h2 class="hd-title">A CLI is a tool you use by typing</h2>
+  <p class="hd-lede">CLI stands for command-line interface. Instead of manually creating a project from scratch each time, you type one line into a terminal, and the tool does the work. Here, it sets up a whole project to scaffold a prototyping environment.</p>
+  <div class="hd-anatomy" style="margin-top:calc(26 * var(--u));font-size:calc(28 * var(--u));gap:calc(26 * var(--u))">
+    <span style="--seg:#94a6dd"><b>npx</b><i><strong>"Run this tool"</strong>Downloads it and runs it. Nothing to install first.</i></span>
+    <span style="--seg:#fcd64d"><b>create-ds-prototype</b><i><strong>The tool's name</strong>Our CLI. Yours would have its own name.</i></span>
+    <span style="--seg:#9fe3d6"><b>product-page</b><i><strong>Your project's name</strong>The folder it creates for you.</i></span>
+  </div>
+  <div class="hd-cols" style="grid-template-columns:1fr 1fr;height:auto;margin-top:calc(26 * var(--u));gap:calc(40 * var(--u))">
+    <div class="hd-stack" style="gap:calc(10 * var(--u))">
+      <p class="hd-h3">Then it asks a few questions</p>
+      <p class="hd-text">Like a short form: use the arrow keys to pick an answer, then press Enter.</p>
+    </div>
+<pre class="hd-shell" style="align-self:start"><span class="t-accent">?</span> <span class="t-b">What are you building?</span>
+<span class="t-accent">❯ Prototype</span>
+  App</pre>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="7" data-index="6" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 7"><div class="hd ">
+  <p class="hd-label">Why a CLI</p>
+  <h2 class="hd-title">Why it's worth building one</h2>
+  <div class="hd-why">
+    <div class="hd-card">
+      <span class="hd-card-icon">1 command</span>
+      <h3>Fast</h3>
+      <p>Complex, repetitive, multi-step setup becomes one text command.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">same in · same out</span>
+      <h3>Repeatable</h3>
+      <p>The same answers produce the same project every time, for every team.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">--options</span>
+      <h3>Automatable</h3>
+      <p>Answers can be typed into the command itself (like <code>--template product</code>), so scripts can run it with no one at the keyboard.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">fewer tokens</span>
+      <h3>A head start for AI</h3>
+      <p>The agent starts from a working base template instead of generating the project from scratch, so it spends tokens on the actual work.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">npx …</span>
+      <h3>Easy to share</h3>
+      <p>One line anyone can copy into a README, a ticket or a chat, and an AI agent can run it too.</p>
+    </div>
+    <div class="hd-card is-key">
+      <h3>One command that people, scripts and AI agents all run the same way</h3>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="8" data-index="7" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 8"><div class="hd ">
+  <p class="hd-label">Requirements</p>
+  <h2 class="hd-title">What your CLI needs to work for everyone</h2>
+  <div class="hd-why">
+    <div class="hd-card">
+      <span class="hd-card-icon">git</span>
+      <h3>A repo host</h3>
+      <p>GitHub, GitLab, Azure DevOps or another, for the CLI's code, templates and releases.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">npx</span>
+      <h3>A way to distribute it</h3>
+      <p>Publish to a package registry (npm, GitHub Packages, GitLab or Azure Artifacts) so anyone can run it. Keep it private for an internal system.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">repo create</span>
+      <h3>A repo for every project</h3>
+      <p>The CLI creates one through the host's API or CLI (<code>gh</code>, <code>glab</code>, <code>az repos</code>) and pushes the first commit.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">https://</span>
+      <h3>Shareable prototype URLs</h3>
+      <p>Each project deploys to hosting (GitHub Pages, GitLab Pages, Azure Static Web Apps, Netlify or Vercel) with a link to send.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">tokens · SSO</span>
+      <h3>Access</h3>
+      <p>Credentials for the registry and repo host, so people can install the CLI and publish their projects.</p>
+    </div>
+    <div class="hd-card is-key">
+      <h3>The CLI ships like any package, and every prototype ends up with a repo and a URL</h3>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="9" data-index="8" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 9"><div class="hd ">
+  <p class="hd-label">The example</p>
+  <h2 class="hd-title">One ecommerce site, all the way through</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(400 * var(--u)) 1fr">
+    <div class="hd-stack">
+      <p class="hd-text">From here on, we'll follow one designer on Brand A, the coffee supply vertical. Their task: add a customer reviews section to the product item page.</p>
+      <ul class="hd-list">
+        <li>The CLI offers each brand its own <b>ecommerce templates</b>, built from design system components</li>
+        <li>They scaffold <b>product-page</b> from Brand A's product page template, then build the reviews with an agent</li>
+        <li>First, a look at the templates <b>in Figma</b>, and why we want them in a CLI</li>
+      </ul>
+    </div>
+    <div class="hd-tpls">
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><i class="wf-hero"></i><span class="wf-row"><i></i><i></i><i></i></span></span><b>Storefront</b><p>Header, navigation and a product grid</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-split"><i class="wf-img"></i><span class="wf-lines"><i></i><i></i><i class="short"></i><i class="wf-btn"></i></span></span></span><b>Product page</b><p>Gallery, price and add to cart</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i><span class="wf-steps"><i></i><i></i><i></i></span><span class="wf-split"><span class="wf-lines"><i></i><i></i><i></i><i class="wf-btn"></i></span><i class="wf-box"></i></span></span><b>Checkout</b><p>Cart, shipping and payment steps</p></div>
+      <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i></span><b>Blank page</b><p>The store header and nothing else</p></div>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="10" data-index="9" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 10"><div class="hd dark">
+  <div class="hd-break">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in Figma</p>
+    <h2 class="hd-section-title">Our example, in Figma</h2>
+    <p class="hd-section-sub">Each brand's storefront, product page and checkout templates, designed with the design system, and why we want to turn them into a CLI.</p>
+    <p class="hd-todo">Figma link for this demo</p>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="11" data-index="10" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 11"><div class="hd dark">
+  <div class="hd-section">
+    <p class="hd-section-num">02</p>
+    <h2 class="hd-section-title">The setup interview<br>as a decision tree</h2>
+    <p class="hd-section-sub">Start from the outcome, and ask only what changes it, in the right order. Then where the tree sits in the CLI's architecture.</p>
+  </div>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Staying current</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="12" data-index="11" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 12"><div class="hd dark">
+  <div class="hd-break">
+    <p class="hd-break-tag"><span aria-hidden="true">◇</span> Choose your own adventure</p>
+    <h2 class="hd-section-title">You're the author</h2>
+    <p class="hd-section-sub">Write the ending first: a prototyping environment for designers and PMs. Then play it as a designer, where the team you're on decides which templates you get.</p>
+    <button type="button" class="hd-break-btn" data-walkthrough="decision-tree/">Open the story <kbd>Enter</kbd></button>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="13" data-index="12" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 13"><div class="hd dark">
+  <div class="hd-break" style="top:calc(130 * var(--u))">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live in the code</p>
+    <h2 class="hd-section-title">Inside the CLI project</h2>
+    <p class="hd-section-sub">The architecture, in the real repo: how the decision tree's answers become a project, from entry to publish.</p>
+    <ul class="hd-break-list">
+      <li><code>src/</code> entry, the decision tree, plan, generate and publish</li>
+      <li><code>templates/</code> one folder per brand, each a runnable project</li>
+      <li><code>package.json</code> your design system, as a dependency</li>
+      <li><code>agent/</code> the <code>CLAUDE.md</code> and hooks every project gets</li>
+    </ul>
+    <p class="hd-todo">Link to the CLI repo for this demo</p>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="14" data-index="13" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 14"><div class="hd dark">
+  <div class="hd-break" style="top:calc(130 * var(--u))">
+    <p class="hd-break-tag"><span aria-hidden="true">↗</span> Live demo</p>
+    <h2 class="hd-section-title">The finished experience</h2>
+    <p class="hd-section-sub">Run the CLI the way a designer would, then open the project it creates.</p>
+    <ul class="hd-break-list">
+      <li><code>Run</code> <b>npx create-ds-prototype product-page</b>: Prototype → Brand A → Product page, set up for Claude</li>
+      <li><code>Open</code> <b>npm run dev</b>: Brand A's product page, built from the design system</li>
+      <li><code>Build</code> ask the agent to add a customer reviews section</li>
+      <li><code>Share</code> the preview URL the CLI printed</li>
+    </ul>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="15" data-index="14" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 15"><div class="hd dark">
+  <div class="hd-section">
+    <p class="hd-section-num">03</p>
+    <h2 class="hd-section-title">Always current</h2>
+    <p class="hd-section-sub">Projects outlive the design system version they were made with. Keep the CLI, every project and what Claude knows in sync with the latest release.</p>
+  </div>
+  <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span>Staying current</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="16" data-index="15" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 16"><div class="hd ">
+  <p class="hd-label">Staying current</p>
+  <h2 class="hd-title">Three things fall behind the design system</h2>
+  <div class="hd-cards">
+    <div class="hd-card">
+      <span class="hd-card-icon">cli</span>
+      <h3>The CLI</h3>
+      <p>Its templates and packages are a snapshot. <b>Release it with the design system</b>, so <code>npx create-ds-prototype@latest</code> always starts from the newest version.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">context</span>
+      <h3>What Claude knows</h3>
+      <p>Rules written once go stale. <b>Ship the context in the package</b>, so <code>CLAUDE.md</code> updates with <code>npm install</code>.</p>
+    </div>
+    <div class="hd-card">
+      <span class="hd-card-icon">project</span>
+      <h3>Existing projects</h3>
+      <p>Last month's prototype is still on last month's release. <b>Check when work starts</b>, and tell Claude what's new.</p>
+    </div>
+  </div>
+  <p class="hd-after">Make the latest design system the default,<br><span>not something people have to remember to fetch.</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="17" data-index="16" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 17"><div class="hd ">
+  <p class="hd-label">The CLI</p>
+  <h2 class="hd-title">Release the CLI with the design system</h2>
+  <div class="hd-flow">
+    <div class="hd-flow-step"><b>Design system release</b><p>Components 4.4.0 is published, with a new <code>Rating</code>.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Bump</b><p>Renovate or Dependabot opens a pull request on the CLI.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step is-key"><b>Scaffold every path</b><p>CI answers each path of the decision tree, then builds each project.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Publish</b><p>Merge, and a new CLI version goes to the registry.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Start current</b><p>The next <code>npx</code> run gets the new templates and packages.</p></div>
+  </div>
+  <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The decision tree doubles as the test plan: <span>every answer is an option, so CI can scaffold every path on every release.</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="18" data-index="17" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 18"><div class="hd ">
+  <p class="hd-label">What Claude knows</p>
+  <h2 class="hd-title">Ship the context with the components</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(500 * var(--u)) 1fr;gap:calc(36 * var(--u))">
+    <div class="hd-stack" style="gap:calc(18 * var(--u))">
+      <p class="hd-text">The design system team writes the guidance once, and publishes it inside the package: which components exist, when to use them, and what never to write.</p>
+      <p class="hd-text">The project's <code>CLAUDE.md</code> imports it instead of copying it. When the package updates, so does what Claude reads.</p>
+      <p class="hd-text">The guardrail reads its token and component map from the same package, so it can't fall behind either.</p>
+    </div>
+    <div class="hd-stack" style="gap:calc(12 * var(--u))">
+<pre class="hd-pre" style="font-size:calc(14 * var(--u))"><span class="c"># product-page/CLAUDE.md · written by the CLI</span>
+Prototype for Brand A, built with @your-ds.
+
+@node_modules/@your-ds/components/CLAUDE.md
+@node_modules/@your-ds/tokens/tokens.md</pre>
+<pre class="hd-pre" style="font-size:calc(14 * var(--u))">@your-ds/components/      <span class="c">published by the DS team</span>
+├── dist/
+├── <span class="k">CLAUDE.md</span>             <span class="c">usage rules for Claude</span>
+├── <span class="k">components.json</span>       <span class="c">every component and its props</span>
+└── <span class="k">guard-map.json</span>        <span class="c">what the guardrail swaps in</span></pre>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="19" data-index="18" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 19"><div class="hd ">
+  <p class="hd-label">Correct usage</p>
+  <h2 class="hd-title">Make the right component the easy path</h2>
+  <p class="hd-lede">Up-to-date context isn't enough on its own. Claude still has to pick the right component, use it as designed, and not invent a new one.</p>
+  <div class="hd-flow">
+    <div class="hd-flow-step"><b>Tell</b><p><code>CLAUDE.md</code> imports the catalog: every component, its props, and when to use it.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Look it up</b><p>Before writing UI, Claude asks the catalog: <code>npm run ds:find "review"</code>.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step is-key"><b>Block</b><p>The guardrail stops raw values, plain elements, unknown props, and new components that copy one in the system.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Flag</b><p>If nothing fits, Claude composes from existing pieces and logs a request for the design system team.</p></div>
+  </div>
+  <p class="hd-after" style="margin-top:calc(44 * var(--u));max-width:calc(940 * var(--u))">Rules ask. Hooks enforce. <span>And a missing component becomes a request, not a one-off.</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="20" data-index="19" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 20"><div class="hd ">
+  <p class="hd-label">What Claude writes</p>
+  <h2 class="hd-title">A guardrail blocks off-system and invented code</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(32 * var(--u))">
+    <div class="hd-stack" style="gap:calc(12 * var(--u))">
+<pre class="hd-pre" style="font-size:calc(11.5 * var(--u))"><span class="c">// .claude/settings.json</span>
+<span class="s">"PreToolUse"</span>: [{
+  <span class="s">"matcher"</span>: <span class="s">"Edit|Write"</span>,
+  <span class="s">"hooks"</span>: [{ <span class="s">"type"</span>: <span class="s">"command"</span>,
+    <span class="s">"command"</span>: <span class="s">"node .claude/hooks/ds-guard.mjs"</span> }]
+}]</pre>
+<pre class="hd-pre" style="font-size:calc(11.5 * var(--u))"><span class="c">// .claude/hooks/ds-guard.mjs</span>
+<span class="k">const</span> { tool_input } = JSON.parse(<span class="k">await</span> readStdin());
+<span class="k">const</span> code = tool_input.new_string ?? tool_input.content ?? <span class="s">''</span>;
+<span class="k">const</span> problems = [
+  ...rawColours(code).map((c) =&gt;
+    <span class="s">`Raw colour ${c}. Use a token: ${tokenFor(c)}`</span>),
+  ...rawElements(code).map((el) =&gt;
+    <span class="s">`&lt;${el}&gt; found. Use &lt;${componentFor(el)}&gt;`</span>),
+  ...newComponents(tool_input.file_path, code).map((c) =&gt;
+    <span class="s">`New component ${c}. Use &lt;${closestInCatalog(c)}&gt;`</span>),
+];
+<span class="k">if</span> (problems.length) {
+  console.error(problems.join(<span class="s">'\n'</span>));
+  process.exit(<span class="k">2</span>); <span class="c">// blocks the edit; stderr tells the agent the fix</span>
+}</pre>
+    </div>
+    <div data-terminal="guardrail" style="height:calc(452 * var(--u));font-size:calc(12 * var(--u))"></div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="21" data-index="20" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 21"><div class="hd ">
+  <p class="hd-label">Existing projects</p>
+  <h2 class="hd-title">A session-start check nudges toward updates</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(32 * var(--u))">
+    <div class="hd-stack" style="gap:calc(12 * var(--u))">
+      <p class="hd-text" style="font-size:calc(17 * var(--u))">Prototypes outlive the version they were made with. When a session starts, the hook compares versions and gives the agent a short note.</p>
+<pre class="hd-pre" style="font-size:calc(12.5 * var(--u))"><span class="c">// .claude/hooks/ds-check.mjs · registered under "SessionStart"</span>
+<span class="k">const</span> installed = installedVersion(<span class="s">'@your-ds/components'</span>);
+<span class="k">const</span> latest = <span class="k">await</span> publishedVersion(<span class="s">'@your-ds/components'</span>);
+<span class="k">if</span> (installed !== latest) {
+  console.log(<span class="s">`Components ${installed} installed, ${latest} out`</span>);
+  console.log(<span class="s">`New: ${</span><span class="k">await</span> <span class="s">newComponents(installed, latest)}`</span>);
+}
+<span class="k">if</span> (scaffoldVersion() &lt; latestScaffold()) {
+  console.log(<span class="s">'Update with: npx create-ds-prototype update'</span>);
+}
+<span class="c">// SessionStart output is added to the agent's context</span></pre>
+      <p class="hd-text" style="font-size:calc(16 * var(--u))">It nudges and never blocks. Updating stays the team's call.</p>
+    </div>
+    <div data-terminal="session-start" style="height:calc(452 * var(--u));font-size:calc(12 * var(--u))"></div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="22" data-index="21" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 22"><div class="hd ">
+  <p class="hd-label">Putting it together</p>
+  <h2 class="hd-title">One command, consistent from the start</h2>
+  <div class="hd-flow">
+    <div class="hd-flow-step"><b>Run</b><p>One <code>npx</code> command starts it.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Interview</b><p>A decision tree, planned from the ending.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Scaffold</b><p>Answers become files built on your system.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Build</b><p>Claude uses the system's components, checked by a guardrail.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step is-key"><b>Stay current</b><p>The CLI releases with the system; projects check each session.</p></div>
+  </div>
+  <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The design system stops being something people look up, <span>and becomes something they start from.</span></p>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="23" data-index="22" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 23"><div class="hd ">
+  <p class="hd-label">Take it home</p>
+  <h2 class="hd-title">Fork the starter, then add your design system</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(600 * var(--u)) 1fr">
+    <ol class="hd-num" style="gap:calc(12 * var(--u));font-size:calc(17 * var(--u))">
+      <li><b>Packages:</b> point the installer at your token and component packages</li>
+      <li><b>Templates:</b> rebuild the storefront, product and checkout templates with your components</li>
+      <li><b>Questions:</b> edit the tree and its gates, all in one file</li>
+      <li><b>Context:</b> publish <code>CLAUDE.md</code>, the component catalog and the guardrail map inside your package</li>
+      <li><b>Releases:</b> let a bot bump the CLI and scaffold every path when your system publishes</li>
+      <li><b>Publishing:</b> connect your repo host, package registry and hosting</li>
+    </ol>
+    <div class="hd-stack" style="gap:calc(16 * var(--u))">
+      <p class="hd-todo">Starter CLI repository link (and a QR code, if you want one)</p>
+<pre class="hd-shell"><span class="t-dim"># fork the starter on GitHub, then</span>
+git clone &lt;your fork&gt;
+cd create-ds-prototype
+npm install
+npm link
+create-ds-prototype my-first-prototype</pre>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="24" data-index="23" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#05237d" aria-label="Slide 24"><div class="hd dark">
+  <div class="hd-close">
+    <h2>Thank you</h2>
+    <p class="hd-sub">Questions?</p>
+    <div class="hd-people">
+      <p><b>Aimee Maroney</b>Design Engineer · Deva Studio</p>
+      <p><b>Hannah Clarke</b>Design System Architect · Deva Studio</p>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      <section class="slide-frame" id="25" data-index="24" hidden>
+        <div class="slide" style="--w:1280;--h:720;background:#f4c7c2" aria-label="Slide 25"><div class="hd ">
+  <p class="hd-label">Appendix</p>
+  <h2 class="hd-title">Try the interview yourself</h2>
+  <div class="hd-cols" style="grid-template-columns:calc(330 * var(--u)) 1fr">
+    <div class="hd-stack">
+      <p class="hd-text">The same questions as the starter CLI. Change any answer to see which files the scaffold would create.</p>
+      <ul class="hd-list">
+        <li>Pick <b>App</b> to see a recommendation</li>
+        <li>Switch the <b>brand</b> to change the theme and templates</li>
+      </ul>
+    </div>
+    <div class="hd-demo" style="align-items:stretch">
+      <span class="hd-anno" style="align-self:center">Answer the questions · new files are highlighted</span>
+      <div data-interview="files"></div>
+    </div>
+  </div>
+  
+</div></div>
+        
+      </section>
+      </div>
+      <nav class="deck-nav" aria-label="Slide navigation">
+        <button type="button" data-prev aria-label="Previous slide">‹</button>
+        <span data-counter aria-live="polite">1 / 25</span>
+        <button type="button" data-next aria-label="Next slide">›</button>
+      </nav>
+    </main>
+    <script src="../viewer.js" defer></script>
+  </body>
+</html>
