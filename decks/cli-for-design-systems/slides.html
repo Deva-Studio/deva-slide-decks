@@ -91,7 +91,7 @@
     <ol class="hd-num" style="margin-top:calc(10 * var(--u))">
       <li><b>What a CLI is</b>, why it's worth building one, and what it needs to run for everyone</li>
       <li><b>How to design the setup interview as a decision tree</b>: start from the outcome you want, gate each question on earlier answers, and see how the tree drives the CLI's architecture</li>
-      <li><b>How to keep it always current</b>: release the CLI with the design system, ship Claude's context inside the package, and check every project for updates when work starts</li>
+      <li><b>How to keep it always current</b>: release the CLI with the design system, ship Claude's context inside the package, make sure it uses the right components instead of inventing new ones, and check every project for updates</li>
     </ol>
     <div class="hd-quote" style="align-self:start">
       <p class="hd-quote-text">You'll leave with a forkable starter CLI to add your own design system to.</p>
@@ -363,19 +363,36 @@ Prototype for Brand A, built with @your-ds.
   </div>
 </section>
 
-<!-- 19 · Guardrail hook -->
+<!-- 19 · Correct usage -->
+<section>
+  <p class="hd-label">Correct usage</p>
+  <h2 class="hd-title">Make the right component the easy path</h2>
+  <p class="hd-lede">Up-to-date context isn't enough on its own. Claude still has to pick the right component, use it as designed, and not invent a new one.</p>
+  <div class="hd-flow">
+    <div class="hd-flow-step"><b>Tell</b><p><code>CLAUDE.md</code> imports the catalog: every component, its props, and when to use it.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Look it up</b><p>Before writing UI, Claude asks the catalog: <code>npm run ds:find "review"</code>.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step is-key"><b>Block</b><p>The guardrail stops raw values, plain elements, unknown props, and new components that copy one in the system.</p></div>
+    <span class="hd-flow-arrow" aria-hidden="true">→</span>
+    <div class="hd-flow-step"><b>Flag</b><p>If nothing fits, Claude composes from existing pieces and logs a request for the design system team.</p></div>
+  </div>
+  <p class="hd-after" style="margin-top:calc(44 * var(--u));max-width:calc(940 * var(--u))">Rules ask. Hooks enforce. <span>And a missing component becomes a request, not a one-off.</span></p>
+</section>
+
+<!-- 20 · Guardrail hook -->
 <section>
   <p class="hd-label">What Claude writes</p>
-  <h2 class="hd-title">A guardrail keeps edits on the latest system</h2>
+  <h2 class="hd-title">A guardrail blocks off-system and invented code</h2>
   <div class="hd-cols" style="grid-template-columns:calc(560 * var(--u)) 1fr;gap:calc(32 * var(--u))">
     <div class="hd-stack" style="gap:calc(12 * var(--u))">
-<pre class="hd-pre" style="font-size:calc(12.5 * var(--u))"><span class="c">// .claude/settings.json</span>
+<pre class="hd-pre" style="font-size:calc(11.5 * var(--u))"><span class="c">// .claude/settings.json</span>
 <span class="s">"PreToolUse"</span>: [{
   <span class="s">"matcher"</span>: <span class="s">"Edit|Write"</span>,
   <span class="s">"hooks"</span>: [{ <span class="s">"type"</span>: <span class="s">"command"</span>,
     <span class="s">"command"</span>: <span class="s">"node .claude/hooks/ds-guard.mjs"</span> }]
 }]</pre>
-<pre class="hd-pre" style="font-size:calc(12.5 * var(--u))"><span class="c">// .claude/hooks/ds-guard.mjs</span>
+<pre class="hd-pre" style="font-size:calc(11.5 * var(--u))"><span class="c">// .claude/hooks/ds-guard.mjs</span>
 <span class="k">const</span> { tool_input } = JSON.parse(<span class="k">await</span> readStdin());
 <span class="k">const</span> code = tool_input.new_string ?? tool_input.content ?? <span class="s">''</span>;
 <span class="k">const</span> problems = [
@@ -383,6 +400,8 @@ Prototype for Brand A, built with @your-ds.
     <span class="s">`Raw colour ${c}. Use a token: ${tokenFor(c)}`</span>),
   ...rawElements(code).map((el) =&gt;
     <span class="s">`&lt;${el}&gt; found. Use &lt;${componentFor(el)}&gt;`</span>),
+  ...newComponents(tool_input.file_path, code).map((c) =&gt;
+    <span class="s">`New component ${c}. Use &lt;${closestInCatalog(c)}&gt;`</span>),
 ];
 <span class="k">if</span> (problems.length) {
   console.error(problems.join(<span class="s">'\n'</span>));
@@ -393,7 +412,7 @@ Prototype for Brand A, built with @your-ds.
   </div>
 </section>
 
-<!-- 20 · Session-start check -->
+<!-- 21 · Session-start check -->
 <section>
   <p class="hd-label">Existing projects</p>
   <h2 class="hd-title">A session-start check nudges toward updates</h2>
@@ -417,7 +436,7 @@ Prototype for Brand A, built with @your-ds.
   </div>
 </section>
 
-<!-- 21 · Putting it together -->
+<!-- 22 · Putting it together -->
 <section>
   <p class="hd-label">Putting it together</p>
   <h2 class="hd-title">One command, consistent from the start</h2>
@@ -428,14 +447,14 @@ Prototype for Brand A, built with @your-ds.
     <span class="hd-flow-arrow" aria-hidden="true">→</span>
     <div class="hd-flow-step"><b>Scaffold</b><p>Answers become files built on your system.</p></div>
     <span class="hd-flow-arrow" aria-hidden="true">→</span>
-    <div class="hd-flow-step"><b>Build</b><p>Claude works from the design system's own context.</p></div>
+    <div class="hd-flow-step"><b>Build</b><p>Claude uses the system's components, checked by a guardrail.</p></div>
     <span class="hd-flow-arrow" aria-hidden="true">→</span>
     <div class="hd-flow-step is-key"><b>Stay current</b><p>The CLI releases with the system; projects check each session.</p></div>
   </div>
   <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The design system stops being something people look up, <span>and becomes something they start from.</span></p>
 </section>
 
-<!-- 22 · Fork the starter -->
+<!-- 23 · Fork the starter -->
 <section>
   <p class="hd-label">Take it home</p>
   <h2 class="hd-title">Fork the starter, then add your design system</h2>
@@ -444,7 +463,7 @@ Prototype for Brand A, built with @your-ds.
       <li><b>Packages:</b> point the installer at your token and component packages</li>
       <li><b>Templates:</b> rebuild the storefront, product and checkout templates with your components</li>
       <li><b>Questions:</b> edit the tree and its gates, all in one file</li>
-      <li><b>Context:</b> publish a <code>CLAUDE.md</code> and guardrail map inside your component package</li>
+      <li><b>Context:</b> publish <code>CLAUDE.md</code>, the component catalog and the guardrail map inside your package</li>
       <li><b>Releases:</b> let a bot bump the CLI and scaffold every path when your system publishes</li>
       <li><b>Publishing:</b> connect your repo host, package registry and hosting</li>
     </ol>
@@ -460,7 +479,7 @@ create-ds-prototype my-first-prototype</pre>
   </div>
 </section>
 
-<!-- 23 · Thank you -->
+<!-- 24 · Thank you -->
 <section class="dark">
   <div class="hd-close">
     <h2>Thank you</h2>
@@ -472,7 +491,7 @@ create-ds-prototype my-first-prototype</pre>
   </div>
 </section>
 
-<!-- 24 · Appendix · Try the interview -->
+<!-- 25 · Appendix · Try the interview -->
 <section>
   <p class="hd-label">Appendix</p>
   <h2 class="hd-title">Try the interview yourself</h2>

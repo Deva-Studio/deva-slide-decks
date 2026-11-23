@@ -76,21 +76,25 @@
     // An agent tries to write off-system code and the PreToolUse hook blocks it.
     guardrail: {
       title: 'Terminal — Claude Code in product-page',
-      label: 'Animated agent session: asked to add a customer reviews section, the agent writes a raw hex colour and a '
-        + 'plain heading element. The guardrail hook blocks the edit and names the token and component to use. The '
-        + 'agent retries with the design system Heading and Card, and the edit passes.',
+      label: 'Animated agent session: asked to add a customer reviews section, Claude starts writing its own ReviewCard '
+        + 'component with a raw hex colour. The guardrail hook blocks the new file: the design system already has Card, '
+        + 'and the colour should be a token. Claude looks up the catalog, then builds the section with the design '
+        + 'system Heading and Card, and the edit passes.',
       steps: [
         { cmd: 'Add a customer reviews section under the product details', prompt: '❯ ' },
         { out: '', wait: 600 },
-        { out: '<span class="t-b">●</span> I\'ll add a heading and a list of review cards.', wait: 700 },
-        { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
-        { out: '  <span class="t-add">+ &lt;h3 style={{ color: "#6B3E1F" }}&gt;Customer reviews&lt;/h3&gt;</span>', wait: 900 },
+        { out: '<span class="t-b">●</span> I\'ll make a ReviewCard component, then list the reviews.', wait: 700 },
+        { out: '<span class="t-b">●</span> <span class="t-b">Write</span> src/components/ReviewCard.tsx', wait: 300 },
+        { out: '  <span class="t-add">+ export function ReviewCard({ review }) {</span>', wait: 150 },
+        { out: '  <span class="t-add">+   return &lt;div style={{ border: "1px solid #D9C9B6" }}&gt;</span>', wait: 900 },
         { spin: 'Running PreToolUse hook: ds-guard', done: '', ms: 900, quiet: true },
         { out: '  <span class="t-err">⎿ Blocked by ds-guard</span>', wait: 200 },
-        { out: '    <span class="t-err">✖</span> Raw colour #6B3E1F. Use a token: var(--ds-color-text-heading)', wait: 200 },
-        { out: '    <span class="t-err">✖</span> &lt;h3&gt; found. Use &lt;Heading&gt; from @your-ds/components', wait: 1400 },
+        { out: '    <span class="t-err">✖</span> New component ReviewCard. Use &lt;Card&gt; from @your-ds/components', wait: 200 },
+        { out: '    <span class="t-err">✖</span> Raw colour #D9C9B6. Use a token: var(--ds-color-border)', wait: 1400 },
         { out: '' },
-        { out: '<span class="t-b">●</span> The design system has Heading and Card. Using them instead.', wait: 700 },
+        { out: '<span class="t-b">●</span> I\'ll check the catalog before writing UI.', wait: 500 },
+        { out: '<span class="t-b">●</span> <span class="t-b">Bash</span> npm run ds:find "review"', wait: 300 },
+        { out: '  <span class="t-dim">⎿ Card · Heading · Text · Avatar</span>', wait: 900 },
         { out: '<span class="t-b">●</span> <span class="t-b">Edit</span> src/templates/ProductPage.tsx', wait: 300 },
         { out: '  <span class="t-add">+ &lt;Heading level={3}&gt;Customer reviews&lt;/Heading&gt;</span>', wait: 300 },
         { out: '  <span class="t-add">+ {reviews.map((r) =&gt; &lt;Card key={r.id}&gt;{r.text}&lt;/Card&gt;)}</span>', wait: 900 },
