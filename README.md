@@ -100,6 +100,28 @@ The example's fictional brands (placeholders "Brand A" and "Brand B") appear in 
 Files in `decks/<dir>/pages/` are copied next to the deck as they are. Mermaid (used by the diagrams on the slides) comes from the `mermaid` npm
 package and is copied to `dist/vendor/`, so the diagrams work without a network connection.
 
+## Presenter notes and the presenter view
+
+Each slide can carry notes, kept off the slide itself:
+
+```html
+<aside class="notes" data-speaker="Hannah" data-minutes="1.5">
+  <p>What to say. <span class="cue">Switch to the code</span> marks a cue.</p>
+</aside>
+```
+
+- `data-speaker` names who presents the slide; the presenter view warns before a handoff.
+- `data-minutes` is the slide's time budget. Add `"minutes": 40` to the deck in `decks/decks.json` for the talk's slot.
+
+In the deck, press `N` (or **Presenter view**) to open `/<slug>/presenter/` in its own window. Opening it also puts the deck in full screen; if the
+browser refuses (it only allows full screen from a click in that window), the deck shows a **Click to present full
+screen** prompt, and the presenter view says whether the deck is full screen. Put the deck on the projector and the
+presenter view on your laptop. It shows the notes, who's speaking, this slide and the next, a talk
+timer (`T` starts and pauses it; it also starts on the first slide change) and whether you're ahead or behind the
+budget. `←` / `→`, `Space`, `Enter`, `1`–`4` and `Esc` in the presenter view drive the deck, and the
+choose-your-own-adventure when it's open; its pages send their own notes (`NOTES` in its script). The windows sync
+over a `BroadcastChannel`, so both must be open in the same browser.
+
 ## Viewing a deck
 
 - One slide at a time, scaled to fit the screen from phone to desktop.

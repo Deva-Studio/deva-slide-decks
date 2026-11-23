@@ -4,6 +4,7 @@
     "slug": "cli-for-design-systems",
     "title": "How to build a CLI for your design system",
     "description": "Into Design Systems · AI and Design Systems. How a prototyping CLI is put together: a decision-tree setup interview, a scaffold that follows the answers, and how to keep the CLI, every project and Claude's context in sync with the latest design system.",
-    "date": "2026"
+    "date": "2026",
+    "minutes": 40
   }
 ]

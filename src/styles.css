@@ -248,6 +248,37 @@ body.deck-page {
   .slide-frame { border-radius: 0; outline: 0; }
 }
 
+/* Presenter view buttons and bare previews (?preview). */
+.notes-btn {
+  border: 1px solid var(--text);
+  background: transparent;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.notes-btn:hover { background: color-mix(in srgb, var(--text) 8%, transparent); }
+@media (max-width: 720px) { .notes-btn { display: none; } }
+.is-preview body.deck-page { background: transparent; }
+.is-preview .deck-bar, .is-preview .deck-nav { display: none; }
+.is-preview .deck { padding: 0; gap: 0; }
+.is-preview .slide-frame { border-radius: 0; outline: 0; box-shadow: none; }
+
+/* Shown on the deck when the presenter view is open but the deck isn't full screen yet. */
+.present-prompt {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  border: 0; cursor: pointer;
+  background: rgb(3 21 75 / 0.88); color: #fcefed;
+  font-family: var(--ui-font);
+}
+.present-prompt b { font-family: var(--display-font); font-size: clamp(28px, 4vw, 56px); font-weight: 700; }
+.present-prompt span { font-size: 1rem; opacity: 0.85; }
+.present-prompt kbd { font: inherit; padding: 0 6px; border: 1px solid currentColor; border-radius: 4px; }
+.present-prompt:focus-visible { outline: 3px solid #fcd64d; outline-offset: -8px; }
+
 /* Full-screen presenting. */
 .deck:fullscreen { background: #000; padding: 0; gap: 0; }
 .deck:fullscreen .slide-frame { border-radius: 0; outline: 0; box-shadow: none; }

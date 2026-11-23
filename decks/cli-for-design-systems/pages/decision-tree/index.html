@@ -283,7 +283,48 @@
       const ret = new URLSearchParams(location.search).get('return');
       back.href = ret ? `../#${ret}` : '../';
 
+      // ------------------------------------------------------------------------------------------
+      // Presenter notes for each page, shown in the deck's presenter view (N on the deck).
+      // ------------------------------------------------------------------------------------------
+      const SPEAKER = 'Aimee';
+      const NOTES = {
+        ending: `<p>Set up the metaphor: in a choose-your-own-adventure the reader makes the choices, but the <b>author knows every ending first</b>.</p>
+          <p>Our ending is a <b>prototyping environment</b> for designers and PMs. Read the four ticks quickly.</p>
+          <p>Land the rule: if a choice can't reach this ending, it doesn't belong in the book. <span class="cue">~45 s</span></p>`,
+        readers: `<p>Two things shape the story: <b>who reads it</b> and <b>the world they're in</b>.</p>
+          <p>Readers are designers and PMs, not engineers: plain questions, no flags, a default for everything.</p>
+          <p>The world: one company, two product verticals, one design system. Each brand has its own version of the same templates. <span class="cue">~45 s</span></p>`,
+        turning: `<p>Every story has a turning point. Ours is <b>"Which team are you on?"</b></p>
+          <p>Point at the table: the team decides the theme, which versions of the templates you see and the mock products. Everything else is the same for both.</p>
+          <p>That's why it's asked first. <span class="cue">~45 s</span></p>`,
+        map: `<p>Now map it <b>right to left</b>, from the ending back to the first question.</p>
+          <p>Each column is a question in the CLI, each chip an answer. Call out the gate on the templates column.</p>
+          <p>Then switch roles: "Let's read it as a designer." <span class="cue">~45 s</span></p>`,
+        team: `<p>Read the opening: you design for Brand A's coffee team, and your PM wants <b>customer reviews</b> on the product page by Friday.</p>
+          <p>Point to the author's note: this question is <code>--team a</code> in the CLI.</p>
+          <p>Pick <b>Brand A</b>. <span class="cue">~40 s</span></p>`,
+        template: `<p>Show the gate: the story map dims Brand B's templates. Nobody can start from the wrong brand.</p>
+          <p>Pick <b>Product page</b>, our brief. <span class="cue">~30 s</span></p>`,
+        end: `<p>"The end." The prototype is running in Brand A's theme. Read the files list: each traces back to an answer.</p>
+          <p>The dashed box is the real job, the reviews section, and the prompt we'll give Claude.</p>
+          <p>Skip "Read it again" if time is tight. Press <b>Back to the slides</b> and hand over to Hannah. <span class="cue">~45 s</span></p>`,
+      };
+      const deckPath = new URL('../', location.href).pathname;
+      const channel = 'BroadcastChannel' in window ? new BroadcastChannel(`deck-presenter:${deckPath}`) : null;
+      const announce = () => channel?.postMessage({
+        type: 'story', page: at + 1, of: PAGES.length, speaker: SPEAKER,
+        title: main.querySelector('h1, .ask, .the')?.textContent.trim() || '', html: NOTES[PAGES[at]] || '',
+      });
+      channel?.addEventListener('message', ({ data }) => { if (data?.type === 'hello') announce(); });
+      addEventListener('pagehide', () => channel?.postMessage({ type: 'story-end' }));
+      // Keys pressed in the presenter view arrive from the deck as presenter-key messages.
+      addEventListener('message', (e) => {
+        if (e.origin !== location.origin || e.data?.type !== 'presenter-key') return;
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: e.data.key, bubbles: true, cancelable: true }));
+      });
+
       function leave(finished) {
+        channel?.postMessage({ type: 'story-end' });
         if (embedded) parent.postMessage({ type: 'walkthrough-close', finished }, '*');
         else location.href = back.href;
       }
@@ -312,6 +353,7 @@
           ? '<kbd>1</kbd>–<kbd>4</kbd> choose · <kbd>←</kbd> <kbd>→</kbd> turn the page · <kbd>Esc</kbd> back to the slides'
           : '<kbd>←</kbd> <kbd>→</kbd> turn the page · <kbd>Esc</kbd> back to the slides';
         history.replaceState(null, '', `${location.search}#${at + 1}`);
+        announce();
         main.querySelectorAll('[data-choose]').forEach((b) => b.addEventListener('click', () => choose(+b.dataset.choose)));
         main.querySelector('[data-again]')?.addEventListener('click', () => {
           const other = pick.team === 'a' ? 'b' : 'a';

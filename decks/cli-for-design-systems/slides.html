@@ -23,6 +23,11 @@
     </div>
   </div>
   <div data-terminal="interview" style="position:absolute;left:calc(720 * var(--u));top:calc(104 * var(--u));width:calc(474 * var(--u));height:calc(512 * var(--u));font-size:calc(11.5 * var(--u))"></div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1">
+    <p>Welcome. <b>Aimee</b>: introduce yourself, Design Engineer at Deva Studio. <b>Hannah</b>: introduce yourself, Design System Architect.</p>
+    <p>One line on the talk: we'll build a CLI that hands every designer a prototype on your design system, and keeps it current.</p>
+    <p>The terminal on the right is the CLI we'll build, running. No need to narrate it yet.</p>
+  </aside>
 </section>
 
 <!-- 2 · How design systems ship -->
@@ -47,6 +52,10 @@
     </div>
   </div>
   <p class="hd-after">That was enough two years ago.<br><span>AI changed who builds prototypes, and how fast.</span></p>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1.5">
+    <p>How do design systems reach people today? <b>Figma libraries</b> for designers, <b>packages</b> for engineers, <b>docs</b> for guidance.</p>
+    <p>That worked when people built things by hand. Pause on the last line: AI changed who builds prototypes, and how fast.</p>
+  </aside>
 </section>
 
 <!-- 3 · What changed -->
@@ -81,6 +90,11 @@
       </div>
     </div>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1.5">
+    <p>Anyone can ask an AI agent for a working prototype in minutes. Left alone, it reaches for <b>what it already knows</b>, not your system.</p>
+    <p>Point at the code: a hand-rolled button with a raw colour, when the system already has <code>&lt;Button variant="primary"&gt;</code>.</p>
+    <p>Land it: libraries, packages and docs tell <b>people</b> what to use. Nothing tells the agent.</p>
+  </aside>
 </section>
 
 <!-- 4 · This session -->
@@ -98,6 +112,11 @@
       <p class="hd-text" style="font-size:calc(16 * var(--u))">For design system teams who want people to build with the system quickly and consistently, and anyone working out where AI coding agents fit.</p>
     </div>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1">
+    <p>Three things you'll learn: what a CLI is and why, how to design its setup as a decision tree, and how to keep it always current.</p>
+    <p>Mention the split: <b>I'll take the first two sections, Hannah the last two.</b></p>
+    <p>And everyone leaves with a forkable starter CLI.</p>
+  </aside>
 </section>
 
 <!-- 5 · Section: what a CLI is -->
@@ -108,6 +127,9 @@
     <p class="hd-section-sub">What it does, why it suits a design system and AI agents, and what it needs to work for everyone.</p>
   </div>
   <p class="hd-band"><span>What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Staying current</span></p>
+  <aside class="notes" data-speaker="Aimee" data-minutes="0.25">
+    <p>Section one: what a CLI is, and why it's worth building one. Move straight on.</p>
+  </aside>
 </section>
 
 <!-- 6 · What a CLI is -->
@@ -129,6 +151,11 @@
 <span class="t-accent">❯ Prototype</span>
   App</pre>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1.5">
+    <p>For anyone who hasn't used one: a CLI is a tool you use by <b>typing</b>.</p>
+    <p>Walk the command left to right: <code>npx</code> runs it, <code>create-ds-prototype</code> is the tool, <code>product-page</code> is your project.</p>
+    <p>Then it asks a few questions, like a short form. That's the whole interface.</p>
+  </aside>
 </section>
 
 <!-- 7 · Why a CLI -->
@@ -165,6 +192,11 @@
       <h3>One command that people, scripts and AI agents all run the same way</h3>
     </div>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1.5">
+    <p>Why a CLI, and not a template repo or a doc? Pick two or three cards, don't read all six:</p>
+    <ul><li><b>Repeatable</b>: same answers, same project, every team</li><li><b>A head start for AI</b>: Claude starts from a working base, so it spends tokens on the real work</li><li><b>Easy to share</b>: one line in a ticket or chat</li></ul>
+    <p>Close on the line at the bottom: people, scripts and AI agents all run it the same way.</p>
+  </aside>
 </section>
 
 <!-- 8 · What your CLI needs -->
@@ -201,6 +233,11 @@
       <h3>The CLI ships like any package, and every prototype ends up with a repo and a URL</h3>
     </div>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1.5">
+    <p>What it needs to work for <b>everyone</b>, not just on your laptop:</p>
+    <ul><li>a repo host and a registry to publish it</li><li>a repo for every project, created for you</li><li>hosting for a shareable URL, and access for the people using it</li></ul>
+    <p>The point: every prototype ends up with a repo and a link to send.</p>
+  </aside>
 </section>
 
 <!-- 9 · The example -->
@@ -223,6 +260,11 @@
       <div class="hd-tpl"><span class="hd-wf" aria-hidden="true"><i class="wf-bar"></i></span><b>Blank page</b><p>The store header and nothing else</p></div>
     </div>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="1">
+    <p>Introduce the example we'll follow all the way through: one company, Brand A's <b>coffee supply</b> team.</p>
+    <p>The designer's task: add a <b>customer reviews</b> section to the product item page.</p>
+    <p>The CLI offers each brand its own templates, built from the design system. Let's look at them in Figma.</p>
+  </aside>
 </section>
 
 <!-- 10 · Live in Figma: the example -->
@@ -233,6 +275,12 @@
     <p class="hd-section-sub">Each brand's storefront, product page and checkout templates, designed with the design system, and why we want to turn them into a CLI.</p>
     <p class="hd-todo">Figma link for this demo</p>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="2.5">
+    <p><span class="cue">Switch to Figma</span> Keep this to two or three minutes.</p>
+    <p>Show Brand A's product page template, then one other. Call out that they're built from design system components.</p>
+    <p>Why a CLI: today someone rebuilds these by hand, or asks an agent and gets something close enough. We want them as a starting point.</p>
+    <p><span class="cue">Switch back to the deck</span></p>
+  </aside>
 </section>
 
 <!-- 11 · Section: the interview -->
@@ -243,6 +291,9 @@
     <p class="hd-section-sub">Start from the outcome, and ask only what changes it, in the right order. Then where the tree sits in the CLI's architecture.</p>
   </div>
   <p class="hd-band"><span class="is-off">What a CLI is</span><span>Decision tree</span><span class="is-off">Architecture</span><span class="is-off">Staying current</span></p>
+  <aside class="notes" data-speaker="Aimee" data-minutes="0.25">
+    <p>Section two: the setup interview, designed as a decision tree. Move straight on.</p>
+  </aside>
 </section>
 
 <!-- 12 · Walkthrough: the decision tree as a choose-your-own-adventure -->
@@ -253,6 +304,11 @@
     <p class="hd-section-sub">Write the ending first: a prototyping environment for designers and PMs. Then play it as a designer, where the team you're on decides which templates you get.</p>
     <button type="button" class="hd-break-btn" data-walkthrough="decision-tree/">Open the story <kbd>Enter</kbd></button>
   </div>
+  <aside class="notes" data-speaker="Aimee" data-minutes="5.5">
+    <p>Set it up: "We're going to plan the interview like a choose-your-own-adventure book, and we're the author."</p>
+    <p>Press <b>Enter</b> to open it. The notes for each page appear here as you go.</p>
+    <p>Budget about <b>5 minutes</b> for the whole story. It ends with "Back to the slides", which goes to Hannah's first slide.</p>
+  </aside>
 </section>
 
 <!-- 13 · Live in the repo: inside the CLI project -->
@@ -269,6 +325,12 @@
     </ul>
     <p class="hd-todo">Link to the CLI repo for this demo</p>
   </div>
+  <aside class="notes" data-speaker="Hannah" data-minutes="3.5">
+    <p><b>Hannah takes over.</b> Section three starts here: the architecture, in the real repo.</p>
+    <p><span class="cue">Switch to the code</span> Walk through, in this order:</p>
+    <ul><li><code>src/</code>: entry, the decision tree, plan, generate, publish</li><li><code>templates/</code>: one folder per brand, each a runnable project</li><li><code>package.json</code>: the design system is a dependency</li><li><code>agent/</code>: the <code>CLAUDE.md</code> and hooks every project gets</li></ul>
+    <p>Tie it back: each question in the story is one function in the tree.</p>
+  </aside>
 </section>
 
 <!-- 14 · Live demo: the finished experience -->
@@ -284,6 +346,11 @@
       <li><code>Share</code> the preview URL the CLI printed</li>
     </ul>
   </div>
+  <aside class="notes" data-speaker="Hannah" data-minutes="3.5">
+    <p><span class="cue">Live demo</span> Run it the way a designer would:</p>
+    <ul><li><code>npx create-ds-prototype product-page</code>: Prototype, Brand A, Product page</li><li><code>npm run dev</code>: Brand A's product page, from the design system</li><li>Ask Claude for the reviews section</li><li>Share the preview URL</li></ul>
+    <p>If the install is slow, talk through what it's doing. Have a recording ready as a backup.</p>
+  </aside>
 </section>
 
 <!-- 15 · Section: staying current -->
@@ -294,6 +361,9 @@
     <p class="hd-section-sub">Projects outlive the design system version they were made with. Keep the CLI, every project and what Claude knows in sync with the latest release.</p>
   </div>
   <p class="hd-band"><span class="is-off">What a CLI is</span><span class="is-off">Decision tree</span><span class="is-off">Architecture</span><span>Staying current</span></p>
+  <aside class="notes" data-speaker="Hannah" data-minutes="0.25">
+    <p>Section four: always current. Projects outlive the design system version they were made with.</p>
+  </aside>
 </section>
 
 <!-- 16 · What goes out of date -->
@@ -318,6 +388,11 @@
     </div>
   </div>
   <p class="hd-after">Make the latest design system the default,<br><span>not something people have to remember to fetch.</span></p>
+  <aside class="notes" data-speaker="Hannah" data-minutes="1.5">
+    <p>Three things fall behind the design system:</p>
+    <ul><li><b>The CLI</b>: its templates and packages are a snapshot</li><li><b>What Claude knows</b>: rules written once go stale</li><li><b>Existing projects</b>: last month's prototype is on last month's release</li></ul>
+    <p>Land the line: make the latest design system the default, not something people have to remember to fetch. We'll take them one at a time.</p>
+  </aside>
 </section>
 
 <!-- 17 · The CLI releases with the design system -->
@@ -336,6 +411,10 @@
     <div class="hd-flow-step"><b>Start current</b><p>The next <code>npx</code> run gets the new templates and packages.</p></div>
   </div>
   <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The decision tree doubles as the test plan: <span>every answer is an option, so CI can scaffold every path on every release.</span></p>
+  <aside class="notes" data-speaker="Hannah" data-minutes="1.5">
+    <p><b>The CLI</b> releases with the design system. Walk the flow: release, a bot bumps the CLI, CI scaffolds every path, publish, and the next <code>npx</code> run starts current.</p>
+    <p>Callback to Aimee's section: the decision tree doubles as the test plan. Every answer is an option, so CI can run every path.</p>
+  </aside>
 </section>
 
 <!-- 18 · Context ships in the package -->
@@ -361,6 +440,11 @@ Prototype for Brand A, built with @your-ds.
 └── <span class="k">guard-map.json</span>        <span class="c">what the guardrail swaps in</span></pre>
     </div>
   </div>
+  <aside class="notes" data-speaker="Hannah" data-minutes="1.5">
+    <p><b>What Claude knows.</b> The design system team writes the guidance once and ships it <b>inside the package</b>.</p>
+    <p>The project's <code>CLAUDE.md</code> imports it with the <code>@</code> lines instead of copying it. When the package updates, so does what Claude reads.</p>
+    <p>The guardrail reads its map from the same package.</p>
+  </aside>
 </section>
 
 <!-- 19 · Correct usage -->
@@ -378,6 +462,11 @@ Prototype for Brand A, built with @your-ds.
     <div class="hd-flow-step"><b>Flag</b><p>If nothing fits, Claude composes from existing pieces and logs a request for the design system team.</p></div>
   </div>
   <p class="hd-after" style="margin-top:calc(44 * var(--u));max-width:calc(940 * var(--u))">Rules ask. Hooks enforce. <span>And a missing component becomes a request, not a one-off.</span></p>
+  <aside class="notes" data-speaker="Hannah" data-minutes="1.5">
+    <p>Current context isn't enough on its own. Claude still has to <b>pick the right component</b> and not invent one.</p>
+    <p>Four layers: <b>tell</b> it with the catalog, have it <b>look up</b> before writing UI, <b>block</b> what's off-system, and <b>flag</b> when something's genuinely missing.</p>
+    <p>Land it: rules ask, hooks enforce, and a missing component becomes a request for the design system team.</p>
+  </aside>
 </section>
 
 <!-- 20 · Guardrail hook -->
@@ -410,6 +499,11 @@ Prototype for Brand A, built with @your-ds.
     </div>
     <div data-terminal="guardrail" style="height:calc(452 * var(--u));font-size:calc(12 * var(--u))"></div>
   </div>
+  <aside class="notes" data-speaker="Hannah" data-minutes="1.5">
+    <p>Here's the guardrail working, on our reviews task. Let the terminal play.</p>
+    <p>Claude starts its own <code>ReviewCard</code>. The hook blocks it: the system already has <code>Card</code>, and the colour should be a token.</p>
+    <p>Claude looks up the catalog, uses <code>Heading</code> and <code>Card</code>, and the edit passes. Point at <code>newComponents</code> in the hook code.</p>
+  </aside>
 </section>
 
 <!-- 21 · Session-start check -->
@@ -434,6 +528,11 @@ Prototype for Brand A, built with @your-ds.
     </div>
     <div data-terminal="session-start" style="height:calc(452 * var(--u));font-size:calc(12 * var(--u))"></div>
   </div>
+  <aside class="notes" data-speaker="Hannah" data-minutes="1.5">
+    <p><b>Existing projects.</b> When a Claude session starts, a hook compares what's installed with what's published.</p>
+    <p>In the terminal: 4.4.0 is out with a new <code>Rating</code>. Asked to show star ratings on the reviews, Claude updates the package first, then uses <code>Rating</code>.</p>
+    <p>It nudges and never blocks. Updating stays the team's call.</p>
+  </aside>
 </section>
 
 <!-- 22 · Putting it together -->
@@ -452,6 +551,10 @@ Prototype for Brand A, built with @your-ds.
     <div class="hd-flow-step is-key"><b>Stay current</b><p>The CLI releases with the system; projects check each session.</p></div>
   </div>
   <p class="hd-after" style="margin-top:calc(60 * var(--u));max-width:calc(900 * var(--u))">The design system stops being something people look up, <span>and becomes something they start from.</span></p>
+  <aside class="notes" data-speaker="Hannah" data-minutes="0.75">
+    <p>Putting it together: run, interview, scaffold, build, stay current.</p>
+    <p>Read the closing line: the design system stops being something people look up, and becomes something they start from.</p>
+  </aside>
 </section>
 
 <!-- 23 · Fork the starter -->
@@ -477,6 +580,10 @@ npm link
 create-ds-prototype my-first-prototype</pre>
     </div>
   </div>
+  <aside class="notes" data-speaker="Hannah" data-minutes="1">
+    <p>Take it home: fork the starter and add your design system. Six steps, from packages to publishing.</p>
+    <p>Point at the repo link and QR code, and leave this up while you wrap up.</p>
+  </aside>
 </section>
 
 <!-- 24 · Thank you -->
@@ -489,6 +596,10 @@ create-ds-prototype my-first-prototype</pre>
       <p><b>Hannah Clarke</b>Design System Architect · Deva Studio</p>
     </div>
   </div>
+  <aside class="notes" data-speaker="Aimee and Hannah" data-minutes="0.5">
+    <p><b>Both</b>: thank you. Hannah hands back to Aimee, or take questions together.</p>
+    <p>Go back to the "Fork the starter" slide during Q&amp;A if people want the link.</p>
+  </aside>
 </section>
 
 <!-- 25 · Appendix · Try the interview -->
@@ -508,5 +619,8 @@ create-ds-prototype my-first-prototype</pre>
       <div data-interview="files"></div>
     </div>
   </div>
+  <aside class="notes" data-speaker="" data-minutes="0">
+    <p>Appendix, for Q&amp;A only: an interactive version of the interview. Pick <b>App</b> to show a recommendation, or switch the brand.</p>
+  </aside>
 </section>
 

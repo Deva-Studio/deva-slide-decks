@@ -55,8 +55,18 @@ async function loadHtmlDeck(dir) {
   for (const m of src.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)) {
     const cls = /class="([^"]*)"/.exec(m[1])?.[1] || '';
     const dark = /\bdark\b/.test(cls);
+    // Presenter notes: <aside class="notes" data-speaker="…" data-minutes="…">…</aside>, kept off the slide.
+    const n = /<aside\b([^>]*)\bclass="notes"([^>]*)>([\s\S]*?)<\/aside>/.exec(m[2]);
+    const attrs = n ? n[1] + n[2] : '';
+    const notes = n ? {
+      html: n[3].trim(),
+      speaker: /data-speaker="([^"]*)"/.exec(attrs)?.[1] || '',
+      minutes: parseFloat(/data-minutes="([^"]*)"/.exec(attrs)?.[1]) || 0,
+    } : null;
+    const body = n ? m[2].replace(n[0], '') : m[2];
     slides.push({
-      html: `<div class="hd ${esc(cls)}">${m[2].replaceAll('media/', MEDIA)}</div>`,
+      notes,
+      html: `<div class="hd ${esc(cls)}">${body.replaceAll('media/', MEDIA)}</div>`,
       background: `background:${dark ? '#05237d' : '#f4c7c2'}`, // Deva Kit indigo/700 · pink/400
       text: '',
     });
@@ -121,6 +131,8 @@ async function main() {
   await fs.mkdir(dist, { recursive: true });
   await fs.copyFile(path.join(srcDir, 'styles.css'), path.join(dist, 'styles.css'));
   await fs.copyFile(path.join(srcDir, 'viewer.js'), path.join(dist, 'viewer.js'));
+  await fs.copyFile(path.join(srcDir, 'presenter.js'), path.join(dist, 'presenter.js'));
+  await fs.copyFile(path.join(srcDir, 'presenter.css'), path.join(dist, 'presenter.css'));
   await fs.copyFile(path.join(srcDir, 'html-deck.css'), path.join(dist, 'html-deck.css'));
   await fs.copyFile(path.join(srcDir, 'html-deck.js'), path.join(dist, 'html-deck.js'));
   await fs.copyFile(path.join(srcDir, 'favicon.png'), path.join(dist, 'favicon.png'));
@@ -156,6 +168,7 @@ async function main() {
     }
 
     const fonts = googleFontsUrls(deck.fonts);
+    const hasNotes = deck.slides.some((s) => s.notes);
     const slidesHtml = deck.slides
       .map((s, i) => `      <section class="slide-frame" id="${i + 1}" data-index="${i}"${entry.enhance?.[i + 1] ? ` data-enhance="${esc(entry.enhance[i + 1])}"` : ''}${i ? ' hidden' : ''}>
         ${slideMarkup(deck, s, i, 'media/')}
@@ -167,6 +180,7 @@ async function main() {
       <a class="back" href="../" aria-label="All decks"><span aria-hidden="true">←</span> <span class="back-label">All decks</span></a>
       <h1 class="deck-title">${esc(title)}</h1>
       <span class="deck-count">${deck.slides.length} slides</span>
+      ${hasNotes ? '<button class="notes-btn" type="button" data-presenter title="Open the presenter view (N)">Presenter view</button>' : ''}
       <button class="present-btn" type="button" data-present>Present</button>
     </header>
     <main class="deck" data-deck style="--w:${deck.width};--h:${deck.height}">
@@ -193,6 +207,24 @@ ${slidesHtml}
         bodyClass: 'deck-page',
       }),
     );
+
+    // Presenter view: dist/<slug>/presenter/, with every slide's notes inline.
+    if (hasNotes) {
+      await fs.mkdir(path.join(outDir, 'presenter'), { recursive: true });
+      const data = { title, minutes: entry.minutes || 0, slides: deck.slides.map((s) => s.notes || { html: '', speaker: '', minutes: 0 }) };
+      await fs.writeFile(
+        path.join(outDir, 'presenter', 'index.html'),
+        page({
+          title: `Presenter view · ${title}`,
+          fonts,
+          css: '../../styles.css',
+          head: '<link rel="stylesheet" href="../../presenter.css">',
+          body: `    <script type="application/json" id="deck-notes">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`,
+          scriptTag: '<script src="../../presenter.js" defer></script>',
+          bodyClass: 'presenter-page',
+        }),
+      );
+    }
 
     built.push({ slug, title, entry, deck, fonts });
     console.log(`✓ ${source} → dist/${slug}/  (${deck.slides.length} slides, ${deck.media.length} images)`);
